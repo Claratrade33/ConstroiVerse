@@ -1,121 +1,63 @@
+
 import os
-from flask import Flask, render_template_string, request, redirect, jsonify
+from flask import Flask, render_template_string, request
 from cryptography.fernet import Fernet
 import openai
 import sqlite3
 
-# === Segurança ===
-FERNET_KEY = b'0dUWR9N3n0N_CAf8jPwjrVzhU3TXw1BkCrnIQ6HvhIA='
-CHAVE_CRIPTOGRAFADA = b'gAAAAABoerOcaUWALvY8Vr42IJjyoC1O7iW8NZ284Ic2vOoF4FlYcGu-tuXF7Qi76saV6MftU5McTiMMiAd6Hb8JxcrhWWi-HLRxx0o4aEH74X7-4b3hltdavirtw64hsyOSGm6MemlP'
+FERNET_KEY = b"zcEp99AQzcHhVddY6fuInXuk9ZLtHQ0lLBcwjs2s_-Q="
+CHAVE_CRIPTOGRAFADA = b"gAAAAABoescWePjrpCUPgEHl99XFf2or46RyYvgkAA4uE_7M6H8-BkLHdNUD8Z8qfrZTcFimPOlIDINeZFWWlgqnuFXDgMRDgecLmyvtohmQDBHjAuoUgkk2h5irzXfbRYtX40F7CwqX"
 fernet = Fernet(FERNET_KEY)
 openai.api_key = fernet.decrypt(CHAVE_CRIPTOGRAFADA).decode()
 
-# === Flask App ===
 app = Flask(__name__)
 
-# === Banco de dados simples ===
 def init_db():
     conn = sqlite3.connect("constroiverse.db")
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS orcamentos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        cliente TEXT,
-        itens TEXT,
-        valor_total TEXT
-    )''')
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS orcamentos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            perfil TEXT,
+            nome TEXT,
+            itens TEXT,
+            status TEXT
+        )
+    """)
     conn.commit()
     conn.close()
-
 init_db()
 
-# === Página inicial ===
 HTML_INDEX = """
 <!DOCTYPE html>
-<html>
-<head>
-    <title>ConstroiVerse</title>
-    <style>
-        body {
-            background-color: #0d0d0d;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 60px;
-        }
-        button {
-            background-color: #00ffcc;
-            color: black;
-            padding: 20px 40px;
-            font-size: 22px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0 0 15px #00ffcc;
-        }
-        button:hover {
-            background-color: #00ccaa;
-        }
-    </style>
-</head>
-<body>
-    <h1>🧱 Bem-vindo ao ConstroiVerse</h1>
-    <p>IA Clarice pronta para iniciar sua jornada de construção inteligente.</p>
-    <form action="/painel">
-        <button>INICIAR CONSTRUÇÃO DA MINHA OBRA</button>
-    </form>
-</body>
-</html>
+<html><head><title>ConstroiVerse</title><style>
+body { background:#0d0d0d; color:#fff; text-align:center; padding:50px; font-family:sans-serif }
+button { background:#00ffcc; border:none; padding:20px; border-radius:10px; font-size:20px; cursor:pointer }
+</style></head><body>
+<h1>ð Bem-vindo ao ConstroiVerse</h1>
+<p>A IA Clarice estÃ¡ pronta para te ajudar.</p>
+<form action='/painel'><button>INICIAR CONSTRUÃÃO DA MINHA OBRA</button></form>
+</body></html>
 """
 
-# === Painel com IA Clarice ===
 HTML_PAINEL = """
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Painel da Obra - ConstroiVerse</title>
-    <style>
-        body {
-            background-color: #111;
-            color: white;
-            font-family: Arial;
-            padding: 40px;
-        }
-        textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-        }
-        button {
-            margin-top: 10px;
-            padding: 15px;
-            background: #00ffcc;
-            border: none;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .resposta {
-            background: #1a1a1a;
-            padding: 20px;
-            margin-top: 20px;
-            border-left: 5px solid #00ffcc;
-        }
-    </style>
-</head>
-<body>
-    <h2>IA Clarice — Consultora da sua Obra</h2>
-    <form method="POST">
-        <textarea name="pergunta" placeholder="Ex: Qual o melhor piso para área externa?"></textarea><br>
-        <button type="submit">Perguntar à Clarice</button>
-    </form>
-    {% if resposta %}
-    <div class="resposta">
-        <strong>Resposta da Clarice:</strong><br>
-        {{ resposta }}
-    </div>
-    {% endif %}
-</body>
-</html>
+<html><head><title>Painel - Clarice</title><style>
+body { background:#111; color:white; font-family:sans-serif; padding:30px }
+textarea { width:100%; height:120px; padding:10px; font-size:16px }
+button { margin-top:10px; padding:12px; background:#00ffcc; border:none; font-size:16px; border-radius:6px; cursor:pointer }
+.resposta { margin-top:20px; background:#222; padding:20px; border-left:5px solid #00ffcc }
+</style></head><body>
+<h2>ð·ââï¸ IA Clarice â Assistente de Obra</h2>
+<form method="post">
+<label>Digite sua dÃºvida ou lista de materiais:</label><br>
+<textarea name="pergunta" placeholder="Ex: Qual a diferenÃ§a entre piso porcelanato e vinÃ­lico?"></textarea><br>
+<button type="submit">Perguntar Ã  Clarice</button>
+</form>
+{% if resposta %}
+<div class="resposta"><strong>Clarice diz:</strong><br>{{ resposta }}</div>
+{% endif %}
+</body></html>
 """
 
 @app.route("/")
@@ -126,23 +68,21 @@ def index():
 def painel():
     resposta = ""
     if request.method == "POST":
-        pergunta = request.form["pergunta"]
+        pergunta = request.form.get("pergunta", "")
         try:
             completion = openai.ChatCompletion.create(
                 model="gpt-4",
                 messages=[
-                    {"role": "system", "content": "Você é Clarice, uma consultora especializada em obras e construção civil."},
+                    {"role": "system", "content": "VocÃª Ã© Clarice, uma assistente de inteligÃªncia da construÃ§Ã£o civil. Responda com empatia, clareza e dados tÃ©cnicos sempre que possÃ­vel."},
                     {"role": "user", "content": pergunta}
                 ]
             )
             resposta = completion.choices[0].message.content
         except Exception as e:
-            resposta = f"Erro ao consultar a IA Clarice: {e}"
+            resposta = f"Erro com Clarice: {e}"
     return render_template_string(HTML_PAINEL, resposta=resposta)
 
-# === Aplicação para Render ===
 if __name__ == "__main__":
     app.run(debug=True)
 else:
     application = app
-
