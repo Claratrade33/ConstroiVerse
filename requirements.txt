@@ -1,2 +1,4 @@
 Flask==2.3.3
 openai==1.16.2
+tqdm
+gunicorn
