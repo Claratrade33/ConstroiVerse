@@ -2,12 +2,12 @@ from flask import Flask, request, render_template_string
 import os
 import openai
 
-# Configurar a chave da OpenAI usando variável de ambiente
+# Pega a chave da OpenAI do ambiente (definida no Render)
 openai.api_key = os.getenv("OPENAI")
 
 app = Flask(__name__)
 
-# HTML da página inicial
+# HTML da página inicial (index)
 index_html = """
 <!DOCTYPE html>
 <html lang='pt-br'>
@@ -43,7 +43,7 @@ index_html = """
 </html>
 """
 
-# HTML da página da IA Clarice
+# HTML da página da Clarice
 clarice_html = """
 <!DOCTYPE html>
 <html lang='pt-br'>
@@ -98,13 +98,13 @@ clarice_html = """
 </html>
 """
 
-# Função de resposta da IA Clarice
+# Função de IA da Clarice
 def perguntar_clarice(pergunta):
     try:
         resposta = openai.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "Você é Clarice, uma assistente de obra inteligente, organizada, empática. Ajude clientes, pedreiros, arquitetos e lojistas com dúvidas sobre construção, obra, materiais, orçamento e reforma."},
+                {"role": "system", "content": "Você é Clarice, uma assistente de obra inteligente, organizada e empática. Ajude pessoas com construção civil, orçamento, planejamento e materiais."},
                 {"role": "user", "content": pergunta}
             ]
         )
@@ -112,11 +112,12 @@ def perguntar_clarice(pergunta):
     except Exception as e:
         return f"Erro com Clarice: {str(e)}"
 
-# Rotas
+# Rota da página inicial
 @app.route("/")
 def index():
     return render_template_string(index_html)
 
+# Rota da Clarice
 @app.route("/clarice", methods=["GET", "POST"])
 def clarice():
     resposta = ""
@@ -125,8 +126,8 @@ def clarice():
         resposta = perguntar_clarice(pergunta)
     return render_template_string(clarice_html, resposta=resposta)
 
-# Para rodar no Render
+# Início do app
 if __name__ == "__main__":
     app.run(debug=True)
 else:
-    application = app
+    application = app  # Para o Render usar
