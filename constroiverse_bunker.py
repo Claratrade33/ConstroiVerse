@@ -1,141 +1,132 @@
+from flask import Flask, request, render_template_string
+import os
+import openai
+
+# Configurar chave da OpenAI via variável de ambiente
+openai.api_key = os.getenv("OPENAI")
+
+app = Flask(__name__)
+
+# HTML da página inicial
+index_html = """
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>ConstroiVerse | Bunker do Construtor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ConstroiVerse</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap">
     <style>
         body {
-            margin: 0;
-            background: #0f0f0f;
+            background-color: #0a0a0a;
             color: white;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        header {
-            background-color: #00c4b4;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: black;
-        }
-
-        nav {
-            background-color: #121212;
+            font-family: 'Orbitron', sans-serif;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            padding: 10px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
-
-        nav button {
-            background: #1f1f1f;
-            border: 2px solid #00c4b4;
-            color: #00f0ff;
-            padding: 10px 15px;
-            margin: 5px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        nav button:hover {
-            background-color: #00c4b4;
+        a.botao {
+            background-color: #00ffc3;
             color: black;
-        }
-
-        section {
-            padding: 20px;
-            display: none;
-        }
-
-        section.active {
-            display: block;
-        }
-
-        .card {
-            background-color: #1a1a1a;
-            border: 1px solid #00f0ff44;
-            border-left: 6px solid #00c4b4;
-            margin: 20px auto;
-            padding: 20px;
-            max-width: 600px;
-            box-shadow: 0 0 10px #00f0ff33;
-            border-radius: 10px;
+            padding: 14px 24px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #00ffc366;
         }
     </style>
 </head>
 <body>
-
-<header>🔨 ConstroiVerse – Painel do Construtor</header>
-
-<nav>
-    <button onclick="navegar('dashboard')">Dashboard</button>
-    <button onclick="navegar('projetos')">Central de Projetos</button>
-    <button onclick="navegar('acompanhamento')">Acompanhamento</button>
-    <button onclick="navegar('previsao')">Previsão & Custo</button>
-    <button onclick="navegar('calculadora')">Calculadora</button>
-    <button onclick="navegar('financiamento')">Simular Financiamento</button>
-    <button onclick="navegar('corretores')">Rede de Corretores</button>
-</nav>
-
-<main>
-    <section id="dashboard" class="active">
-        <div class="card">
-            <h2>📊 Dashboard</h2>
-            <p>Resumo geral das obras, custos e progresso em tempo real.</p>
-        </div>
-    </section>
-
-    <section id="projetos">
-        <div class="card">
-            <h2>📁 Central de Projetos</h2>
-            <p>Todos os projetos organizados por fase, categoria e status.</p>
-        </div>
-    </section>
-
-    <section id="acompanhamento">
-        <div class="card">
-            <h2>📍 Acompanhamento de Obra</h2>
-            <p>Veja o que está pronto, o que está em andamento e o que falta com cronograma visual.</p>
-        </div>
-    </section>
-
-    <section id="previsao">
-        <div class="card">
-            <h2>📅 Previsão e Custo</h2>
-            <p>Tempo estimado, materiais necessários e valor total com base nos acabamentos escolhidos.</p>
-        </div>
-    </section>
-
-    <section id="calculadora">
-        <div class="card">
-            <h2>🧮 Calculadora Inteligente</h2>
-            <p>Insira as medidas e veja quanto material precisa, tempo, custo e margem de sobra.</p>
-        </div>
-    </section>
-
-    <section id="financiamento">
-        <div class="card">
-            <h2>💰 Simulador de Financiamento</h2>
-            <p>Veja quanto pegar no banco, qual será a taxa, os juros e quanto custará sua obra no final.</p>
-        </div>
-    </section>
-
-    <section id="corretores">
-        <div class="card">
-            <h2>🌐 Rede de Corretores</h2>
-            <p>Encontre arquitetos, mestres de obra, fornecedores e parceiros perto de você.</p>
-        </div>
-    </section>
-</main>
-
-<script>
-    function navegar(pagina) {
-        document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-        document.getElementById(pagina).classList.add('active');
-    }
-</script>
-
+    <h2>🔩 Bem-vindo ao ConstroiVerse</h2>
+    <p>A IA Clarice está pronta para te ajudar.</p>
+    <a href="/clarice" class="botao">INICIAR CONSTRUÇÃO DA MINHA OBRA</a>
 </body>
 </html>
+"""
+
+# HTML da página da IA Clarice
+clarice_html = """
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Clarice - Assistente de Obra</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+        textarea, input[type=submit] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        input[type=submit] {
+            background-color: #00ffc3;
+            color: black;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .resposta {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-left: 4px solid #00ffc3;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h2>👷‍♀️ IA Clarice 🏗️ Assistente de Obra</h2>
+    <form method="post">
+        <label>Digite sua dúvida ou lista de materiais:</label>
+        <textarea name="pergunta" rows="4" placeholder="Ex: Qual a diferença entre piso porcelanato e vinílico?"></textarea>
+        <input type="submit" value="Perguntar à Clarice">
+    </form>
+
+    {% if resposta %}
+    <div class="resposta">
+        <strong>Clarice diz:</strong><br>
+        {{ resposta }}
+    </div>
+    {% endif %}
+</body>
+</html>
+"""
+
+def perguntar_clarice(pergunta):
+    try:
+        resposta = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Você é Clarice, uma assistente de obra inteligente, calma e bem organizada. Sua missão é ajudar pessoas em construções, obras, reformas, materiais, e planejamento, de forma prática e empática."
+                },
+                {"role": "user", "content": pergunta}
+            ]
+        )
+        return resposta.choices[0].message.content.strip()
+    except Exception as e:
+        return f"Erro com Clarice: {str(e)}"
+
+@app.route("/")
+def index():
+    return render_template_string(index_html)
+
+@app.route("/clarice", methods=["GET", "POST"])
+def clarice():
+    resposta = ""
+    if request.method == "POST":
+        pergunta = request.form.get("pergunta")
+        resposta = perguntar_clarice(pergunta)
+    return render_template_string(clarice_html, resposta=resposta)
+
+if __name__ == "__main__":
+    app.run(debug=True)
