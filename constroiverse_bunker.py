@@ -1,132 +1,153 @@
 from flask import Flask, request, render_template_string
-import os
 import openai
 
-# Configurar chave da OpenAI via variável de ambiente
-openai.api_key = os.getenv("OPENAI")
+# 🔐 Chave da OpenAI já embutida no bunker
+openai.api_key = "sk-..."
 
 app = Flask(__name__)
 
-# HTML da página inicial
-index_html = """
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>ConstroiVerse</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap">
-    <style>
-        body {
-            background-color: #0a0a0a;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        a.botao {
-            background-color: #00ffc3;
-            color: black;
-            padding: 14px 24px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 8px;
-            box-shadow: 0 0 10px #00ffc366;
-        }
-    </style>
-</head>
-<body>
-    <h2>🔩 Bem-vindo ao ConstroiVerse</h2>
-    <p>A IA Clarice está pronta para te ajudar.</p>
-    <a href="/clarice" class="botao">INICIAR CONSTRUÇÃO DA MINHA OBRA</a>
-</body>
-</html>
-"""
-
-# HTML da página da IA Clarice
+# 🧠 Template HTML com IA Clarice implantada
 clarice_html = """
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Clarice - Assistente de Obra</title>
+    <title>ConstróiVerse | Clarice IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            background-color: #0f0f0f;
-            color: #fff;
-            font-family: 'Arial', sans-serif;
-            padding: 20px;
+            background: #0d0d0d;
+            color: #e0f7fa;
+            font-family: 'Segoe UI', sans-serif;
+            padding: 30px;
         }
-        textarea, input[type=submit] {
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        h1, h2 {
+            color: #00e6e6;
+            text-align: center;
+        }
+        textarea {
             width: 100%;
+            height: 120px;
+            background: #1a1a1a;
+            border: 1px solid #00cccc;
+            color: #fff;
             padding: 10px;
-            margin-top: 10px;
+            border-radius: 8px;
             font-size: 16px;
+            resize: none;
         }
-        input[type=submit] {
-            background-color: #00ffc3;
-            color: black;
-            font-weight: bold;
+        button {
+            margin-top: 15px;
+            padding: 12px 24px;
+            background-color: #00e6e6;
             border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: bold;
             cursor: pointer;
-            border-radius: 5px;
+        }
+        .bloco {
+            margin-top: 40px;
+            background: #111;
+            border-left: 6px solid #00cccc;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #00cccc66;
+        }
+        ul {
+            list-style-type: "🛠️ ";
+            padding-left: 20px;
+        }
+        ul li {
+            margin-bottom: 8px;
         }
         .resposta {
-            margin-top: 20px;
-            padding: 15px;
-            background: #1a1a1a;
-            border-left: 4px solid #00ffc3;
-            border-radius: 6px;
+            margin-top: 30px;
+            padding: 20px;
+            background: #222;
+            border-left: 6px solid #00e6e6;
+            border-radius: 8px;
+        }
+        a {
+            color: #00cccc;
         }
     </style>
 </head>
 <body>
-    <h2>👷‍♀️ IA Clarice 🏗️ Assistente de Obra</h2>
-    <form method="post">
-        <label>Digite sua dúvida ou lista de materiais:</label>
-        <textarea name="pergunta" rows="4" placeholder="Ex: Qual a diferença entre piso porcelanato e vinílico?"></textarea>
-        <input type="submit" value="Perguntar à Clarice">
-    </form>
+    <div class="container">
+        <h1>🧠 Clarice - Assistente de Construção</h1>
+        <p style="text-align: center;">Digite seu orçamento, projeto ou dúvida:</p>
+        
+        <form method="POST">
+            <textarea name="pergunta" placeholder="Ex: Preciso construir uma casa de 3 quartos com acabamento médio..."></textarea>
+            <button type="submit">Analisar</button>
+        </form>
 
-    {% if resposta %}
-    <div class="resposta">
-        <strong>Clarice diz:</strong><br>
-        {{ resposta }}
+        {% if resposta %}
+            <div class="resposta">
+                <strong>Resposta da Clarice:</strong><br>
+                {{ resposta }}
+            </div>
+        {% endif %}
+
+        <div class="bloco">
+            <h2>📋 Tela de Orçamentos Inteligentes</h2>
+            <ul>
+                <li>Módulo de cadastro de obras, materiais, fornecedores</li>
+                <li>Calculadora de obra e financiamento automático</li>
+                <li>Interface da construtora com gerenciamento total</li>
+                <li>IA Clarice organizando tudo entre arquiteto, loja e cliente</li>
+                <li>Lojas podendo responder orçamentos direto na plataforma</li>
+                <li>Impacto humano visível (tempo com família, paz, menos briga)</li>
+                <li>Vendedores respondendo orçamentos com 1 clique</li>
+                <li>Relatórios, alertas, previsões e histórico completo</li>
+            </ul>
+        </div>
+
+        <div class="bloco">
+            <h2>🚀 Clarice ainda vai fazer:</h2>
+            <ul style="list-style-type: '🧠 '; padding-left: 20px;">
+                <li>Conversar com fornecedores, clientes e arquitetos</li>
+                <li>Lembrar o pedreiro do que precisa chegar</li>
+                <li>Informar o arquiteto do valor e prazos reais</li>
+                <li>Criar orçamentos inteligentes</li>
+                <li>Propor mudanças para reduzir custo ou aumentar qualidade</li>
+                <li>Mostrar tudo em tempo real pro cliente e pro dono da obra</li>
+            </ul>
+        </div>
+
+        <p style="text-align:center; margin-top: 40px;"><a href="/">← Voltar ao início</a></p>
     </div>
-    {% endif %}
 </body>
 </html>
 """
 
-def perguntar_clarice(pergunta):
-    try:
-        resposta = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Você é Clarice, uma assistente de obra inteligente, calma e bem organizada. Sua missão é ajudar pessoas em construções, obras, reformas, materiais, e planejamento, de forma prática e empática."
-                },
-                {"role": "user", "content": pergunta}
-            ]
-        )
-        return resposta.choices[0].message.content.strip()
-    except Exception as e:
-        return f"Erro com Clarice: {str(e)}"
-
-@app.route("/")
-def index():
-    return render_template_string(index_html)
-
-@app.route("/clarice", methods=["GET", "POST"])
+# 🌐 Rota principal Clarice
+@app.route("/", methods=["GET", "POST"])
 def clarice():
-    resposta = ""
+    resposta = None
     if request.method == "POST":
-        pergunta = request.form.get("pergunta")
-        resposta = perguntar_clarice(pergunta)
+        pergunta = request.form.get("pergunta", "")
+        if pergunta.strip():
+            try:
+                completion = openai.ChatCompletion.create(
+                    model="gpt-4",
+                    messages=[
+                        {"role": "system", "content": "Você é a IA Clarice, especialista em obras e construções. Dê respostas objetivas, humanas e úteis."},
+                        {"role": "user", "content": pergunta}
+                    ],
+                    temperature=0.7,
+                    max_tokens=600
+                )
+                resposta = completion.choices[0].message.content.strip()
+            except Exception as e:
+                resposta = f"Erro ao consultar a IA: {str(e)}"
     return render_template_string(clarice_html, resposta=resposta)
 
+# ✅ Rodando o app
 if __name__ == "__main__":
     app.run(debug=True)
