@@ -1,4 +1,8 @@
 Flask==2.3.3
-openai==1.16.2
-tqdm
-gunicorn
+gunicorn==21.2.0
+openai==1.14.3
+cryptography==42.0.5
+requests==2.31.0
+python-binance==1.0.17
+fpdf==1.7.2
+python-dotenv==1.0.1
