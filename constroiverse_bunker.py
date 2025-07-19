@@ -1,211 +1,141 @@
-from flask import Flask, request, render_template_string
-import os
-import openai
-
-openai.api_key = os.getenv("OPENAI")
-
-app = Flask(__name__)
-
-# -------------------------- HTML PÁGINA INICIAL ----------------------------
-index_html = '''
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse</title>
-  <style>
-    body {
-      background-color: #0a0a0a;
-      color: white;
-      font-family: 'Arial', sans-serif;
-      text-align: center;
-      padding-top: 80px;
-    }
-    a {
-      display: inline-block;
-      margin-top: 40px;
-      padding: 16px 28px;
-      background-color: #00ffc3;
-      color: black;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 10px;
-      box-shadow: 0 0 12px #00ffc366;
-    }
-  </style>
-</head>
-<body>
-  <h1>💎 Bem-vindo ao ConstroiVerse</h1>
-  <p>Sua obra começa aqui com inteligência.</p>
-  <a href='/clarice'>INICIAR CONSTRUÇÃO</a><br><br>
-  <a href='/licitacoes'>ANALISAR LICITAÇÕES</a>
-</body>
-</html>
-'''
-
-# -------------------------- HTML CLARICE ----------------------------
-clarice_html = '''
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Clarice - Assistente de Obra</title>
-  <style>
-    body {
-      background-color: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 30px;
-    }
-    textarea {
-      width: 100%;
-      height: 120px;
-      padding: 10px;
-      font-size: 16px;
-    }
-    button {
-      padding: 12px 20px;
-      background-color: #00ffc3;
-      border: none;
-      font-weight: bold;
-      font-size: 16px;
-      border-radius: 6px;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-    .resposta {
-      margin-top: 30px;
-      background: #1c1c1c;
-      padding: 20px;
-      border-left: 4px solid #00ffc3;
-      border-radius: 8px;
-    }
-  </style>
-</head>
-<body>
-  <h2>👷‍♀️ IA Clarice — Assistente de Obra</h2>
-  <form method='POST'>
-    <label>Digite sua dúvida ou lista de materiais:</label><br>
-    <textarea name='pergunta' placeholder='Ex: Qual a diferença entre telha cerâmica e metálica?'></textarea><br>
-    <button type='submit'>Perguntar à Clarice</button>
-  </form>
-  {% if resposta %}
-    <div class='resposta'>
-      <strong>Clarice diz:</strong><br>{{ resposta }}
-    </div>
-  {% endif %}
-</body>
-</html>
-'''
-
-# -------------------------- HTML LICITAÇÕES ----------------------------
-licitacao_html = '''
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Licitações - ConstroiVerse</title>
+    <title>ConstroiVerse | Bunker do Construtor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
-            background-color: #101010;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            padding: 30px;
+            margin: 0;
+            background: #0f0f0f;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
         }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        button {
-            padding: 12px 24px;
-            background-color: #00ffc3;
-            border: none;
+
+        header {
+            background-color: #00c4b4;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
             font-weight: bold;
-            font-size: 16px;
-            border-radius: 6px;
-            margin-top: 15px;
+            color: black;
+        }
+
+        nav {
+            background-color: #121212;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        nav button {
+            background: #1f1f1f;
+            border: 2px solid #00c4b4;
+            color: #00f0ff;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 8px;
             cursor: pointer;
         }
-        .resposta {
-            margin-top: 30px;
-            background: #1c1c1c;
+
+        nav button:hover {
+            background-color: #00c4b4;
+            color: black;
+        }
+
+        section {
             padding: 20px;
-            border-left: 4px solid #00ffc3;
-            border-radius: 8px;
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        .card {
+            background-color: #1a1a1a;
+            border: 1px solid #00f0ff44;
+            border-left: 6px solid #00c4b4;
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 600px;
+            box-shadow: 0 0 10px #00f0ff33;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <h2>📄 Análise de Licitação</h2>
-    <form method="POST">
-        <label>Copie e cole o conteúdo do edital ou um trecho:</label><br>
-        <textarea name="edital" placeholder="Cole aqui o conteúdo da licitação..."></textarea><br>
-        <button type="submit">Analisar com Clarice</button>
-    </form>
-    {% if resposta %}
-        <div class="resposta">
-            <strong>Resumo da Clarice:</strong><br>{{ resposta }}
+
+<header>🔨 ConstroiVerse – Painel do Construtor</header>
+
+<nav>
+    <button onclick="navegar('dashboard')">Dashboard</button>
+    <button onclick="navegar('projetos')">Central de Projetos</button>
+    <button onclick="navegar('acompanhamento')">Acompanhamento</button>
+    <button onclick="navegar('previsao')">Previsão & Custo</button>
+    <button onclick="navegar('calculadora')">Calculadora</button>
+    <button onclick="navegar('financiamento')">Simular Financiamento</button>
+    <button onclick="navegar('corretores')">Rede de Corretores</button>
+</nav>
+
+<main>
+    <section id="dashboard" class="active">
+        <div class="card">
+            <h2>📊 Dashboard</h2>
+            <p>Resumo geral das obras, custos e progresso em tempo real.</p>
         </div>
-    {% endif %}
+    </section>
+
+    <section id="projetos">
+        <div class="card">
+            <h2>📁 Central de Projetos</h2>
+            <p>Todos os projetos organizados por fase, categoria e status.</p>
+        </div>
+    </section>
+
+    <section id="acompanhamento">
+        <div class="card">
+            <h2>📍 Acompanhamento de Obra</h2>
+            <p>Veja o que está pronto, o que está em andamento e o que falta com cronograma visual.</p>
+        </div>
+    </section>
+
+    <section id="previsao">
+        <div class="card">
+            <h2>📅 Previsão e Custo</h2>
+            <p>Tempo estimado, materiais necessários e valor total com base nos acabamentos escolhidos.</p>
+        </div>
+    </section>
+
+    <section id="calculadora">
+        <div class="card">
+            <h2>🧮 Calculadora Inteligente</h2>
+            <p>Insira as medidas e veja quanto material precisa, tempo, custo e margem de sobra.</p>
+        </div>
+    </section>
+
+    <section id="financiamento">
+        <div class="card">
+            <h2>💰 Simulador de Financiamento</h2>
+            <p>Veja quanto pegar no banco, qual será a taxa, os juros e quanto custará sua obra no final.</p>
+        </div>
+    </section>
+
+    <section id="corretores">
+        <div class="card">
+            <h2>🌐 Rede de Corretores</h2>
+            <p>Encontre arquitetos, mestres de obra, fornecedores e parceiros perto de você.</p>
+        </div>
+    </section>
+</main>
+
+<script>
+    function navegar(pagina) {
+        document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(pagina).classList.add('active');
+    }
+</script>
+
 </body>
 </html>
-'''
-
-# -------------------------- FUNÇÕES OPENAI ----------------------------
-
-def perguntar_clarice(pergunta):
-    try:
-        resposta = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Você é Clarice, uma assistente de obra inteligente, organizada e empática. Ajude pessoas com construção civil, orçamento, planejamento e materiais."},
-                {"role": "user", "content": pergunta}
-            ]
-        )
-        return resposta.choices[0].message.content.strip()
-    except Exception as e:
-        return f"Erro com Clarice: {str(e)}"
-
-def analisar_edital(texto):
-    try:
-        resposta = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "Você é Clarice, especialista em licitações públicas e privadas na área de construção civil. Gere um resumo prático para lojistas, construtores e engenheiros. Liste documentos obrigatórios, prazos e riscos."},
-                {"role": "user", "content": texto}
-            ]
-        )
-        return resposta.choices[0].message.content.strip()
-    except Exception as e:
-        return f"Erro com Clarice: {str(e)}"
-
-# -------------------------- ROTAS ----------------------------
-
-app = Flask(__name__)
-
-@app.route("/")
-def index():
-    return render_template_string(index_html)
-
-@app.route("/clarice", methods=["GET", "POST"])
-def clarice():
-    resposta = ""
-    if request.method == "POST":
-        pergunta = request.form.get("pergunta", "")
-        resposta = perguntar_clarice(pergunta)
-    return render_template_string(clarice_html, resposta=resposta)
-
-@app.route("/licitacoes", methods=["GET", "POST"])
-def licitacoes():
-    resposta = ""
-    if request.method == "POST":
-        edital = request.form.get("edital", "")
-        resposta = analisar_edital(edital)
-    return render_template_string(licitacao_html, resposta=resposta)
-
-if __name__ == "__main__":
-    app.run(debug=True)
-else:
-    application = app
