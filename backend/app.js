@@ -1,43 +1,35 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+
 const app = express();
 const PORT = 3000;
 
-// Configurações
+// Middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend')));
-app.set('views', path.join(__dirname, '../frontend'));
-app.set('view engine', 'ejs');
 
-// Rota inicial: seleção de perfil
+// Rotas fixas
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 // Rota de login por perfil (ex: /login?perfil=arquiteto)
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/login.html'));
+  const perfil = req.query.perfil;
+  if (!perfil) {
+    return res.sendFile(path.join(__dirname, '../frontend/login/login.html'));
+  }
+  res.sendFile(path.join(__dirname, `../frontend/login/login_${perfil}.html`));
 });
 
-// Rota POST de painel após login (será ajustada para cada perfil)
-app.post('/painel', (req, res) => {
-  const { email, senha, perfil } = req.body;
-
-  // Aqui entra a lógica de autenticação (mock por enquanto)
-  console.log(`Usuário: ${email}, Perfil: ${perfil}`);
-
-  // Redireciona para painel do perfil (ex: /painel/arquiteto)
-  res.redirect(`/painel/${perfil}`);
-});
-
-// Rota de painel por perfil
+// Painéis por perfil (ex: /painel/engenheiro → painel_engenheiro.html)
 app.get('/painel/:perfil', (req, res) => {
   const perfil = req.params.perfil;
-  res.send(`<h1>Painel do ${perfil.charAt(0).toUpperCase() + perfil.slice(1)}</h1><p>Bem-vindo(a) ao ConstroiVerse!</p>`);
+  res.sendFile(path.join(__dirname, `../frontend/painel/painel_${perfil}.html`));
 });
 
-// Inicia o servidor
+// Start do servidor
 app.listen(PORT, () => {
-  console.log(`🌐 Servidor rodando em http://localhost:${PORT}`);
+  console.log(`✅ Servidor rodando: http://localhost:${PORT}`);
 });
