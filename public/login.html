@@ -1,35 +1,24 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login | ConstroiVerse</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <script>
-    // Preenche o perfil automaticamente com base na URL (?perfil=loja, ?perfil=pintor...)
-    window.onload = () => {
-      const params = new URLSearchParams(window.location.search);
-      const perfil = params.get('perfil');
-      if (perfil) {
-        document.getElementById('mainProfile').value = perfil;
-        document.getElementById('perfil-label').innerText = perfil.charAt(0).toUpperCase() + perfil.slice(1);
-      }
+<script>
+  const form = document.querySelector("form");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const dados = Object.fromEntries(formData.entries());
+
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    });
+
+    const result = await response.json();
+
+    if (result.sucesso) {
+      // Redireciona automaticamente para o painel correto
+      window.location.href = result.redirect;
+    } else {
+      alert(result.erro || "Erro ao fazer login");
     }
-  </script>
-</head>
-<body>
-  <div class="container">
-    <h1 class="titulo">🔐 Acesso ConstroiVerse</h1>
-    <p id="perfil-label">Perfil:</p>
-
-    <form action="/api/auth/login" method="POST" class="form-box">
-      <input type="email" name="email" placeholder="E-mail" required />
-      <input type="password" name="password" placeholder="Senha" required />
-      <input type="hidden" id="mainProfile" name="mainProfile" value="" />
-      <button type="submit">Entrar</button>
-    </form>
-
-    <p class="registro-link">Não tem conta? <a href="/register.html">Cadastre-se</a></p>
-  </div>
-</body>
-</html>
+  });
+</script>
