@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logística - ConstroiVerse</title>
+  <link rel="stylesheet" href="/public/style.css">
+  <script src="https://maps.googleapis.com/maps/api/js?key=SUA_CHAVE_GOOGLE_MAPS"></script>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2>Logística</h2>
+    <ul>
+      <li><a href="#">📦 Entregas</a></li>
+      <li><a href="#">🗺️ Mapa</a></li>
+      <li><a href="#">➕ Nova Entrega</a></li>
+    </ul>
+  </nav>
+
+  <main class="painel">
+    <h1>Roteirizador de Entregas</h1>
+
+    <section class="bloco">
+      <h3>📦 Entregas do Dia</h3>
+      <ul>
+        <li>Obra: Aurora — Cimento (10 sacos) — <strong>Em rota</strong></li>
+        <li>Obra: Green Hall — Areia lavada — <strong>Entregue</strong></li>
+        <li>Obra: Solar Park — Tijolos — <strong style="color:red">Atrasado</strong></li>
+      </ul>
+    </section>
+
+    <section class="bloco">
+      <h3>🗺️ Mapa de Entregas</h3>
+      <div id="mapa-entregas" style="width: 100%; height: 300px;"></div>
+    </section>
+
+    <section class="bloco">
+      <h3>⏱️ Estimativas</h3>
+      <p>Entrega mais longa: 43min</p>
+      <p>Entrega mais urgente: Solar Park (atraso de 27min)</p>
+      <p>Total em rota: 6 pedidos</p>
+    </section>
+  </main>
+
+  <script>
+    function initMap() {
+      const mapa = new google.maps.Map(document.getElementById('mapa-entregas'), {
+        center: { lat: -23.5505, lng: -46.6333 },
+        zoom: 11
+      });
+
+      // Exemplo de marcador
+      new google.maps.Marker({
+        position: { lat: -23.5505, lng: -46.6333 },
+        map: mapa,
+        title: "Obra Aurora"
+      });
+    }
+
+    window.onload = initMap;
+  </script>
+</body>
+</html>
