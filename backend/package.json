@@ -1,17 +1,14 @@
 {
-  "name": "constroiverse-backend",
+  "name": "constroiverse-frontend",
   "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "dev": "node server.js"
-  },
+  "private": true,
   "dependencies": {
-    "express": "^4.18.2",
-    "bcrypt": "^5.1.0",
-    "jsonwebtoken": "^9.0.0",
-    "pg": "^8.11.1",
-    "sequelize": "^6.32.1",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5"
+    "axios": "^1.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0"
+  },
+  "scripts": {
+    "start": "react-scripts start"
   }
 }
