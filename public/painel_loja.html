@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel da Loja | ConstroiVerse</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    // Simulação de perfil (será dinâmico quando conectado com backend)
+    const usuario = {
+      nome: "João",
+      role: "vendedor", // pode ser: gerente, vendedor, financeiro, estoquista
+      permissoes: ["criar_orcamento", "ver_estoque"]
+    };
+
+    function exibirMenus() {
+      const menus = document.querySelectorAll(".menu-item");
+      menus.forEach(menu => {
+        const permissao = menu.getAttribute("data-permissao");
+        if (!usuario.permissoes.includes(permissao)) {
+          menu.style.display = "none";
+        }
+      });
+      document.getElementById("bem-vindo").innerText = `Bem-vindo, ${usuario.nome} (${usuario.role})`;
+    }
+
+    window.onload = exibirMenus;
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1 class="titulo">🏪 Painel da Loja</h1>
+    <p id="bem-vindo"></p>
+
+    <div class="menu-grid">
+      <a href="#" class="menu-item" data-permissao="criar_orcamento">📝 Criar Orçamento</a>
+      <a href="#" class="menu-item" data-permissao="ver_estoque">📦 Consultar Estoque</a>
+      <a href="#" class="menu-item" data-permissao="editar_preco">💲 Editar Preços</a>
+      <a href="#" class="menu-item" data-permissao="financeiro">📊 Financeiro</a>
+      <a href="#" class="menu-item" data-permissao="gerenciar_funcionarios">👥 Funcionários</a>
+      <a href="#" class="menu-item" data-permissao="relatorios">📈 Relatórios</a>
+    </div>
+  </div>
+</body>
+</html>
