@@ -1,28 +1,3 @@
-const User = require('../models/User');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
-exports.register = async (req, res) => {
-  try {
-    const { name, email, password, mainProfile, role } = req.body;
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword,
-      mainProfile,
-      role
-    });
-
-    await user.save();
-
-    res.status(201).json({ sucesso: true, mensagem: 'Usuário criado com sucesso' });
-  } catch (err) {
-    res.status(500).json({ sucesso: false, erro: err.message });
-  }
-};
-
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -42,6 +17,7 @@ exports.login = async (req, res) => {
     res.json({
       sucesso: true,
       token,
+      redirect: `/painel/${user.mainProfile}`, // 🔁 redirecionamento por perfil
       perfil: user.mainProfile,
       role: user.role,
       permissions: user.permissions
