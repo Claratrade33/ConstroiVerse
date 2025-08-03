@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>ConstroiVerse — Painel do Pedreiro</title>
+  <title>ConstroiVerse — Pedreiro</title>
   <link rel="stylesheet" href="/static/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -10,27 +10,25 @@
 
   <header>
     <h1>🧱 ConstroiVerse — Painel do Mestre de Obra</h1>
-    <p>Bem-vindo, Profissional de Execução</p>
+    <p>Execução com qualidade e organização</p>
   </header>
 
   <main>
 
-    <!-- SEÇÃO: TAREFAS DA OBRA -->
-    <section class="bloco bloco-tarefas">
+    <!-- TAREFAS -->
+    <section class="bloco bloco-minhas-tarefas">
       <h2>📋 Minhas Tarefas do Dia</h2>
-      <ul>
-        <li>✅ Reforço de vigas na fundação</li>
-        <li>🟡 Início da alvenaria do quarto 2</li>
-        <li>⚪ Instalação de contra piso da sala</li>
+      <ul id="lista-tarefas">
+        <li>Carregando...</li>
       </ul>
     </section>
 
-    <!-- SEÇÃO: ATUALIZAR STATUS -->
+    <!-- ATUALIZAÇÃO -->
     <section class="bloco bloco-status">
-      <h2>🔄 Atualizar Status da Tarefa</h2>
+      <h2>🔄 Atualizar Status</h2>
       <select id="tarefa">
-        <option>Alvenaria — Quarto 2</option>
-        <option>Contra piso — Sala</option>
+        <option>Parede da sala</option>
+        <option>Contra piso</option>
       </select>
       <select id="status">
         <option>Concluída</option>
@@ -41,19 +39,30 @@
       <p id="resposta_status">...</p>
     </section>
 
+    <!-- FERRAMENTAS -->
+    <section class="bloco bloco-ferramentas">
+      <h2>🔧 Ferramentas do Pedreiro</h2>
+      <ul>
+        <li>🧱 Colher de pedreiro</li>
+        <li>📏 Trena e nível de bolha</li>
+        <li>🔩 Desempenadeira e prumo</li>
+        <li>🪚 Serra mármore e carrinho de mão</li>
+      </ul>
+    </section>
+
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Equipe de Campo</p>
+    <p>ConstroiVerse © 2025 — Profissional de Execução</p>
   </footer>
 
+  <script src="/static/dashboard.js"></script>
   <script>
     function atualizarTarefa() {
       const tarefa = document.getElementById('tarefa').value;
       const status = document.getElementById('status').value;
-      document.getElementById('resposta_status').innerText = `✅ Tarefa "${tarefa}" marcada como "${status}"`;
+      document.getElementById('resposta_status').innerText = `✅ "${tarefa}" atualizado para "${status}"`;
     }
   </script>
-
 </body>
 </html>
