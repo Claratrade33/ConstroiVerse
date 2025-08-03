@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Painel do Engenheiro | ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>🔧 Painel do Engenheiro</h1>
+    <h1>📐 Painel do Engenheiro</h1>
     <nav>
       <a href="/logout">Sair</a>
     </nav>
@@ -16,46 +15,34 @@
 
   <main>
     <section>
-      <h2>📋 Obras em andamento</h2>
-      <div id="lista-obras">
-        <!-- Lista dinâmica -->
-      </div>
-    </section>
-
-    <section>
-      <h2>🛠️ Ferramentas do Engenheiro</h2>
+      <h2>📊 Acompanhamento de Obras</h2>
       <ul>
-        <li>AutoCAD</li>
-        <li>Revit</li>
-        <li>MS Project</li>
-        <li>Excel Avançado</li>
-        <li>Normas ABNT</li>
+        <li>Obra 1 - 45% concluída - Risco: baixo</li>
+        <li>Obra 2 - 60% concluída - Risco: médio</li>
       </ul>
     </section>
 
     <section>
       <h2>✅ Aprovação Técnica</h2>
-      <p>Acompanhe e aprove as etapas técnicas das obras com base em relatórios de campo.</p>
-      <button onclick="abrirAprovacoes()">Ver Aprovações Pendentes</button>
+      <p>Etapas aguardando aprovação:</p>
+      <ul>
+        <li>Estrutura de concreto - aguardando verificação</li>
+        <li>Instalação elétrica - aprovado ✅</li>
+      </ul>
     </section>
 
     <section>
-      <h2>📊 Relatórios</h2>
-      <button onclick="gerarRelatorio()">Gerar Relatório Técnico</button>
+      <h2>🛠️ Ferramentas de Engenheiro</h2>
+      <ul>
+        <li>Leitura de projetos integrados</li>
+        <li>Histórico técnico da obra</li>
+        <li>Emissão de ART automatizada</li>
+      </ul>
     </section>
   </main>
 
   <footer>
     <p>© 2025 ConstroiVerse</p>
   </footer>
-
-  <script>
-    function abrirAprovacoes() {
-      alert("Abrindo lista de aprovações...");
-    }
-    function gerarRelatorio() {
-      alert("Relatório técnico gerado com sucesso!");
-    }
-  </script>
 </body>
 </html>
