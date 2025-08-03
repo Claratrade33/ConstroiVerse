@@ -1,57 +1,75 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel da Construtora - ConstroiVerse</title>
-  <link rel="stylesheet" href="/public/style.css">
+  <meta charset="UTF-8">
+  <title>ConstroiVerse — Painel da Construtora</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <nav class="sidebar">
-    <h2>Construtora</h2>
-    <ul>
-      <li><a href="#">🏗️ Obras</a></li>
-      <li><a href="#">💰 Fluxo de Caixa</a></li>
-      <li><a href="#">📈 ROI</a></li>
-      <li><a href="#">👷 Equipe</a></li>
-      <li><a href="#">🛒 Histórico</a></li>
-      <li><a href="#">➕ Nova Obra</a></li>
-    </ul>
-  </nav>
+<body class="painel-construtora">
 
-  <main class="painel">
-    <h1>Bem-vindo, Gestor de Obras</h1>
+  <header>
+    <h1>🏢 ConstroiVerse — Painel da Construtora</h1>
+    <p>Gestão total da obra e dos profissionais</p>
+  </header>
 
-    <section class="bloco">
-      <h3>🏗️ Obras Ativas</h3>
+  <main>
+
+    <!-- SEÇÃO: OBRAS ATIVAS -->
+    <section class="bloco bloco-obras">
+      <h2>🏗️ Obras Ativas</h2>
       <ul>
-        <li>Residencial Aurora - <strong>Etapa: Acabamento</strong></li>
-        <li>Comercial Green Hall - <strong>Etapa: Fundação</strong></li>
+        <li>Obra #001 — Casa Vila Verde — 75% concluída</li>
+        <li>Obra #002 — Prédio Comercial — 38% concluída</li>
+        <li>Obra #003 — Condomínio Solar — 12% concluída</li>
       </ul>
     </section>
 
-    <section class="bloco">
-      <h3>💰 Fluxo de Caixa</h3>
-      <p>Disponível: <strong>R$ 128.300,00</strong></p>
-      <p>Previsto para o mês: <strong>R$ 197.000,00</strong></p>
+    <!-- SEÇÃO: ROI e INDICADORES -->
+    <section class="bloco bloco-financeiro">
+      <h2>📊 Indicadores da Obra</h2>
+      <ul>
+        <li>ROI médio por obra: <strong>22%</strong></li>
+        <li>Gasto médio por etapa: <strong>R$ 48.000</strong></li>
+        <li>Profissionais ativos: <strong>37</strong></li>
+      </ul>
     </section>
 
-    <section class="bloco">
-      <h3>📈 ROI por Obra</h3>
-      <p>Aurora: <strong>19%</strong> | Green Hall: <strong>-3%</strong></p>
+    <!-- SEÇÃO: SUGESTÕES DA IA -->
+    <section class="bloco bloco-ia">
+      <h2>🤖 Sugerir Otimizações com Clarice</h2>
+      <textarea id="descricao_construtora" placeholder="Descreva um problema ou etapa cara..."></textarea>
+      <button onclick="consultarIA()">Consultar Clarice</button>
+      <pre id="resposta_construtora">...</pre>
     </section>
 
-    <section class="bloco">
-      <h3>👷 Equipe</h3>
-      <p>13 profissionais ativos</p>
-      <button>Adicionar Profissional</button>
-    </section>
-
-    <section class="bloco">
-      <h3>🛒 Histórico</h3>
-      <p>Última compra: cimento CP-IV - 500 sacos</p>
-      <p>Fornecedor: MegaMateriais</p>
-    </section>
   </main>
+
+  <footer>
+    <p>ConstroiVerse © 2025 — Gestão Integrada da Construtora</p>
+  </footer>
+
+  <script>
+    async function consultarIA() {
+      const descricao = document.getElementById('descricao_construtora').value;
+      document.getElementById('resposta_construtora').innerText = "⏳ Consultando Clarice...";
+
+      try {
+        const response = await fetch('/ia/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            descricao: `Sou da construtora e preciso de sugestões para: ${descricao}`
+          })
+        });
+
+        const data = await response.json();
+        document.getElementById('resposta_construtora').innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById('resposta_construtora').innerText = "Erro ao acessar a IA.";
+      }
+    }
+  </script>
+
 </body>
 </html>
