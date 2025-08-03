@@ -1,130 +1,131 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
-from bson import ObjectId
+from dotenv import load_dotenv
 import jwt
 import datetime
+import openai
+import os
+
+# Carregar variáveis do .env
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# 🔐 JWT config
-SECRET_KEY = "constroiverse_super_secreta"
+# Configurações
+SECRET_KEY = os.getenv("SECRET_KEY")
+MONGO_URI = os.getenv("MONGO_URI")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+openai.api_key = OPENAI_API_KEY
 
-# 🌐 MongoDB
-client = MongoClient("mongodb://localhost:27017/")
+# Conexão MongoDB
+client = MongoClient(MONGO_URI)
 db = client.constroiverse
 
-# 🛠 Util
-def decode_token(token):
+# Autenticação JWT
+def criar_token(usuario):
+    payload = {
+        "usuario": usuario,
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)
+    }
+    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+
+def verificar_token(token):
     try:
-        return jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        return payload["usuario"]
     except:
         return None
 
-# ✅ LOGIN SIMPLES
-@app.route("/login", methods=["POST"])
+# Middleware de autenticação
+def protegido(f):
+    def wrapper(*args, **kwargs):
+        auth = request.headers.get("Authorization")
+        if not auth:
+            return jsonify({"erro": "Sem token"}), 401
+        usuario = verificar_token(auth)
+        if not usuario:
+            return jsonify({"erro": "Token inválido"}), 403
+        return f(usuario, *args, **kwargs)
+    wrapper.__name__ = f.__name__
+    return wrapper
+
+# ===== ROTAS PRINCIPAIS =====
+
+@app.route("/api/login", methods=["POST"])
 def login():
-    data = request.json
-    usuario = db.usuarios.find_one({"email": data["email"], "senha": data["senha"]})
-    if usuario:
-        payload = {
-            "id": str(usuario["_id"]),
-            "perfil": usuario["perfil"],
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12)
-        }
-        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-        return jsonify({"token": token})
-    return jsonify({"erro": "Credenciais inválidas"}), 401
+    dados = request.json
+    usuario = dados.get("usuario")
+    senha = dados.get("senha")
 
-# 🚧 ROTAS DE OBRAS
-@app.route("/api/obras", methods=["GET", "POST"])
-def obras():
-    token = decode_token(request.headers.get("Authorization"))
-    if not token: return jsonify({"erro": "Não autorizado"}), 403
+    user = db.usuarios.find_one({"usuario": usuario, "senha": senha})
+    if not user:
+        return jsonify({"erro": "Credenciais inválidas"}), 401
 
-    if request.method == "GET":
-        obras = list(db.obras.find({"dono_id": token["id"]}))
-        for o in obras:
-            o["_id"] = str(o["_id"])
-        return jsonify(obras)
+    token = criar_token(usuario)
+    return jsonify({"token": token})
 
-    if request.method == "POST":
-        data = request.json
-        data["dono_id"] = token["id"]
-        db.obras.insert_one(data)
-        return jsonify({"msg": "Obra cadastrada com sucesso"})
+@app.route("/api/obras", methods=["GET"])
+@protegido
+def listar_obras(usuario):
+    obras = list(db.obras.find({"usuario": usuario}))
+    for o in obras:
+        o["_id"] = str(o["_id"])
+    return jsonify(obras)
 
-# ✅ TAREFAS POR OBRA
 @app.route("/api/tarefas", methods=["POST"])
-def criar_tarefa():
-    token = decode_token(request.headers.get("Authorization"))
-    if not token: return jsonify({"erro": "Não autorizado"}), 403
-    data = request.json
-    db.tarefas.insert_one({
-        "obra_id": data["obra_id"],
-        "profissional": data["profissional"],
-        "descricao": data["descricao"],
-        "status": "pendente"
-    })
-    return jsonify({"msg": "Tarefa atribuída"})
+@protegido
+def criar_tarefa(usuario):
+    dados = request.json
+    dados["usuario"] = usuario
+    dados["status"] = "pendente"
+    db.tarefas.insert_one(dados)
+    return jsonify({"mensagem": "Tarefa criada"})
 
-@app.route("/api/tarefas/<id>/status", methods=["PUT"])
-def atualizar_tarefa(id):
-    data = request.json
-    db.tarefas.update_one({"_id": ObjectId(id)}, {"$set": {"status": data["status"]}})
-    return jsonify({"msg": f"Tarefa marcada como {data['status']}"})
+@app.route("/api/tarefas/<id>/status", methods=["PATCH"])
+@protegido
+def atualizar_tarefa(usuario, id):
+    novo_status = request.json.get("status")
+    db.tarefas.update_one({"_id": id, "usuario": usuario}, {"$set": {"status": novo_status}})
+    return jsonify({"mensagem": "Status atualizado"})
 
-# ⭐️ AVALIAÇÕES
+@app.route("/api/orcamentos", methods=["POST"])
+@protegido
+def enviar_orcamento(usuario):
+    dados = request.json
+    dados["usuario"] = usuario
+    db.orcamentos.insert_one(dados)
+    return jsonify({"mensagem": "Orçamento enviado"})
+
 @app.route("/api/avaliacoes", methods=["POST"])
-def avaliar():
-    data = request.json
-    db.avaliacoes.insert_one(data)
-    return jsonify({"msg": "Avaliação registrada com sucesso"})
+@protegido
+def avaliar(usuario):
+    dados = request.json
+    dados["usuario"] = usuario
+    db.avaliacoes.insert_one(dados)
+    return jsonify({"mensagem": "Avaliação registrada"})
 
-# 👥 VITRINE DE PROFISSIONAIS
 @app.route("/api/vitrine", methods=["GET"])
-def vitrine():
-    categoria = request.args.get("categoria")
-    regiao = request.args.get("regiao")
-    query = {}
-    if categoria: query["categoria"] = categoria
-    if regiao: query["regiao"] = {"$regex": regiao, "$options": "i"}
-    resultados = list(db.profissionais.find(query))
-    for p in resultados:
+@protegido
+def vitrine(usuario):
+    profissionais = list(db.profissionais.find({}))
+    for p in profissionais:
         p["_id"] = str(p["_id"])
-    return jsonify(resultados)
+    return jsonify(profissionais)
 
-# 💼 OPORTUNIDADES PARA PROFISSIONAIS
-@app.route("/api/oportunidades", methods=["GET"])
-def oportunidades():
-    categoria = request.args.get("categoria")
-    cidade = request.args.get("cidade")
-    query = {}
-    if categoria: query["vaga"] = categoria
-    if cidade: query["cidade"] = {"$regex": cidade, "$options": "i"}
-    vagas = list(db.vagas.find(query))
-    for v in vagas:
-        v["_id"] = str(v["_id"])
-    return jsonify(vagas)
+# IA Clarice (Exemplo)
+@app.route("/api/clarice", methods=["POST"])
+@protegido
+def clarice(usuario):
+    pergunta = request.json.get("mensagem")
+    resposta = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": pergunta}]
+    )
+    texto = resposta.choices[0].message.content.strip()
+    return jsonify({"resposta": texto})
 
-# 📨 CORRETOR SOLICITA HABILITAÇÃO
-@app.route("/api/solicitar-habilitacao", methods=["POST"])
-def habilitar():
-    data = request.json
-    db.habilitacoes.insert_one(data)
-    return jsonify({"msg": "Solicitação enviada para construtora"})
-
-# 🔄 RESET INICIAL (opcional)
-@app.route("/api/reset", methods=["POST"])
-def reset():
-    db.obras.delete_many({})
-    db.tarefas.delete_many({})
-    db.profissionais.delete_many({})
-    db.vagas.delete_many({})
-    db.habilitacoes.delete_many({})
-    db.avaliacoes.delete_many({})
-    return jsonify({"msg": "Sistema resetado!"})
-
+# Inicializador
 if __name__ == "__main__":
     app.run(debug=True)
