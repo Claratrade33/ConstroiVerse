@@ -1,22 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel do Engenheiro | ConstroiVerse</title>
-  <link rel="stylesheet" href="../style/style.css" />
+  <meta charset="UTF-8">
+  <title>ConstroiVerse — Painel do Engenheiro</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <div class="painel-container">
-    <h1>🧱 Painel do Engenheiro</h1>
-    <p>Gerencie as etapas técnicas da obra com precisão:</p>
+<body class="painel-engenheiro">
 
-    <div class="menu">
-      <button onclick="window.location.href='etapas_tecnicas.html'">🔧 Etapas Técnicas</button>
-      <button onclick="window.location.href='aprovacoes_engenharia.html'">✅ Aprovações Técnicas</button>
-      <button onclick="window.location.href='relatorios_risco.html'">⚠️ Relatórios de Risco</button>
-      <button onclick="window.location.href='../index.html'">🔙 Voltar</button>
-    </div>
-  </div>
+  <header>
+    <h1>🔧 ConstroiVerse — Engenheiro Responsável</h1>
+    <p>Bem-vindo, <span id="nome-usuario">Engenheiro</span></p>
+  </header>
+
+  <main>
+
+    <!-- SEÇÃO: ETAPAS PARA APROVAÇÃO -->
+    <section class="bloco bloco-etapas">
+      <h2>📋 Etapas Técnicas para Aprovação</h2>
+      <ul>
+        <li>✅ Fundação — Aprovada</li>
+        <li>🟡 Alvenaria — Aguardando validação <button>Aprovar</button></li>
+        <li>⚪ Elétrica — Pendente</li>
+        <li>⚪ Hidráulica — Pendente</li>
+        <li>⚪ Cobertura — Pendente</li>
+      </ul>
+    </section>
+
+    <!-- SEÇÃO: ANÁLISE DE RISCO COM A IA -->
+    <section class="bloco bloco-ia">
+      <h2>🧠 Análise de Risco com Clarice</h2>
+      <textarea id="descricao_risco" placeholder="Descreva uma etapa crítica, atraso ou suspeita..."></textarea>
+      <button onclick="analisarRisco()">Analisar com IA</button>
+      <pre id="resposta_risco">...</pre>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>ConstroiVerse © 2025 — Engenheiro Responsável</p>
+  </footer>
+
+  <script>
+    async function analisarRisco() {
+      const descricao = document.getElementById('descricao_risco').value;
+      document.getElementById('resposta_risco').innerText = "⏳ Analisando com Clarice...";
+
+      try {
+        const response = await fetch('/ia/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            descricao: `Sou engenheiro e preciso de uma análise técnica de risco para a seguinte situação: ${descricao}`
+          })
+        });
+
+        const data = await response.json();
+        document.getElementById('resposta_risco').innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById('resposta_risco').innerText = "Erro ao acessar a IA Clarice.";
+      }
+    }
+  </script>
+
 </body>
 </html>
