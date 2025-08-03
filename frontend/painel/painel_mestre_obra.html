@@ -1,56 +1,52 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Mestre de Obra | ConstroiVerse</title>
+  <meta charset="UTF-8" />
+  <title>Painel do Mestre de Obra - ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>👷 Painel do Mestre de Obra</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>Painel do Mestre de Obra</h1>
+    <p>Gerencie toda a equipe, delegue tarefas e acompanhe o andamento das obras.</p>
   </header>
 
   <main>
     <section>
-      <h2>🧱 Obra: Residencial Aurora</h2>
-      <p>Equipe designada: João (Pedreiro), Pedro (Encanador), Luana (Pintora)</p>
-      <h3>Tarefas:</h3>
+      <h2>Obras em Andamento</h2>
       <ul>
-        <li>Banheiro Social - <button onclick="iniciar()">Iniciar</button> <button onclick="finalizar()">Finalizar</button></li>
-        <li>Quarto Casal - <button onclick="iniciar()">Iniciar</button> <button onclick="finalizar()">Finalizar</button></li>
+        <li>Residencial Alameda - 52%</li>
+        <li>Casa da Maria (cliente) - 78%</li>
       </ul>
     </section>
 
     <section>
-      <h2>📊 Acompanhamento da Obra</h2>
-      <p>Tempo estimado pela IA: 12 dias</p>
-      <p>Status: Aguardando entrega de cimento (Loja São Paulo - Entrega prevista: hoje)</p>
+      <h2>Equipe por Obra</h2>
+      <ul>
+        <li>Pedreiros: 3</li>
+        <li>Encanadores: 1</li>
+        <li>Eletricistas: 2</li>
+      </ul>
     </section>
 
     <section>
-      <h2>⭐ Avaliação da Equipe</h2>
-      <p>Ao final da obra, avalie os profissionais para compor a reputação na Vitrine.</p>
-      <button onclick="avaliarEquipe()">Avaliar Equipe</button>
+      <h2>Tarefas Delegadas</h2>
+      <ul>
+        <li>Pintura interna iniciada - Quarto das Crianças</li>
+        <li>Instalação elétrica pausada por falta de material</li>
+        <li>Entrega de telhas aguardada</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ferramentas do Mestre de Obra</h2>
+      <ul>
+        <li>Agenda da Obra</li>
+        <li>QR Code para tarefas</li>
+        <li>Relatórios de Equipe</li>
+        <li>Histórico de Atrasos</li>
+      </ul>
     </section>
   </main>
-
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
-
-  <script>
-    function iniciar() {
-      alert("Tarefa iniciada.");
-    }
-    function finalizar() {
-      alert("Tarefa finalizada.");
-    }
-    function avaliarEquipe() {
-      alert("Avaliação enviada.");
-    }
-  </script>
 </body>
 </html>
