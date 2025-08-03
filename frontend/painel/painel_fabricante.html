@@ -1,56 +1,48 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Fabricante</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Fabricante | ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="painel-fabricante">
-
+<body>
   <header>
-    <h1>🏭 ConstroiVerse — Fabricante de Materiais</h1>
-    <p>Controle de produção e pedidos diretos</p>
+    <h1>🏭 Painel do Fabricante</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
-
-    <!-- PEDIDOS RECEBIDOS -->
-    <section class="bloco bloco-pedidos">
-      <h2>📦 Pedidos Recebidos</h2>
-      <ul>
-        <li>Obra #001 — 50 blocos estruturais — Produção: 75%</li>
-        <li>Obra #003 — 12m² de cerâmica acetinada — Preparando</li>
-      </ul>
+    <section>
+      <h2>🏷️ Vendas Diretas</h2>
+      <label>
+        <input type="checkbox" id="venda-direta" /> Aceita vendas diretas para CNPJ
+      </label>
     </section>
 
-    <!-- ESTOQUE -->
-    <section class="bloco bloco-estoque">
-      <h2>📊 Estoque Atual</h2>
-      <ul>
-        <li>Blocos estruturais: 1.200 un</li>
-        <li>Telhas cerâmicas: 400 un</li>
-        <li>Cimento CP-II: 160 sacos</li>
-      </ul>
+    <section>
+      <h2>📦 Recebimento de Orçamentos</h2>
+      <p>Visualize pedidos feitos por construtoras ou representantes.</p>
+      <div id="pedidos-fabricante">Carregando pedidos...</div>
     </section>
 
-    <!-- FERRAMENTAS -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🔧 Ferramentas do Fabricante</h2>
-      <ul>
-        <li>🏭 Máquinas de moldagem</li>
-        <li>📦 Sistema de controle de lote</li>
-        <li>📉 Painel de produção em tempo real</li>
-        <li>🔄 Integração com fornecedores e entregadores</li>
-      </ul>
+    <section>
+      <h2>👔 Representantes Cadastrados</h2>
+      <p>Veja e convide representantes para sua marca.</p>
+      <div id="representantes">Consultando...</div>
     </section>
-
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Produção Inteligente</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
 
-  <script src="/static/dashboard.js"></script>
+  <script>
+    document.getElementById('venda-direta').addEventListener('change', function () {
+      alert("Configuração atualizada.");
+    });
+  </script>
 </body>
 </html>
