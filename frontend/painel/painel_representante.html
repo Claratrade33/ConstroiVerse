@@ -2,119 +2,96 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>ConstroiVerse — Representante Comercial</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConstroiVerse — Painel do Fabricante</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body class="painel-representante">
+<body class="painel-fabricante">
 
   <header>
-    <h1>💼 ConstroiVerse — Representante Comercial</h1>
-    <p>Portfólio inteligente e conexão com o mercado</p>
+    <h1>🏭 ConstroiVerse — Fabricante de Materiais</h1>
+    <p>Produção conectada à construção real</p>
   </header>
 
   <main>
 
-    <!-- PRODUTOS OFERTADOS -->
-    <section class="bloco bloco-produtos">
-      <h2>🛒 Meus Produtos Ativos</h2>
+    <!-- PEDIDOS RECEBIDOS -->
+    <section class="bloco bloco-pedidos">
+      <h2>📦 Pedidos Atuais</h2>
       <ul>
-        <li>Tijolo ecológico — R$2,80/un — 12 vendas</li>
-        <li>Massa corrida Premium — R$89,90 — 7 vendas</li>
+        <li>Obra #001 — 200 blocos cerâmicos</li>
+        <li>Obra #004 — 40 sacos de argamassa</li>
       </ul>
     </section>
 
-    <!-- COMISSÕES -->
-    <section class="bloco bloco-comissoes">
-      <h2>💰 Minhas Comissões</h2>
+    <!-- CONFIGURAR TIPO DE VENDA -->
+    <section class="bloco bloco-configuracao">
+      <h2>⚙️ Política de Venda</h2>
+      <p>Este fabricante aceita vendas diretas para CNPJ?</p>
+      <label><input type="radio" name="venda" value="sim" checked> ✅ Sim, aceito vendas diretas para construtoras</label><br>
+      <label><input type="radio" name="venda" value="nao"> 🚫 Não, apenas via lojas</label>
+    </section>
+
+    <!-- REPRESENTANTES CANDIDATOS -->
+    <section class="bloco bloco-representantes">
+      <h2>📥 Representantes Interessados</h2>
       <ul>
-        <li>Vendas no mês: R$ 8.490</li>
-        <li>Comissão atual: R$ 1.273,50</li>
+        <li>
+          <strong>João Oliveira</strong> — Região: SP<br>
+          <button onclick="verApresentacao('joao')">📄 Ver Apresentação</button>
+          <button>✅ Aceitar</button>
+          <button>❌ Recusar</button>
+        </li>
+        <li>
+          <strong>Maria Souza</strong> — Região: RJ<br>
+          <button onclick="verApresentacao('maria')">📄 Ver Apresentação</button>
+          <button>✅ Aceitar</button>
+          <button>❌ Recusar</button>
+        </li>
       </ul>
     </section>
 
-    <!-- CURRÍCULO INTELIGENTE -->
-    <section class="bloco bloco-portifolio">
-      <h2>📄 Montar Currículo Inteligente</h2>
-
-      <p>Escolha os produtos/segmentos que deseja incluir:</p>
-      <label><input type="checkbox" class="produto" value="Tintas Suvinil"> Tintas — Suvinil</label><br>
-      <label><input type="checkbox" class="produto" value="Pisos Portobello"> Pisos — Portobello</label><br>
-      <label><input type="checkbox" class="produto" value="Louças Celite"> Louças — Celite</label><br>
-      <label><input type="checkbox" class="produto" value="Metais Deca"> Metais — Deca</label><br>
-
-      <textarea id="descricao_portfolio" placeholder="Observações (opcional)..."></textarea>
-
-      <button onclick="gerarApresentacao()">✨ Gerar Apresentação com IA</button>
-      <pre id="apresentacao_gerada">...</pre>
-
-      <div class="bloco-envio">
-        <button onclick="enviarParaFabricante()">📤 Enviar para Fabricante</button>
-        <button onclick="enviarParaLoja()">📩 Enviar para Loja</button>
-      </div>
+    <!-- VISUALIZAÇÃO DE APRESENTAÇÃO -->
+    <section class="bloco bloco-apresentacao">
+      <h2>🧾 Apresentação do Representante</h2>
+      <pre id="apresentacao_fabricante">Selecione um representante para visualizar.</pre>
     </section>
 
-    <!-- FERRAMENTAS -->
+    <!-- FERRAMENTAS DO FABRICANTE -->
     <section class="bloco bloco-ferramentas">
-      <h2>🧰 Ferramentas do Representante</h2>
+      <h2>🧰 Ferramentas do Fabricante</h2>
       <ul>
-        <li>📱 App de vendas com catálogo inteligente</li>
-        <li>📦 Acesso ao estoque e margens em tempo real</li>
-        <li>📊 Painel de comissões e histórico</li>
-        <li>🧠 Geração de currículo com IA Clarice</li>
+        <li>🏭 Controle de produção por lote</li>
+        <li>📊 Painel de pedidos e representantes</li>
+        <li>💼 Política de vendas configurável</li>
+        <li>🧠 Integração com IA e orçamentos inteligentes</li>
       </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Representante Integrado</p>
+    <p>ConstroiVerse © 2025 — Indústria Inteligente</p>
   </footer>
 
   <script src="/static/dashboard.js"></script>
   <script>
-    async function gerarApresentacao() {
-      const produtosSelecionados = Array.from(document.querySelectorAll('.produto:checked')).map(p => p.value);
-      const descricaoExtra = document.getElementById('descricao_portfolio').value;
+    function verApresentacao(nome) {
+      const apresentacoes = {
+        joao: "João representa Suvinil, com crescimento de 22% em 2 meses. Atua no varejo de SP e já atendeu 12 lojas.",
+        maria: "Maria é destaque em metais e louças. Atua no RJ e PE com foco em acabamentos e fidelização de clientes."
+      };
+      document.getElementById('apresentacao_fabricante').innerText = apresentacoes[nome] || "Apresentação não encontrada.";
+    }
 
-      if (produtosSelecionados.length === 0) {
-        alert('Selecione pelo menos 1 produto.');
-        return;
-      }
-
-      document.getElementById('apresentacao_gerada').innerText = '⏳ Gerando apresentação com IA...';
-
-      const response = await fetch('/ia/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          descricao: `Sou um representante comercial. Quero uma apresentação para os produtos: ${produtosSelecionados.join(', ')}. Observações: ${descricaoExtra}`
-        })
+    // Opcional: salvar política de venda
+    document.querySelectorAll('input[name="venda"]').forEach(input => {
+      input.addEventListener('change', () => {
+        const escolha = input.value;
+        alert(`✅ Preferência atualizada: ${escolha === 'sim' ? 'Aceita CNPJ' : 'Somente via lojas'}`);
+        // Aqui você pode fazer um POST para salvar no backend a política
       });
-
-      const data = await response.json();
-      document.getElementById('apresentacao_gerada').innerText = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
-    }
-
-    function enviarParaFabricante() {
-      const curriculo = document.getElementById('apresentacao_gerada').innerText;
-      if (!curriculo || curriculo.includes('⏳')) {
-        alert('Gere a apresentação antes de enviar!');
-        return;
-      }
-      alert('✅ Apresentação enviada ao fabricante!');
-      // Aqui entraria um POST para /fabricante/receber_apresentacao
-    }
-
-    function enviarParaLoja() {
-      const curriculo = document.getElementById('apresentacao_gerada').innerText;
-      if (!curriculo || curriculo.includes('⏳')) {
-        alert('Gere a apresentação antes de enviar!');
-        return;
-      }
-      alert('✅ Apresentação enviada para loja!');
-      // Aqui entraria um POST para /loja/receber_apresentacao
-    }
+    });
   </script>
 </body>
 </html>
