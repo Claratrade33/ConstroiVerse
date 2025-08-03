@@ -8,46 +8,36 @@
 <body>
   <header>
     <h1>Painel do Engenheiro</h1>
-    <p>Gerencie obras, aprove etapas e visualize relatórios técnicos.</p>
+    <p>Acompanhe a execução técnica e aprove ou corrija etapas da obra.</p>
   </header>
 
   <main>
     <section>
-      <h2>Obras sob sua responsabilidade</h2>
-      <ul id="obras-engenheiro">
-        <!-- Lista de obras será populada via JS -->
+      <h2>Etapas para Aprovação Técnica</h2>
+      <ul>
+        <li>Fundação concluída ✅</li>
+        <li>Estrutura aguardando aprovação ⏳</li>
+        <li>Instalação elétrica inicial pendente ⚠️</li>
       </ul>
     </section>
 
     <section>
-      <h2>Aprovação técnica</h2>
-      <p>Valide ou recuse as etapas das obras diretamente pela plataforma.</p>
-    </section>
-
-    <section>
-      <h2>Relatórios de risco e cronograma</h2>
-      <button>Baixar relatório completo</button>
+      <h2>Riscos Técnicos Identificados</h2>
+      <ul>
+        <li>Infiltração no piso térreo</li>
+        <li>Fissura estrutural no pilar P3</li>
+      </ul>
     </section>
 
     <section>
       <h2>Ferramentas do Engenheiro</h2>
       <ul>
-        <li>Nível a laser</li>
-        <li>Trena digital</li>
-        <li>Software de cálculo estrutural</li>
-        <li>Notebook com AutoCAD</li>
+        <li>Prancheta técnica</li>
+        <li>Trena a laser</li>
+        <li>Nível de bolha</li>
+        <li>Laudos em PDF</li>
       </ul>
     </section>
   </main>
-
-  <script>
-    const obras = ['Edifício Central Park', 'Residencial Sol Nascente', 'Galpão Industrial XPTO'];
-    const listaObras = document.getElementById('obras-engenheiro');
-    obras.forEach(obra => {
-      const li = document.createElement('li');
-      li.textContent = obra;
-      listaObras.appendChild(li);
-    });
-  </script>
 </body>
 </html>
