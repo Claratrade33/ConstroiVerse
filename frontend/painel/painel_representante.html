@@ -1,24 +1,73 @@
-<!-- frontend/painel/painel_representante.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Representante | ConstroiVerse</title>
-  <link rel="stylesheet" href="../style/style.css" />
+  <meta charset="UTF-8">
+  <title>ConstroiVerse — Painel do Representante Comercial</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <div class="painel-container">
-    <h1>🧳 Painel do Representante Comercial</h1>
-    <p>Bem-vindo! Aqui está sua central de atendimento e prospecção:</p>
+<body class="painel-representante">
 
-    <div class="menu">
-      <button onclick="window.location.href='/clientes_interessados'">🗂️ Clientes Interessados</button>
-      <button onclick="window.location.href='/propostas_enviadas'">📨 Propostas Enviadas</button>
-      <button onclick="window.location.href='/roteiros_visita'">🗺️ Roteiro de Visitas</button>
-      <button onclick="window.location.href='/feedback_clientes'">💬 Feedback dos Clientes</button>
-      <button onclick="window.location.href='/'">🔙 Voltar ao Início</button>
-    </div>
-  </div>
+  <header>
+    <h1>💼 ConstroiVerse — Representante Comercial</h1>
+    <p>Seus produtos. Suas vendas. Suas comissões.</p>
+  </header>
+
+  <main>
+
+    <!-- PRODUTOS OFERTADOS -->
+    <section class="bloco bloco-produtos">
+      <h2>🛒 Meus Produtos</h2>
+      <ul>
+        <li>Tijolo ecológico — R$2,80/un — 12 vendas</li>
+        <li>Massa corrida Premium — R$89,90/balde — 7 vendas</li>
+      </ul>
+    </section>
+
+    <!-- COMISSÕES -->
+    <section class="bloco bloco-comissoes">
+      <h2>💰 Comissões</h2>
+      <ul>
+        <li>Vendas no mês: R$ 8.490</li>
+        <li>Comissão atual: R$ 1.273,50</li>
+      </ul>
+    </section>
+
+    <!-- CONSULTAR DEMANDA COM IA -->
+    <section class="bloco bloco-ia">
+      <h2>📈 Sugerir Produtos com IA Clarice</h2>
+      <textarea id="descricao_vendas" placeholder="Ex: Construções em áreas litorâneas, reformas comerciais..."></textarea>
+      <button onclick="sugerirProdutos()">Sugerir Produtos</button>
+      <pre id="resposta_vendas">...</pre>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>ConstroiVerse © 2025 — Painel do Representante</p>
+  </footer>
+
+  <script>
+    async function sugerirProdutos() {
+      const descricao = document.getElementById('descricao_vendas').value;
+      document.getElementById('resposta_vendas').innerText = "⏳ Consultando IA...";
+
+      try {
+        const response = await fetch('/ia/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            descricao: `Sou representante e preciso de ideias de produtos para o seguinte tipo de cliente: ${descricao}`
+          })
+        });
+
+        const data = await response.json();
+        document.getElementById('resposta_vendas').innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById('resposta_vendas').innerText = "Erro com a IA Clarice.";
+      }
+    }
+  </script>
+
 </body>
 </html>
