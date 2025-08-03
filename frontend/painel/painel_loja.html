@@ -1,55 +1,58 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Loja de Materiais</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel da Loja | ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="painel-loja">
-
+<body>
   <header>
-    <h1>🏬 ConstroiVerse — Loja de Materiais</h1>
-    <p>Controle de pedidos, rota e estoque</p>
+    <h1>🏪 Painel da Loja</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
-
-    <!-- PEDIDOS RECEBIDOS -->
-    <section class="bloco bloco-pedidos">
+    <section>
       <h2>📦 Pedidos Recebidos</h2>
+      <div id="pedidos-loja">Consultando pedidos...</div>
+    </section>
+
+    <section>
+      <h2>🚚 Logística de Entregas</h2>
+      <p>Pedidos em rota e estimativas de entrega.</p>
+      <div id="rota-entrega">Carregando logística...</div>
+    </section>
+
+    <section>
+      <h2>🛠️ Ferramentas e Produtos</h2>
       <ul>
-        <li>Obra #001 — 20 sacos de cimento — 🟡 Separando</li>
-        <li>Obra #002 — 5m³ de areia — ⚪ Pendente</li>
+        <li>Areia, cimento, brita</li>
+        <li>Ferramentas manuais</li>
+        <li>Tintas e vernizes</li>
+        <li>Canos e conexões</li>
+        <li>Elétricos e hidráulicos</li>
       </ul>
     </section>
 
-    <!-- ENTREGAS EM ROTA -->
-    <section class="bloco bloco-entregas">
-      <h2>🚚 Entregas em Rota</h2>
-      <ul>
-        <li>Obra #001 — Previsão: 11h30 — A caminho</li>
-        <li>Obra #003 — Agendada para amanhã</li>
-      </ul>
+    <section>
+      <h2>🛒 Loja visível ao consumidor final?</h2>
+      <label>
+        <input type="checkbox" id="visivel-consumidor" checked /> Sim, quero receber pedidos online
+      </label>
     </section>
-
-    <!-- FERRAMENTAS DO LOJISTA -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🛠️ Ferramentas do Lojista</h2>
-      <ul>
-        <li>🖥️ Sistema ERP integrado</li>
-        <li>📦 Controle de estoque e pedidos</li>
-        <li>🗺️ Roteador de entregas (GPS)</li>
-        <li>📱 Aplicativo de despacho logístico</li>
-      </ul>
-    </section>
-
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Loja Parceira</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
 
-  <script src="/static/dashboard.js"></script>
+  <script>
+    document.getElementById('visivel-consumidor').addEventListener('change', function () {
+      alert("Visibilidade da loja atualizada.");
+    });
+  </script>
 </body>
 </html>
