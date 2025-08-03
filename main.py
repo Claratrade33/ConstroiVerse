@@ -1,46 +1,130 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
-import os
+from pymongo import MongoClient
+from bson import ObjectId
+import jwt
+import datetime
 
-# Carrega variáveis do .env
-load_dotenv()
-
-# Inicializa app Flask
 app = Flask(__name__)
 CORS(app)
 
-# Configurações do banco e segurança
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///db.sqlite3')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave-secreta-constroiverse')
+# 🔐 JWT config
+SECRET_KEY = "constroiverse_super_secreta"
 
-# Inicializa banco de dados
-db = SQLAlchemy(app)
+# 🌐 MongoDB
+client = MongoClient("mongodb://localhost:27017/")
+db = client.constroiverse
 
-# Importa modelos (para criar as tabelas)
-from models.user import User
-from models.obra import Obra  # Novo modelo de obra
+# 🛠 Util
+def decode_token(token):
+    try:
+        return jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    except:
+        return None
 
-# Registra blueprints (rotas)
-from controllers.auth_controller import auth_bp
-from controllers.ia_controller import ia_bp
-from controllers.obra_controller import obra_bp
+# ✅ LOGIN SIMPLES
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.json
+    usuario = db.usuarios.find_one({"email": data["email"], "senha": data["senha"]})
+    if usuario:
+        payload = {
+            "id": str(usuario["_id"]),
+            "perfil": usuario["perfil"],
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12)
+        }
+        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+        return jsonify({"token": token})
+    return jsonify({"erro": "Credenciais inválidas"}), 401
 
-app.register_blueprint(auth_bp, url_prefix='/auth')
-app.register_blueprint(ia_bp, url_prefix='/ia')
-app.register_blueprint(obra_bp, url_prefix='/obras')
+# 🚧 ROTAS DE OBRAS
+@app.route("/api/obras", methods=["GET", "POST"])
+def obras():
+    token = decode_token(request.headers.get("Authorization"))
+    if not token: return jsonify({"erro": "Não autorizado"}), 403
 
-# Rota inicial
-@app.route('/')
-def index():
-    return jsonify({'msg': 'ConstroiVerse API rodando 🏗️'})
+    if request.method == "GET":
+        obras = list(db.obras.find({"dono_id": token["id"]}))
+        for o in obras:
+            o["_id"] = str(o["_id"])
+        return jsonify(obras)
 
-# Criação automática de tabelas no primeiro run
-with app.app_context():
-    db.create_all()
+    if request.method == "POST":
+        data = request.json
+        data["dono_id"] = token["id"]
+        db.obras.insert_one(data)
+        return jsonify({"msg": "Obra cadastrada com sucesso"})
 
-# Executa localmente
-if __name__ == '__main__':
+# ✅ TAREFAS POR OBRA
+@app.route("/api/tarefas", methods=["POST"])
+def criar_tarefa():
+    token = decode_token(request.headers.get("Authorization"))
+    if not token: return jsonify({"erro": "Não autorizado"}), 403
+    data = request.json
+    db.tarefas.insert_one({
+        "obra_id": data["obra_id"],
+        "profissional": data["profissional"],
+        "descricao": data["descricao"],
+        "status": "pendente"
+    })
+    return jsonify({"msg": "Tarefa atribuída"})
+
+@app.route("/api/tarefas/<id>/status", methods=["PUT"])
+def atualizar_tarefa(id):
+    data = request.json
+    db.tarefas.update_one({"_id": ObjectId(id)}, {"$set": {"status": data["status"]}})
+    return jsonify({"msg": f"Tarefa marcada como {data['status']}"})
+
+# ⭐️ AVALIAÇÕES
+@app.route("/api/avaliacoes", methods=["POST"])
+def avaliar():
+    data = request.json
+    db.avaliacoes.insert_one(data)
+    return jsonify({"msg": "Avaliação registrada com sucesso"})
+
+# 👥 VITRINE DE PROFISSIONAIS
+@app.route("/api/vitrine", methods=["GET"])
+def vitrine():
+    categoria = request.args.get("categoria")
+    regiao = request.args.get("regiao")
+    query = {}
+    if categoria: query["categoria"] = categoria
+    if regiao: query["regiao"] = {"$regex": regiao, "$options": "i"}
+    resultados = list(db.profissionais.find(query))
+    for p in resultados:
+        p["_id"] = str(p["_id"])
+    return jsonify(resultados)
+
+# 💼 OPORTUNIDADES PARA PROFISSIONAIS
+@app.route("/api/oportunidades", methods=["GET"])
+def oportunidades():
+    categoria = request.args.get("categoria")
+    cidade = request.args.get("cidade")
+    query = {}
+    if categoria: query["vaga"] = categoria
+    if cidade: query["cidade"] = {"$regex": cidade, "$options": "i"}
+    vagas = list(db.vagas.find(query))
+    for v in vagas:
+        v["_id"] = str(v["_id"])
+    return jsonify(vagas)
+
+# 📨 CORRETOR SOLICITA HABILITAÇÃO
+@app.route("/api/solicitar-habilitacao", methods=["POST"])
+def habilitar():
+    data = request.json
+    db.habilitacoes.insert_one(data)
+    return jsonify({"msg": "Solicitação enviada para construtora"})
+
+# 🔄 RESET INICIAL (opcional)
+@app.route("/api/reset", methods=["POST"])
+def reset():
+    db.obras.delete_many({})
+    db.tarefas.delete_many({})
+    db.profissionais.delete_many({})
+    db.vagas.delete_many({})
+    db.habilitacoes.delete_many({})
+    db.avaliacoes.delete_many({})
+    return jsonify({"msg": "Sistema resetado!"})
+
+if __name__ == "__main__":
     app.run(debug=True)
