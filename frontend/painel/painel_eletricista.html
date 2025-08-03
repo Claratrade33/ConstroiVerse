@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>ConstroiVerse — Painel do Eletricista</title>
+  <title>ConstroiVerse — Eletricista</title>
   <link rel="stylesheet" href="/static/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -10,50 +10,59 @@
 
   <header>
     <h1>⚡ ConstroiVerse — Eletricista da Obra</h1>
-    <p>Bem-vindo, profissional de elétrica</p>
+    <p>Conexões com segurança e precisão</p>
   </header>
 
   <main>
 
-    <!-- TAREFAS DIÁRIAS -->
-    <section class="bloco bloco-tarefas">
+    <!-- TAREFAS -->
+    <section class="bloco bloco-minhas-tarefas">
       <h2>🔌 Tarefas Elétricas</h2>
-      <ul>
-        <li>✅ Passagem de conduítes — Sala e cozinha</li>
-        <li>🟡 Instalação de quadro de disjuntores</li>
-        <li>⚪ Teste de tensão nos pontos do quarto</li>
+      <ul id="lista-tarefas">
+        <li>Carregando...</li>
       </ul>
     </section>
 
-    <!-- REGISTRAR EXECUÇÃO -->
+    <!-- ATUALIZAÇÃO -->
     <section class="bloco bloco-status">
       <h2>📍 Atualizar Execução</h2>
-      <select id="tarefa_eletrica">
+      <select id="tarefa">
         <option>Quadro de disjuntores</option>
-        <option>Teste de tensão</option>
+        <option>Fiação do quarto</option>
       </select>
-      <select id="status_eletrica">
+      <select id="status">
         <option>Concluído</option>
         <option>Em execução</option>
         <option>Interrompido</option>
       </select>
-      <button onclick="atualizarTarefaEletrica()">Atualizar</button>
-      <p id="resposta_eletrica">...</p>
+      <button onclick="atualizarTarefa()">Atualizar</button>
+      <p id="resposta_status">...</p>
+    </section>
+
+    <!-- FERRAMENTAS -->
+    <section class="bloco bloco-ferramentas">
+      <h2>🧰 Ferramentas do Eletricista</h2>
+      <ul>
+        <li>🔧 Alicate universal e de corte</li>
+        <li>📏 Fita isolante e trena</li>
+        <li>🔌 Multímetro digital</li>
+        <li>🪛 Chave de teste e parafusadeira</li>
+      </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Painel do Eletricista</p>
+    <p>ConstroiVerse © 2025 — Profissional de Instalações</p>
   </footer>
 
+  <script src="/static/dashboard.js"></script>
   <script>
-    function atualizarTarefaEletrica() {
-      const tarefa = document.getElementById('tarefa_eletrica').value;
-      const status = document.getElementById('status_eletrica').value;
-      document.getElementById('resposta_eletrica').innerText = `✅ "${tarefa}" marcado como "${status}"`;
+    function atualizarTarefa() {
+      const tarefa = document.getElementById('tarefa').value;
+      const status = document.getElementById('status').value;
+      document.getElementById('resposta_status').innerText = `✅ "${tarefa}" atualizado para "${status}"`;
     }
   </script>
-
 </body>
 </html>
