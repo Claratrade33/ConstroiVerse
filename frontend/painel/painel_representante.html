@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Painel do Representante | ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>🤝 Painel do Representante</h1>
+    <h1>🧑‍💼 Painel do Representante Comercial</h1>
     <nav>
       <a href="/logout">Sair</a>
     </nav>
@@ -16,35 +15,36 @@
 
   <main>
     <section>
-      <h2>📇 Meu Portfólio</h2>
-      <p>Monte sua apresentação e envie para fabricantes ou lojas.</p>
-      <textarea placeholder="Descreva seus produtos, regiões de atuação, resultados..."></textarea>
-      <button onclick="gerarCurriculo()">Gerar Currículo Inteligente</button>
+      <h2>📂 Portfólio</h2>
+      <p>Selecione os produtos e marcas que você representa:</p>
+      <form id="portfolio-form">
+        <input type="checkbox" name="produto" value="Tinta Suvinil"> Tinta Suvinil<br>
+        <input type="checkbox" name="produto" value="Piso Portinari"> Piso Portinari<br>
+        <input type="checkbox" name="produto" value="Metais Deca"> Metais Deca<br>
+        <button type="submit">Gerar Apresentação Inteligente</button>
+      </form>
     </section>
 
     <section>
-      <h2>🏢 Fabricantes disponíveis</h2>
-      <div id="fabricantes-disponiveis">Carregando marcas...</div>
+      <h2>📤 Enviar Apresentação</h2>
+      <p>Escolha uma loja ou fabricante para enviar sua proposta:</p>
+      <select>
+        <option>Loja ConstruTudo</option>
+        <option>Fábrica Deca</option>
+        <option>Distribuidora Suvinil</option>
+      </select>
+      <button>Enviar</button>
     </section>
 
     <section>
-      <h2>📬 Enviar apresentação para lojas</h2>
-      <button onclick="enviarApresentacao()">Enviar Agora</button>
+      <h2>✅ Status de Aprovação</h2>
+      <p>Deca: ✅ Aprovado<br>
+      Suvinil: ⏳ Em análise</p>
     </section>
   </main>
 
   <footer>
     <p>© 2025 ConstroiVerse</p>
   </footer>
-
-  <script>
-    function gerarCurriculo() {
-      alert("Currículo gerado com sucesso!");
-    }
-
-    function enviarApresentacao() {
-      alert("Apresentação enviada para as lojas selecionadas.");
-    }
-  </script>
 </body>
 </html>
