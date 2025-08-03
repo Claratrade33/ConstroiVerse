@@ -2,47 +2,63 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <title>ConstroiVerse — Painel do Fabricante</title>
+  <link rel="stylesheet" href="/static/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fabricante - ConstroiVerse</title>
-  <link rel="stylesheet" href="/public/style.css">
 </head>
-<body>
-  <nav class="sidebar">
-    <h2>Fabricante</h2>
-    <ul>
-      <li><a href="#">📥 Orçamentos Recebidos</a></li>
-      <li><a href="#">📦 Meu Estoque</a></li>
-      <li><a href="#">💡 Sugestões para Clientes</a></li>
-    </ul>
-  </nav>
+<body class="painel-fabricante">
 
-  <main class="painel">
-    <h1>Painel do Fabricante</h1>
+  <header>
+    <h1>🏭 ConstroiVerse — Fabricante de Materiais</h1>
+    <p>Gestão de produção e pedidos diretos das obras</p>
+  </header>
 
-    <section class="bloco">
-      <h3>📥 Orçamentos Recebidos</h3>
+  <main>
+
+    <!-- PEDIDOS RECEBIDOS DIRETOS -->
+    <section class="bloco bloco-pedidos">
+      <h2>📦 Pedidos Recebidos</h2>
       <ul>
-        <li>Projeto: Residencial Aquarela — 20 sacos de cimento — <strong>Responder</strong></li>
-        <li>Projeto: Edifício Prisma — 10m³ de areia — <strong>Responder</strong></li>
+        <li>Obra #001 — 50 blocos estruturais — Produção: 75%</li>
+        <li>Obra #003 — 12m² de cerâmica acetinada — Em preparação</li>
       </ul>
     </section>
 
-    <section class="bloco">
-      <h3>📦 Estoque Atual</h3>
+    <!-- ESTOQUE ATUAL -->
+    <section class="bloco bloco-estoque">
+      <h2>📊 Estoque Atual</h2>
       <ul>
-        <li>Cimento CP-II — <strong>120 sacos</strong></li>
-        <li>Tijolo maciço — <strong>2.300 unidades</strong></li>
-        <li>Areia fina — <strong>15m³</strong></li>
+        <li>Blocos estruturais: 1.200 un</li>
+        <li>Telhas cerâmicas: 400 un</li>
+        <li>Cimento CP-II: 160 sacos</li>
       </ul>
     </section>
 
-    <section class="bloco">
-      <h3>💡 Sugestões Inteligentes</h3>
-      <ul>
-        <li>Loja Pedra Forte: produto parado — sugerir <strong>promoção</strong></li>
-        <li>Distribuidora Granito: estoque crítico — sugerir <strong>reposição</strong></li>
-      </ul>
+    <!-- NOTA DE PRODUÇÃO -->
+    <section class="bloco bloco-producao">
+      <h2>🛠️ Atualizar Produção</h2>
+      <select id="item">
+        <option>Blocos estruturais</option>
+        <option>Cerâmica acetinada</option>
+      </select>
+      <input type="number" id="quantidade" placeholder="Nova quantidade pronta" />
+      <button onclick="atualizarProducao()">Atualizar</button>
+      <p id="resposta_producao">...</p>
     </section>
+
   </main>
+
+  <footer>
+    <p>ConstroiVerse © 2025 — Gestão de Fábrica</p>
+  </footer>
+
+  <script>
+    function atualizarProducao() {
+      const item = document.getElementById('item').value;
+      const qtd = document.getElementById('quantidade').value;
+      document.getElementById('resposta_producao').innerText = `✅ Produção de "${item}" atualizada para ${qtd} unidades.`;
+    }
+  </script>
+
 </body>
 </html>
