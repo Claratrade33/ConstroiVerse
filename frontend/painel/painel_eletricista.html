@@ -1,67 +1,49 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Eletricista</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Eletricista | ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="painel-eletricista">
-
+<body>
   <header>
-    <h1>⚡ ConstroiVerse — Eletricista da Obra</h1>
-    <p>Conexões com segurança e precisão</p>
+    <h1>⚡ Painel do Eletricista</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
-
-    <!-- TAREFAS -->
-    <section class="bloco bloco-minhas-tarefas">
-      <h2>🔌 Tarefas Elétricas</h2>
-      <ul id="lista-tarefas">
-        <li>Carregando...</li>
-      </ul>
+    <section>
+      <h2>📋 Tarefas Delegadas</h2>
+      <div id="tarefas-eletricista">Carregando tarefas...</div>
     </section>
 
-    <!-- ATUALIZAÇÃO -->
-    <section class="bloco bloco-status">
-      <h2>📍 Atualizar Execução</h2>
-      <select id="tarefa">
-        <option>Quadro de disjuntores</option>
-        <option>Fiação do quarto</option>
-      </select>
-      <select id="status">
-        <option>Concluído</option>
-        <option>Em execução</option>
-        <option>Interrompido</option>
-      </select>
-      <button onclick="atualizarTarefa()">Atualizar</button>
-      <p id="resposta_status">...</p>
-    </section>
-
-    <!-- FERRAMENTAS -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🧰 Ferramentas do Eletricista</h2>
+    <section>
+      <h2>🧰 Ferramentas Recomendadas</h2>
       <ul>
-        <li>🔧 Alicate universal e de corte</li>
-        <li>📏 Fita isolante e trena</li>
-        <li>🔌 Multímetro digital</li>
-        <li>🪛 Chave de teste e parafusadeira</li>
+        <li>Alicate universal</li>
+        <li>Multímetro</li>
+        <li>Fita isolante</li>
+        <li>Detector de tensão</li>
+        <li>Chave de teste</li>
       </ul>
     </section>
 
+    <section>
+      <h2>✅ Status</h2>
+      <button onclick="marcarComoConcluido()">Finalizar Tarefa</button>
+    </section>
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Profissional de Instalações</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
 
-  <script src="/static/dashboard.js"></script>
   <script>
-    function atualizarTarefa() {
-      const tarefa = document.getElementById('tarefa').value;
-      const status = document.getElementById('status').value;
-      document.getElementById('resposta_status').innerText = `✅ "${tarefa}" atualizado para "${status}"`;
+    function marcarComoConcluido() {
+      alert("Tarefa marcada como concluída.");
     }
   </script>
 </body>
