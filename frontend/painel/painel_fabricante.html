@@ -1,42 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Painel do Fabricante | ConstroiVerse</title>
+  <meta charset="UTF-8" />
+  <title>Painel do Fabricante</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <header>
-    <h1>🏭 Painel do Fabricante</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
-  </header>
+  <div class="painel">
+    <h2>🏭 Painel do Fabricante</h2>
 
-  <main>
     <section>
-      <h2>📦 Pedidos Recebidos</h2>
-      <div id="pedidos">Carregando pedidos...</div>
+      <h3>🔗 Aceita venda direta para CNPJ?</h3>
+      <select id="vendaDireta">
+        <option value="sim">Sim</option>
+        <option value="nao">Não</option>
+      </select>
     </section>
 
     <section>
-      <h2>✅ Indicar Tipo de Venda</h2>
-      <p>Você vende direto para construtoras?</p>
-      <label>
-        <input type="checkbox" id="venda-direta" />
-        Sim, vendo direto para CNPJ de construtoras
-      </label>
+      <h3>📝 Pedidos Recebidos de Construtoras</h3>
+      <ul id="listaPedidosConstrutoras"></ul>
     </section>
 
     <section>
-      <h2>📤 Receber Apresentações de Representantes</h2>
-      <p>Veja os representantes interessados em sua marca.</p>
-      <div id="apresentacoes">Nenhuma apresentação recebida.</div>
+      <h3>🧑‍💼 Representantes Ativos</h3>
+      <ul id="listaRepresentantes"></ul>
     </section>
-  </main>
 
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
+    <section>
+      <h3>🎯 Marcas que você Fabrica</h3>
+      <input type="text" placeholder="Ex: DECA, Portobello..." />
+      <button>Adicionar</button>
+    </section>
+  </div>
+
+  <script src="/static/js/fabricante.js"></script>
 </body>
 </html>
