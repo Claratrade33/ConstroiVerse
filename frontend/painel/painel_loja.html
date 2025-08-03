@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Painel da Loja | ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>🏪 Painel da Loja</h1>
+    <h1>🏬 Painel da Loja de Materiais</h1>
     <nav>
       <a href="/logout">Sair</a>
     </nav>
@@ -17,42 +16,33 @@
   <main>
     <section>
       <h2>📦 Pedidos Recebidos</h2>
-      <div id="pedidos-loja">Consultando pedidos...</div>
-    </section>
-
-    <section>
-      <h2>🚚 Logística de Entregas</h2>
-      <p>Pedidos em rota e estimativas de entrega.</p>
-      <div id="rota-entrega">Carregando logística...</div>
-    </section>
-
-    <section>
-      <h2>🛠️ Ferramentas e Produtos</h2>
       <ul>
-        <li>Areia, cimento, brita</li>
-        <li>Ferramentas manuais</li>
-        <li>Tintas e vernizes</li>
-        <li>Canos e conexões</li>
-        <li>Elétricos e hidráulicos</li>
+        <li>Pedido #001 - Obra de João - 10 sacos de cimento - Entregar até 10/08</li>
+        <li>Pedido #002 - Cliente Maria - 20m² de piso Portinari - Entregar até 12/08</li>
       </ul>
     </section>
 
     <section>
-      <h2>🛒 Loja visível ao consumidor final?</h2>
-      <label>
-        <input type="checkbox" id="visivel-consumidor" checked /> Sim, quero receber pedidos online
-      </label>
+      <h2>📍 Logística e Entregas</h2>
+      <p>Entregas agendadas:</p>
+      <ul>
+        <li>08/08 - Bairro Vila Nova</li>
+        <li>09/08 - Centro</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🧰 Ferramentas e Estoque</h2>
+      <ul>
+        <li>Controle de estoque em tempo real</li>
+        <li>Relatório de vendas por período</li>
+        <li>Requisições pendentes para fabricantes</li>
+      </ul>
     </section>
   </main>
 
   <footer>
     <p>© 2025 ConstroiVerse</p>
   </footer>
-
-  <script>
-    document.getElementById('visivel-consumidor').addEventListener('change', function () {
-      alert("Visibilidade da loja atualizada.");
-    });
-  </script>
 </body>
 </html>
