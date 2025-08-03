@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Painel do Fabricante | ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
@@ -16,33 +15,28 @@
 
   <main>
     <section>
-      <h2>🏷️ Vendas Diretas</h2>
+      <h2>📦 Pedidos Recebidos</h2>
+      <div id="pedidos">Carregando pedidos...</div>
+    </section>
+
+    <section>
+      <h2>✅ Indicar Tipo de Venda</h2>
+      <p>Você vende direto para construtoras?</p>
       <label>
-        <input type="checkbox" id="venda-direta" /> Aceita vendas diretas para CNPJ
+        <input type="checkbox" id="venda-direta" />
+        Sim, vendo direto para CNPJ de construtoras
       </label>
     </section>
 
     <section>
-      <h2>📦 Recebimento de Orçamentos</h2>
-      <p>Visualize pedidos feitos por construtoras ou representantes.</p>
-      <div id="pedidos-fabricante">Carregando pedidos...</div>
-    </section>
-
-    <section>
-      <h2>👔 Representantes Cadastrados</h2>
-      <p>Veja e convide representantes para sua marca.</p>
-      <div id="representantes">Consultando...</div>
+      <h2>📤 Receber Apresentações de Representantes</h2>
+      <p>Veja os representantes interessados em sua marca.</p>
+      <div id="apresentacoes">Nenhuma apresentação recebida.</div>
     </section>
   </main>
 
   <footer>
     <p>© 2025 ConstroiVerse</p>
   </footer>
-
-  <script>
-    document.getElementById('venda-direta').addEventListener('change', function () {
-      alert("Configuração atualizada.");
-    });
-  </script>
 </body>
 </html>
