@@ -2,66 +2,79 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>ConstroiVerse — Painel do Engenheiro</title>
+  <title>ConstroiVerse — Engenheiro</title>
   <link rel="stylesheet" href="/static/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body class="painel-engenheiro">
 
   <header>
-    <h1>🔧 ConstroiVerse — Engenheiro Responsável</h1>
-    <p>Bem-vindo, <span id="nome-usuario">Engenheiro</span></p>
+    <h1>🧮 ConstroiVerse — Painel do Engenheiro</h1>
+    <p>Controle técnico e precisão estrutural</p>
   </header>
 
   <main>
 
-    <!-- SEÇÃO: ETAPAS PARA APROVAÇÃO -->
+    <!-- ETAPAS TÉCNICAS -->
     <section class="bloco bloco-etapas">
-      <h2>📋 Etapas Técnicas para Aprovação</h2>
+      <h2>📋 Etapas Técnicas</h2>
       <ul>
         <li>✅ Fundação — Aprovada</li>
-        <li>🟡 Alvenaria — Aguardando validação <button>Aprovar</button></li>
+        <li>🟡 Alvenaria — Em andamento</li>
         <li>⚪ Elétrica — Pendente</li>
         <li>⚪ Hidráulica — Pendente</li>
-        <li>⚪ Cobertura — Pendente</li>
+        <li>⚪ Acabamento — Pendente</li>
       </ul>
     </section>
 
-    <!-- SEÇÃO: ANÁLISE DE RISCO COM A IA -->
+    <!-- STATUS DA OBRA -->
+    <section class="bloco bloco-status-obra">
+      <h2>📊 Andamento da Obra</h2>
+      <div id="status-obra">Carregando status...</div>
+    </section>
+
+    <!-- ANÁLISE DE RISCO COM IA -->
     <section class="bloco bloco-ia">
-      <h2>🧠 Análise de Risco com Clarice</h2>
-      <textarea id="descricao_risco" placeholder="Descreva uma etapa crítica, atraso ou suspeita..."></textarea>
-      <button onclick="analisarRisco()">Analisar com IA</button>
+      <h2>🧠 Análise Técnica com IA Clarice</h2>
+      <textarea id="descricao_risco" placeholder="Descreva falhas, atrasos ou dúvidas..."></textarea>
+      <button onclick="analisarRisco()">Analisar</button>
       <pre id="resposta_risco">...</pre>
+    </section>
+
+    <!-- FERRAMENTAS DO ENGENHEIRO -->
+    <section class="bloco bloco-ferramentas">
+      <h2>🔧 Ferramentas do Engenheiro</h2>
+      <ul>
+        <li>📐 Nível a laser e trena</li>
+        <li>🧮 Planilhas de cálculo estrutural</li>
+        <li>📋 Checklists de inspeção</li>
+        <li>📱 Apps técnicos: Eberick, TQS, Ftool</li>
+      </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Engenheiro Responsável</p>
+    <p>ConstroiVerse © 2025 — Engenharia de Verdade</p>
   </footer>
 
+  <script src="/static/dashboard.js"></script>
   <script>
     async function analisarRisco() {
       const descricao = document.getElementById('descricao_risco').value;
-      document.getElementById('resposta_risco').innerText = "⏳ Analisando com Clarice...";
+      document.getElementById('resposta_risco').innerText = "⏳ Analisando...";
 
-      try {
-        const response = await fetch('/ia/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            descricao: `Sou engenheiro e preciso de uma análise técnica de risco para a seguinte situação: ${descricao}`
-          })
-        });
+      const response = await fetch('/ia/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          descricao: `Sou engenheiro e preciso analisar tecnicamente: ${descricao}`
+        })
+      });
 
-        const data = await response.json();
-        document.getElementById('resposta_risco').innerText = JSON.stringify(data, null, 2);
-      } catch (error) {
-        document.getElementById('resposta_risco').innerText = "Erro ao acessar a IA Clarice.";
-      }
+      const data = await response.json();
+      document.getElementById('resposta_risco').innerText = JSON.stringify(data, null, 2);
     }
   </script>
-
 </body>
 </html>
