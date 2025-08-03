@@ -1,104 +1,152 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>ConstroiVerse — Mestre de Obra</title>
-  <link rel="stylesheet" href="/static/style.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body class="painel-mestre">
 
   <header>
-    <h1>👷‍♂️ ConstroiVerse — Mestre de Obra</h1>
-    <p>Controle total da sua equipe e execução</p>
+    <h1>👷‍♂️ ConstroiVerse — Painel do Mestre de Obra</h1>
+    <p>Controle sua equipe, obras e progresso em tempo real</p>
   </header>
 
   <main>
 
-    <!-- OBRAS ATIVAS -->
-    <section class="bloco bloco-obras">
+    <!-- Lista de Obras -->
+    <section class="bloco">
       <h2>🏗️ Minhas Obras</h2>
-      <ul>
-        <li onclick="carregarObra('obra001')">Obra #001 — Residência Maria</li>
-        <li onclick="carregarObra('obra002')">Obra #002 — Condomínio Terra Alta</li>
-      </ul>
+      <ul id="obras-lista">Carregando obras...</ul>
     </section>
 
-    <!-- EQUIPE POR OBRA -->
-    <section class="bloco bloco-equipe">
-      <h2>👥 Equipe da Obra</h2>
-      <ul id="listaEquipe">
-        <li>Selecione uma obra para visualizar a equipe</li>
-      </ul>
+    <!-- Delegar Tarefa -->
+    <section class="bloco">
+      <h2>📝 Delegar Tarefa</h2>
+      <label>Descrição:
+        <input id="desc-tarefa" type="text" placeholder="Ex: Assentar piso do banheiro" />
+      </label><br>
+      <label>Profissional:
+        <input id="prof-tarefa" type="text" placeholder="Ex: João Pedreiro" />
+      </label><br>
+      <button onclick="delegarTarefa()">✅ Criar Tarefa</button>
     </section>
 
-    <!-- TAREFAS DELEGADAS -->
-    <section class="bloco bloco-tarefas">
+    <!-- Tarefas da Obra Selecionada -->
+    <section class="bloco">
       <h2>📋 Tarefas da Obra</h2>
-      <ul id="listaTarefas">
-        <li>Selecione uma obra para visualizar as tarefas</li>
-      </ul>
+      <ul id="tarefas-lista">Selecione uma obra acima</ul>
     </section>
 
-    <!-- AVALIAÇÃO FINAL -->
-    <section class="bloco bloco-avaliacao">
-      <h2>✅ Avaliar Equipe após Finalização</h2>
-      <button onclick="avaliarEquipe()">📝 Avaliar Todos os Profissionais</button>
-      <div id="resultadoAvaliacao">Nenhuma avaliação feita ainda.</div>
+    <!-- Avaliação Final -->
+    <section class="bloco">
+      <h2>✅ Avaliar Profissionais</h2>
+      <textarea id="avaliacao" placeholder="Escreva sua avaliação final da equipe..."></textarea><br>
+      <button onclick="avaliarEquipe()">📨 Enviar Avaliação</button>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Obra com Mente</p>
+    <p>ConstroiVerse © 2025 — Construção com Mente</p>
   </footer>
 
   <script>
-    function carregarObra(obraId) {
-      const equipes = {
-        obra001: [
-          { nome: "João Pedreiro", tarefa: "Banheiro Social", status: "em andamento" },
-          { nome: "Carlos Pintor", tarefa: "Quartos das Crianças", status: "não iniciado" }
-        ],
-        obra002: [
-          { nome: "Márcia Eletricista", tarefa: "Infra elétrica", status: "finalizado" },
-          { nome: "Roberto Encanador", tarefa: "Hidráulica", status: "em andamento" }
-        ]
-      };
+    let token = localStorage.getItem("token"); // 🔐 JWT salvo após login
+    let obraSelecionada = null;
 
-      const equipe = equipes[obraId];
-      const listaEquipe = document.getElementById("listaEquipe");
-      const listaTarefas = document.getElementById("listaTarefas");
-      listaEquipe.innerHTML = "";
-      listaTarefas.innerHTML = "";
-
-      equipe.forEach(p => {
-        const li = document.createElement("li");
-        li.innerHTML = `<strong>${p.nome}</strong> — ${p.tarefa}`;
-        listaEquipe.appendChild(li);
+    async function carregarObras() {
+      const res = await fetch('/api/obras', {
+        headers: { Authorization: token }
       });
+      const obras = await res.json();
+      const lista = document.getElementById("obras-lista");
+      lista.innerHTML = "";
+      obras.forEach((obra) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${obra.nome || "Obra Sem Nome"}</strong>
+          <button onclick="selecionarObra('${obra._id}')">🔍 Selecionar</button>`;
+        lista.appendChild(li);
+      });
+    }
 
-      equipe.forEach((p, i) => {
+    async function selecionarObra(id) {
+      obraSelecionada = id;
+      const res = await fetch("/api/tarefas", {
+        method: "GET",
+        headers: { Authorization: token }
+      });
+      const tarefas = await res.json();
+      const filtradas = tarefas.filter(t => t.obra_id === id);
+      const lista = document.getElementById("tarefas-lista");
+      lista.innerHTML = "";
+      filtradas.forEach((t) => {
         const li = document.createElement("li");
         li.innerHTML = `
-          ${p.tarefa} — ${p.status} <br>
-          <button onclick="marcarStatus('${obraId}', ${i}, 'iniciado')">Iniciar</button>
-          <button onclick="marcarStatus('${obraId}', ${i}, 'finalizado')">Finalizar</button>
-        `;
-        listaTarefas.appendChild(li);
+          <strong>${t.descricao}</strong> — ${t.profissional}<br>
+          Status: ${t.status}<br>
+          <button onclick="atualizarStatus('${t._id}', 'iniciado')">▶️ Iniciar</button>
+          <button onclick="atualizarStatus('${t._id}', 'finalizado')">✅ Finalizar</button>`;
+        lista.appendChild(li);
       });
     }
 
-    function marcarStatus(obraId, index, novoStatus) {
-      alert(`✅ Tarefa ${index + 1} da ${obraId} marcada como "${novoStatus.toUpperCase()}"`);
-      // Aqui salvaríamos no banco e atualizamos IA de previsão
+    async function delegarTarefa() {
+      if (!obraSelecionada) return alert("Selecione uma obra antes.");
+      const desc = document.getElementById("desc-tarefa").value;
+      const prof = document.getElementById("prof-tarefa").value;
+      if (!desc || !prof) return alert("Preencha todos os campos!");
+
+      const res = await fetch("/api/tarefas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token
+        },
+        body: JSON.stringify({
+          obra_id: obraSelecionada,
+          descricao: desc,
+          profissional: prof
+        })
+      });
+
+      const data = await res.json();
+      alert(data.msg);
+      selecionarObra(obraSelecionada);
     }
 
-    function avaliarEquipe() {
-      const msg = "⭐ Avaliações registradas para todos os profissionais da obra.\nEssas avaliações serão somadas à reputação da Vitrine.";
-      document.getElementById("resultadoAvaliacao").innerText = msg;
-      alert(msg);
+    async function atualizarStatus(id, status) {
+      const res = await fetch(`/api/tarefas/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      alert(data.msg);
+      selecionarObra(obraSelecionada);
     }
+
+    async function avaliarEquipe() {
+      const texto = document.getElementById("avaliacao").value;
+      if (!texto) return alert("Escreva sua avaliação.");
+      const res = await fetch("/api/avaliacoes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          obra_id: obraSelecionada,
+          avaliacao: texto
+        })
+      });
+      const data = await res.json();
+      alert(data.msg);
+    }
+
+    carregarObras();
   </script>
 </body>
 </html>
