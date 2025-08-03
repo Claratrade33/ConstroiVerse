@@ -1,12 +1,25 @@
-# ConstroiVerse Backend
+# 🏗️ ConstroiVerse — O Universo Real da Construção Inteligente
 
-Backend em Flask com:
-- Login e registro com JWT
-- Banco SQLite ou PostgreSQL
-- Pronto para deploy no Render
+A maior plataforma conectada da construção civil: profissionais, clientes, lojas, representantes, engenheiros e IA trabalhando juntos em tempo real.
 
-## Como rodar localmente:
+---
+
+## 🚀 Tecnologias
+
+- **Backend:** Flask + PyMongo (MongoDB)
+- **Frontend:** HTML + JS (100% responsivo)
+- **Autenticação:** JWT
+- **IA:** OpenAI GPT (Clarice IA)
+- **Banco:** MongoDB Atlas
+- **Deploy:** Render.com ou Railway.app
+
+---
+
+## ⚙️ Instalação
 
 ```bash
+git clone https://github.com/Claratrade33/ConstroiVerse.git
+cd ConstroiVerse
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
-python main.py
