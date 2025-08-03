@@ -1,73 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>ConstroiVerse — Painel do Corretor</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body class="painel-corretor">
 
   <header>
-    <h1>🏘️ ConstroiVerse — Painel do Corretor de Imóveis</h1>
-    <p>Visualização de imóveis, comissões e integração com obras</p>
+    <h1>🏢 ConstroiVerse — Painel do Corretor</h1>
+    <p>Imóveis disponíveis para representar e acompanhar</p>
   </header>
 
   <main>
 
-    <!-- LISTA DE IMÓVEIS VINCULADOS -->
-    <section class="bloco bloco-imoveis">
-      <h2>🏠 Imóveis em Captação</h2>
-      <ul>
-        <li>Casa Vila Verde — Valor: R$ 380.000 — Status: Em obra (75%)</li>
-        <li>Edifício Solaris — Valor: R$ 680.000 — Status: Em acabamento</li>
+    <!-- LISTA DE OBRAS DISPONÍVEIS -->
+    <section class="bloco bloco-obras">
+      <h2>🏗️ Obras Disponíveis para Venda</h2>
+      <ul id="lista-obras">
+        <!-- Obras serão carregadas aqui -->
       </ul>
     </section>
 
-    <!-- COMISSÃO ESTIMADA -->
-    <section class="bloco bloco-comissao">
-      <h2>💰 Comissão Estimada</h2>
-      <ul>
-        <li>Imóveis captados: 2</li>
-        <li>Total de comissões previstas: R$ 28.600</li>
+    <!-- OBRAS HABILITADAS -->
+    <section class="bloco bloco-habilitado">
+      <h2>✅ Minhas Obras Habilitadas</h2>
+      <ul id="obras-habilitadas">
+        <li>Nenhuma obra habilitada ainda.</li>
       </ul>
-    </section>
-
-    <!-- IA PARA ARGUMENTO DE VENDA -->
-    <section class="bloco bloco-ia">
-      <h2>🧠 Criar Argumento de Venda com IA</h2>
-      <textarea id="descricao_imovel" placeholder="Ex: Casa com piscina em área nobre, cliente busca segurança..."></textarea>
-      <button onclick="criarArgumento()">Gerar com IA</button>
-      <pre id="resposta_imovel">...</pre>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Painel do Corretor Integrado</p>
+    <p>ConstroiVerse © 2025 — Conectando obras, vendas e pessoas</p>
   </footer>
 
   <script>
-    async function criarArgumento() {
-      const descricao = document.getElementById('descricao_imovel').value;
-      document.getElementById('resposta_imovel').innerText = "⏳ Gerando argumento com Clarice...";
-
-      try {
-        const response = await fetch('/ia/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            descricao: `Sou corretor e preciso de um argumento de venda para o seguinte imóvel: ${descricao}`
-          })
-        });
-
-        const data = await response.json();
-        document.getElementById('resposta_imovel').innerText = JSON.stringify(data, null, 2);
-      } catch (error) {
-        document.getElementById('resposta_imovel').innerText = "Erro ao acessar a IA.";
+    const obrasDisponiveis = [
+      {
+        id: 1,
+        nome: "Residencial Bela Vista",
+        cidade: "São Paulo",
+        status: "Em andamento",
+        entrega: "Dez/2025"
+      },
+      {
+        id: 2,
+        nome: "Condomínio Vida Nova",
+        cidade: "Fortaleza",
+        status: "Lançamento",
+        entrega: "Mar/2026"
       }
-    }
-  </script>
+    ];
 
+    const listaObras = document.getElementById("lista-obras");
+    const obrasHabilitadas = document.getElementById("obras-habilitadas");
+
+    function renderObras() {
+      listaObras.innerHTML = "";
+      obrasDisponiveis.forEach(obra => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${obra.nome}</strong><br>
+          📍 ${obra.cidade}<br>
+          📈 Status: ${obra.status} — Entrega prevista: ${obra.entrega}<br>
+          <button onclick="solicitarHabilitacao(${obra.id})">📩 Solicitar Habilitação</button>
+        `;
+        listaObras.appendChild(li);
+      });
+    }
+
+    function solicitarHabilitacao(obraId) {
+      const obra = obrasDisponiveis.find(o => o.id === obraId);
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${obra.nome}</strong> — ${obra.status}<br>
+        Entrega: ${obra.entrega}<br>
+        <em>Acompanhamento disponível</em>
+      `;
+      obrasHabilitadas.innerHTML = "";
+      obrasHabilitadas.appendChild(li);
+      alert(`✅ Solicitação de habilitação enviada para "${obra.nome}". Aguarde aprovação da construtora.`);
+    }
+
+    // Inicializa
+    renderObras();
+  </script>
 </body>
 </html>
