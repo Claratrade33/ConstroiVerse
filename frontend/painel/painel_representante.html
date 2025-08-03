@@ -32,7 +32,27 @@
         <li>Comissão prevista: R$ 1.273,50</li>
       </ul>
     </section>
+<section class="bloco bloco-portifolio">
+  <h2>📄 Montar Currículo Inteligente</h2>
 
+  <p>Selecione os segmentos e produtos que deseja incluir no seu portfólio:</p>
+
+  <label><input type="checkbox" class="produto" value="Tintas Suvinil"> Tintas — Suvinil</label><br>
+  <label><input type="checkbox" class="produto" value="Pisos Portobello"> Pisos — Portobello</label><br>
+  <label><input type="checkbox" class="produto" value="Louças Celite"> Louças — Celite</label><br>
+  <label><input type="checkbox" class="produto" value="Metais Deca"> Metais — Deca</label><br>
+  <label><input type="checkbox" class="produto" value="Argamassa Quartzolit"> Argamassa — Quartzolit</label><br>
+
+  <textarea id="descricao_portfolio" placeholder="Adicione uma observação pessoal (opcional)..."></textarea>
+
+  <button onclick="gerarApresentacao()">✨ Gerar Apresentação com IA</button>
+  <pre id="apresentacao_gerada">...</pre>
+
+  <div class="bloco-envio">
+    <button onclick="enviarParaFabricante()">📤 Enviar para Fabricante</button>
+    <button onclick="enviarParaLoja()">📩 Oferecer para Loja</button>
+  </div>
+</section>
     <!-- FERRAMENTAS -->
     <section class="bloco bloco-ferramentas">
       <h2>📦 Ferramentas do Representante</h2>
