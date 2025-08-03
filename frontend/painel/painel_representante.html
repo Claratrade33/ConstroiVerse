@@ -1,50 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Painel do Representante | ConstroiVerse</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Representante</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
   <header>
-    <h1>🧑‍💼 Painel do Representante Comercial</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>Representante Comercial</h1>
   </header>
 
-  <main>
-    <section>
-      <h2>📂 Portfólio</h2>
-      <p>Selecione os produtos e marcas que você representa:</p>
-      <form id="portfolio-form">
-        <input type="checkbox" name="produto" value="Tinta Suvinil"> Tinta Suvinil<br>
-        <input type="checkbox" name="produto" value="Piso Portinari"> Piso Portinari<br>
-        <input type="checkbox" name="produto" value="Metais Deca"> Metais Deca<br>
-        <button type="submit">Gerar Apresentação Inteligente</button>
-      </form>
-    </section>
+  <section>
+    <h2>Meus Produtos Representados</h2>
+    <ul id="produtos-representados">
+      <!-- Lista dos produtos e marcas que o representante já representa -->
+    </ul>
+  </section>
 
-    <section>
-      <h2>📤 Enviar Apresentação</h2>
-      <p>Escolha uma loja ou fabricante para enviar sua proposta:</p>
-      <select>
-        <option>Loja ConstruTudo</option>
-        <option>Fábrica Deca</option>
-        <option>Distribuidora Suvinil</option>
+  <section>
+    <h2>Montar Apresentação Inteligente</h2>
+    <form id="form-apresentacao">
+      <label>Escolha produtos para montar currículo:</label>
+      <select multiple name="produtos">
+        <!-- Lista dinâmica de produtos -->
       </select>
-      <button>Enviar</button>
-    </section>
+      <button type="submit">Gerar Currículo</button>
+    </form>
+  </section>
 
-    <section>
-      <h2>✅ Status de Aprovação</h2>
-      <p>Deca: ✅ Aprovado<br>
-      Suvinil: ⏳ Em análise</p>
-    </section>
-  </main>
+  <section>
+    <h2>Enviar para:</h2>
+    <form id="form-envio">
+      <select name="destino">
+        <option value="fabricante">Fabricante</option>
+        <option value="loja">Loja</option>
+      </select>
+      <input type="text" name="nome_destino" placeholder="Nome do destinatário" required />
+      <button type="submit">Enviar Apresentação</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Convites Recebidos</h2>
+    <div id="convites-recebidos">
+      <!-- Convites de fabricantes para representar marcas -->
+    </div>
+  </section>
 
   <footer>
-    <p>© 2025 ConstroiVerse</p>
+    <p>&copy; ConstroiVerse - Representante</p>
   </footer>
+
+  <script src="/static/js/representante.js"></script>
 </body>
 </html>
