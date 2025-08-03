@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Minha Obra | ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <h1>👤 Painel do Cliente</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>📍 Obra em Andamento</h2>
+      <p>Acompanhe sua obra em tempo real, mesmo à distância.</p>
+      <div id="status-obra">Consultando atualizações...</div>
+    </section>
+
+    <section>
+      <h2>📦 Entregas e Materiais</h2>
+      <p>Saiba se o material chegou, quem recebeu e se foi utilizado.</p>
+      <div id="entregas">Carregando entregas...</div>
+    </section>
+
+    <section>
+      <h2>📝 Avaliação Final</h2>
+      <p>Quando a obra terminar, avalie todos os profissionais envolvidos.</p>
+      <button onclick="avaliarObra()">Avaliar Profissionais</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 ConstroiVerse</p>
+  </footer>
+
+  <script>
+    function avaliarObra() {
+      alert("Avaliação registrada com sucesso.");
+    }
+  </script>
+</body>
+</html>
