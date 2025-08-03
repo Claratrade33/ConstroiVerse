@@ -1,79 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Engenheiro</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Engenheiro | ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="painel-engenheiro">
-
+<body>
   <header>
-    <h1>🧮 ConstroiVerse — Painel do Engenheiro</h1>
-    <p>Controle técnico e precisão estrutural</p>
+    <h1>🔧 Painel do Engenheiro</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
+    <section>
+      <h2>📋 Obras em andamento</h2>
+      <div id="lista-obras">
+        <!-- Lista dinâmica -->
+      </div>
+    </section>
 
-    <!-- ETAPAS TÉCNICAS -->
-    <section class="bloco bloco-etapas">
-      <h2>📋 Etapas Técnicas</h2>
+    <section>
+      <h2>🛠️ Ferramentas do Engenheiro</h2>
       <ul>
-        <li>✅ Fundação — Aprovada</li>
-        <li>🟡 Alvenaria — Em andamento</li>
-        <li>⚪ Elétrica — Pendente</li>
-        <li>⚪ Hidráulica — Pendente</li>
-        <li>⚪ Acabamento — Pendente</li>
+        <li>AutoCAD</li>
+        <li>Revit</li>
+        <li>MS Project</li>
+        <li>Excel Avançado</li>
+        <li>Normas ABNT</li>
       </ul>
     </section>
 
-    <!-- STATUS DA OBRA -->
-    <section class="bloco bloco-status-obra">
-      <h2>📊 Andamento da Obra</h2>
-      <div id="status-obra">Carregando status...</div>
+    <section>
+      <h2>✅ Aprovação Técnica</h2>
+      <p>Acompanhe e aprove as etapas técnicas das obras com base em relatórios de campo.</p>
+      <button onclick="abrirAprovacoes()">Ver Aprovações Pendentes</button>
     </section>
 
-    <!-- ANÁLISE DE RISCO COM IA -->
-    <section class="bloco bloco-ia">
-      <h2>🧠 Análise Técnica com IA Clarice</h2>
-      <textarea id="descricao_risco" placeholder="Descreva falhas, atrasos ou dúvidas..."></textarea>
-      <button onclick="analisarRisco()">Analisar</button>
-      <pre id="resposta_risco">...</pre>
+    <section>
+      <h2>📊 Relatórios</h2>
+      <button onclick="gerarRelatorio()">Gerar Relatório Técnico</button>
     </section>
-
-    <!-- FERRAMENTAS DO ENGENHEIRO -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🔧 Ferramentas do Engenheiro</h2>
-      <ul>
-        <li>📐 Nível a laser e trena</li>
-        <li>🧮 Planilhas de cálculo estrutural</li>
-        <li>📋 Checklists de inspeção</li>
-        <li>📱 Apps técnicos: Eberick, TQS, Ftool</li>
-      </ul>
-    </section>
-
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Engenharia de Verdade</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
 
-  <script src="/static/dashboard.js"></script>
   <script>
-    async function analisarRisco() {
-      const descricao = document.getElementById('descricao_risco').value;
-      document.getElementById('resposta_risco').innerText = "⏳ Analisando...";
-
-      const response = await fetch('/ia/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          descricao: `Sou engenheiro e preciso analisar tecnicamente: ${descricao}`
-        })
-      });
-
-      const data = await response.json();
-      document.getElementById('resposta_risco').innerText = JSON.stringify(data, null, 2);
+    function abrirAprovacoes() {
+      alert("Abrindo lista de aprovações...");
+    }
+    function gerarRelatorio() {
+      alert("Relatório técnico gerado com sucesso!");
     }
   </script>
 </body>
