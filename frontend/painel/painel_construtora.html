@@ -1,93 +1,55 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Construtora</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel da Construtora | ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="painel-construtora">
-
+<body>
   <header>
-    <h1>🏗️ ConstroiVerse — Painel da Construtora</h1>
-    <p>Gestão total da obra, equipe e suprimentos</p>
+    <h1>🏗️ Painel da Construtora</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
+    <section>
+      <h2>🏘️ Obras em execução</h2>
+      <div id="lista-obras-construtora">Listando...</div>
+    </section>
 
-    <!-- OBRAS EM ANDAMENTO -->
-    <section class="bloco bloco-obras">
-      <h2>📋 Obras Ativas</h2>
-      <ul>
-        <li>Obra #001 — Residencial Vila Verde — 75% concluída</li>
-        <li>Obra #004 — Prédio Comercial Aurora — 28% concluída</li>
+    <section>
+      <h2>📈 ROI por Obra</h2>
+      <p>Acompanhe o retorno financeiro de cada projeto em andamento.</p>
+      <button onclick="verROI()">Ver ROI</button>
+    </section>
+
+    <section>
+      <h2>👷 Profissionais</h2>
+      <p>Lista de profissionais vinculados às suas obras.</p>
+      <ul id="lista-profissionais">
+        <!-- Lista dinâmica -->
       </ul>
     </section>
 
-    <!-- ORÇAMENTO INTELIGENTE POR PROJETO -->
-    <section class="bloco bloco-projeto-inteligente">
-      <h2>📐 Solicitar Orçamento Inteligente por Projeto</h2>
-      <input type="file" id="projeto_pdf" />
-      <textarea id="descricao_projeto" placeholder="Descreva o projeto ou os insumos desejados..."></textarea>
-      <button onclick="gerarOrcamentoInteligente()">✨ Gerar Orçamento com IA</button>
-      <pre id="resultado_orcamento">Aguardando entrada do projeto...</pre>
-      <button onclick="enviarPedidos()" style="margin-top: 10px;">📤 Enviar Pedidos para Fornecedores</button>
+    <section>
+      <h2>📁 Documentos</h2>
+      <button onclick="verDocumentos()">Ver todos os documentos da obra</button>
     </section>
-
-    <!-- FERRAMENTAS DA CONSTRUTORA -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🛠️ Ferramentas da Construtora</h2>
-      <ul>
-        <li>📦 Orçamentos fragmentados por estoque real</li>
-        <li>🧠 IA que entende projetos e sugere fornecedores ideais</li>
-        <li>📊 Painel de ROI por obra e por fornecedor</li>
-        <li>👷 Gestão de profissionais e convites diretos</li>
-      </ul>
-    </section>
-
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Construtora Conectada</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
 
-  <script src="/static/dashboard.js"></script>
   <script>
-    async function gerarOrcamentoInteligente() {
-      const descricao = document.getElementById('descricao_projeto').value;
-      const fileInput = document.getElementById('projeto_pdf');
-      const resultado = document.getElementById('resultado_orcamento');
-      resultado.innerText = "⏳ Gerando orçamento...";
-
-      let mensagem = `Sou construtora. Monte um orçamento completo com base no seguinte projeto: ${descricao}. 
-      - Fragmentar por fornecedor (lojas e fabricantes)
-      - Separar o que pode ser comprado direto com CNPJ
-      - Ignorar lojas sem estoque
-      - Indicar origem ideal de cada item
-      - Mostrar total por grupo (fabricante X, loja Y)`;
-
-      if (fileInput.files.length > 0) {
-        mensagem = "Sou construtora. Monte um orçamento com base em um projeto PDF (não processado neste demo).";
-      }
-
-      const res = await fetch('/ia/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ descricao: mensagem })
-      });
-
-      const data = await res.json();
-      resultado.innerText = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+    function verROI() {
+      alert("Mostrando ROI por obra...");
     }
-
-    function enviarPedidos() {
-      const orcamento = document.getElementById('resultado_orcamento').innerText;
-      if (!orcamento || orcamento.includes('⏳')) {
-        alert('Gere o orçamento antes de enviar!');
-        return;
-      }
-      alert('✅ Pedidos enviados para os fornecedores correspondentes!');
-      // (opcional: POST para /pedidos/fragmentar)
+    function verDocumentos() {
+      alert("Abrindo documentos...");
     }
   </script>
 </body>
