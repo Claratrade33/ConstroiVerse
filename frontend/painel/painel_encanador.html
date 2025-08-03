@@ -2,58 +2,67 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>ConstroiVerse — Painel do Encanador</title>
+  <title>ConstroiVerse — Encanador</title>
   <link rel="stylesheet" href="/static/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body class="painel-encanador">
 
   <header>
-    <h1>🚿 ConstroiVerse — Encanador</h1>
+    <h1>🚿 ConstroiVerse — Painel do Encanador</h1>
     <p>Sistema hidráulico da obra sob controle</p>
   </header>
 
   <main>
 
-    <!-- TAREFAS DO DIA -->
-    <section class="bloco bloco-tarefas">
-      <h2>🧰 Tarefas Hidráulicas</h2>
-      <ul>
-        <li>🟡 Instalar canos de entrada no banheiro</li>
-        <li>⚪ Conectar caixa d'água ao sistema</li>
-        <li>⚪ Testar vedação das conexões</li>
+    <!-- TAREFAS -->
+    <section class="bloco bloco-minhas-tarefas">
+      <h2>🧰 Minhas Tarefas</h2>
+      <ul id="lista-tarefas">
+        <li>Carregando...</li>
       </ul>
     </section>
 
-    <!-- ATUALIZAÇÃO DE EXECUÇÃO -->
+    <!-- ATUALIZAÇÃO -->
     <section class="bloco bloco-status">
-      <h2>📍 Atualizar Tarefa</h2>
-      <select id="tarefa_agua">
+      <h2>📍 Atualizar Execução</h2>
+      <select id="tarefa">
         <option>Entrada do banheiro</option>
         <option>Caixa d'água</option>
       </select>
-      <select id="status_agua">
+      <select id="status">
         <option>Concluído</option>
         <option>Em execução</option>
         <option>Parado</option>
       </select>
-      <button onclick="atualizarTarefaAgua()">Atualizar</button>
-      <p id="resposta_agua">...</p>
+      <button onclick="atualizarTarefa()">Atualizar</button>
+      <p id="resposta_status">...</p>
+    </section>
+
+    <!-- FERRAMENTAS -->
+    <section class="bloco bloco-ferramentas">
+      <h2>🧰 Ferramentas do Encanador</h2>
+      <ul>
+        <li>🔧 Chave de grifo e chave inglesa</li>
+        <li>🪠 Cortador de tubo PVC</li>
+        <li>🧪 Vedantes e adesivos</li>
+        <li>📐 Trena e fita de rosca</li>
+      </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Painel do Encanador</p>
+    <p>ConstroiVerse © 2025 — Painel Hidráulico</p>
   </footer>
 
+  <script src="/static/dashboard.js"></script>
   <script>
-    function atualizarTarefaAgua() {
-      const tarefa = document.getElementById('tarefa_agua').value;
-      const status = document.getElementById('status_agua').value;
-      document.getElementById('resposta_agua').innerText = `✅ "${tarefa}" marcado como "${status}"`;
+    function atualizarTarefa() {
+      const tarefa = document.getElementById('tarefa').value;
+      const status = document.getElementById('status').value;
+      document.getElementById('resposta_status').innerText = `✅ "${tarefa}" atualizado para "${status}"`;
     }
   </script>
-
 </body>
 </html>
