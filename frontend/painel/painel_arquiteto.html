@@ -1,73 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Arquiteto</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Arquiteto | ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="painel-arquiteto">
-
+<body>
   <header>
-    <h1>🏛️ ConstroiVerse — Painel do Arquiteto</h1>
-    <p>Bem-vindo, profissional criativo da construção</p>
+    <h1>🏛️ Painel do Arquiteto</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
-
-    <!-- UPLOAD DO PROJETO -->
-    <section class="bloco bloco-upload">
-      <h2>📐 Enviar Projeto</h2>
-      <input type="file" id="projeto" />
-      <button onclick="enviarProjeto()">Enviar</button>
-    </section>
-
-    <!-- ORÇAMENTO POR AMBIENTE -->
-    <section class="bloco bloco-ia">
-      <h2>💡 Orçamento Inteligente por Ambiente</h2>
-      <textarea id="descricao_ambiente" placeholder="Ex: Sala com iluminação embutida, piso vinílico..."></textarea>
-      <button onclick="gerarOrcamentoAmbiente()">Gerar com IA</button>
-      <pre id="resposta_ambiente">...</pre>
-    </section>
-
-    <!-- FERRAMENTAS DO ARQUITETO -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🧰 Ferramentas do Arquiteto</h2>
-      <ul>
-        <li>🖊️ AutoCAD / Revit / SketchUp</li>
-        <li>📏 Régua e escalímetro</li>
-        <li>🧠 Planilhas de acabamento</li>
-        <li>🎨 Cartela de cores e materiais</li>
+    <section>
+      <h2>📁 Projetos enviados</h2>
+      <p>Visualize os projetos e acompanhe a evolução.</p>
+      <ul id="projetos-arquiteto">
+        <!-- Lista dinâmica -->
       </ul>
     </section>
 
+    <section>
+      <h2>📤 Enviar novo projeto</h2>
+      <form method="POST" enctype="multipart/form-data" action="/upload_projeto">
+        <input type="file" name="projeto" required />
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>🧰 Ferramentas do Arquiteto</h2>
+      <ul>
+        <li>AutoCAD</li>
+        <li>SketchUp</li>
+        <li>Revit</li>
+        <li>Lumion</li>
+        <li>Normas de acessibilidade</li>
+      </ul>
+    </section>
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Arquiteto Integrado</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
-
-  <script src="/static/dashboard.js"></script>
-  <script>
-    function enviarProjeto() {
-      alert('🗂️ Upload de projeto será conectado ao backend em breve.');
-    }
-
-    async function gerarOrcamentoAmbiente() {
-      const descricao = document.getElementById('descricao_ambiente').value;
-      document.getElementById('resposta_ambiente').innerText = "⏳ Gerando orçamento...";
-
-      const response = await fetch('/ia/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          descricao: `Sou arquiteto e preciso de um orçamento para o seguinte ambiente: ${descricao}`
-        })
-      });
-
-      const data = await response.json();
-      document.getElementById('resposta_ambiente').innerText = JSON.stringify(data, null, 2);
-    }
-  </script>
 </body>
 </html>
