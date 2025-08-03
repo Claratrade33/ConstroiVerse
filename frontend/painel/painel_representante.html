@@ -2,56 +2,46 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Representante</title>
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <title>Painel do Representante - ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>Representante Comercial</h1>
+    <h1>Painel do Representante Comercial</h1>
+    <p>Gerencie seus produtos representados, gere portfólio e envie propostas.</p>
   </header>
 
-  <section>
-    <h2>Meus Produtos Representados</h2>
-    <ul id="produtos-representados">
-      <!-- Lista dos produtos e marcas que o representante já representa -->
-    </ul>
-  </section>
+  <main>
+    <section>
+      <h2>Portfólio de produtos</h2>
+      <ul id="produtos-representante">
+        <li>Suvinil - Tintas Premium</li>
+        <li>DECA - Metais sanitários</li>
+      </ul>
+      <button onclick="window.location.href='/gerar_curriculo'">Gerar Apresentação Inteligente</button>
+    </section>
 
-  <section>
-    <h2>Montar Apresentação Inteligente</h2>
-    <form id="form-apresentacao">
-      <label>Escolha produtos para montar currículo:</label>
-      <select multiple name="produtos">
-        <!-- Lista dinâmica de produtos -->
-      </select>
-      <button type="submit">Gerar Currículo</button>
-    </form>
-  </section>
+    <section>
+      <h2>Fabricantes disponíveis</h2>
+      <div>
+        <p><strong>DECA</strong> - Aceita representantes na sua região <button>Solicitar Representar</button></p>
+        <p><strong>Tigre</strong> - Cadastrando novos parceiros <button>Solicitar</button></p>
+      </div>
+    </section>
 
-  <section>
-    <h2>Enviar para:</h2>
-    <form id="form-envio">
-      <select name="destino">
-        <option value="fabricante">Fabricante</option>
-        <option value="loja">Loja</option>
-      </select>
-      <input type="text" name="nome_destino" placeholder="Nome do destinatário" required />
-      <button type="submit">Enviar Apresentação</button>
-    </form>
-  </section>
+    <section>
+      <h2>Orçamentos rápidos</h2>
+      <p>Selecione os produtos desejados e envie orçamentos com 1 clique para as lojas.</p>
+    </section>
 
-  <section>
-    <h2>Convites Recebidos</h2>
-    <div id="convites-recebidos">
-      <!-- Convites de fabricantes para representar marcas -->
-    </div>
-  </section>
-
-  <footer>
-    <p>&copy; ConstroiVerse - Representante</p>
-  </footer>
-
-  <script src="/static/js/representante.js"></script>
+    <section>
+      <h2>Ferramentas do Representante</h2>
+      <ul>
+        <li>Catálogo digital</li>
+        <li>Simulador de pedidos</li>
+        <li>Geolocalização de clientes</li>
+      </ul>
+    </section>
+  </main>
 </body>
 </html>
