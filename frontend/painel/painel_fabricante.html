@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>ConstroiVerse — Painel do Fabricante</title>
+  <title>ConstroiVerse — Fabricante</title>
   <link rel="stylesheet" href="/static/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -10,21 +10,21 @@
 
   <header>
     <h1>🏭 ConstroiVerse — Fabricante de Materiais</h1>
-    <p>Gestão de produção e pedidos diretos das obras</p>
+    <p>Controle de produção e pedidos diretos</p>
   </header>
 
   <main>
 
-    <!-- PEDIDOS RECEBIDOS DIRETOS -->
+    <!-- PEDIDOS RECEBIDOS -->
     <section class="bloco bloco-pedidos">
       <h2>📦 Pedidos Recebidos</h2>
       <ul>
         <li>Obra #001 — 50 blocos estruturais — Produção: 75%</li>
-        <li>Obra #003 — 12m² de cerâmica acetinada — Em preparação</li>
+        <li>Obra #003 — 12m² de cerâmica acetinada — Preparando</li>
       </ul>
     </section>
 
-    <!-- ESTOQUE ATUAL -->
+    <!-- ESTOQUE -->
     <section class="bloco bloco-estoque">
       <h2>📊 Estoque Atual</h2>
       <ul>
@@ -34,31 +34,23 @@
       </ul>
     </section>
 
-    <!-- NOTA DE PRODUÇÃO -->
-    <section class="bloco bloco-producao">
-      <h2>🛠️ Atualizar Produção</h2>
-      <select id="item">
-        <option>Blocos estruturais</option>
-        <option>Cerâmica acetinada</option>
-      </select>
-      <input type="number" id="quantidade" placeholder="Nova quantidade pronta" />
-      <button onclick="atualizarProducao()">Atualizar</button>
-      <p id="resposta_producao">...</p>
+    <!-- FERRAMENTAS -->
+    <section class="bloco bloco-ferramentas">
+      <h2>🔧 Ferramentas do Fabricante</h2>
+      <ul>
+        <li>🏭 Máquinas de moldagem</li>
+        <li>📦 Sistema de controle de lote</li>
+        <li>📉 Painel de produção em tempo real</li>
+        <li>🔄 Integração com fornecedores e entregadores</li>
+      </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Gestão de Fábrica</p>
+    <p>ConstroiVerse © 2025 — Produção Inteligente</p>
   </footer>
 
-  <script>
-    function atualizarProducao() {
-      const item = document.getElementById('item').value;
-      const qtd = document.getElementById('quantidade').value;
-      document.getElementById('resposta_producao').innerText = `✅ Produção de "${item}" atualizada para ${qtd} unidades.`;
-    }
-  </script>
-
+  <script src="/static/dashboard.js"></script>
 </body>
 </html>
