@@ -1,56 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel da Loja - ConstroiVerse</title>
-  <link rel="stylesheet" href="/public/style.css">
+  <meta charset="UTF-8">
+  <title>ConstroiVerse — Painel da Loja de Materiais</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <nav class="sidebar">
-    <h2>Loja</h2>
-    <ul>
-      <li><a href="#">📦 Pedidos Recebidos</a></li>
-      <li><a href="#">🛠️ Estoque</a></li>
-      <li><a href="#">📋 Orçamentos</a></li>
-      <li><a href="#">🚚 Fretes</a></li>
-      <li><a href="#">👥 Equipe</a></li>
-      <li><a href="#">💰 Financeiro</a></li>
-    </ul>
-  </nav>
+<body class="painel-loja">
 
-  <main class="painel">
-    <h1>Bem-vindo, Loja Conectada</h1>
-    
-    <section class="bloco">
-      <h3>📦 Pedidos em Aberto</h3>
+  <header>
+    <h1>🏬 ConstroiVerse — Loja de Materiais</h1>
+    <p>Bem-vindo, Lojista</p>
+  </header>
+
+  <main>
+
+    <!-- SEÇÃO: PEDIDOS RECEBIDOS -->
+    <section class="bloco bloco-pedidos">
+      <h2>📦 Pedidos de Obras</h2>
       <ul>
-        <li>Obra João da Silva - <strong>Aguardando Separação</strong></li>
-        <li>Obra Nova Era - <strong>Separado - Aguardando Entrega</strong></li>
+        <li>Obra #001 — 20 sacos de cimento — 🟡 Em separação</li>
+        <li>Obra #002 — 5m³ de areia lavada — ⚪ Pendente</li>
       </ul>
     </section>
 
-    <section class="bloco">
-      <h3>📋 Estoque</h3>
-      <p>Areia média: <strong>45m³</strong> | Cimento: <strong>30 sacos</strong></p>
-      <button>Atualizar Estoque</button>
-    </section>
-
-    <section class="bloco">
-      <h3>🚚 Logística</h3>
-      <p>Entregas agendadas para hoje: <strong>3</strong></p>
-      <button>Ativar GPS Logística</button>
-    </section>
-
-    <section class="bloco">
-      <h3>👥 Equipe da Loja</h3>
+    <!-- SEÇÃO: ENTREGAS COM GPS -->
+    <section class="bloco bloco-entregas">
+      <h2>🚚 Entregas em Rota (Logística)</h2>
       <ul>
-        <li>Maria (Vendas)</li>
-        <li>Pedro (Estoque)</li>
-        <li>Juliana (Financeiro)</li>
+        <li>Obra #001 — Entrega prevista: 11h35 — Status: A caminho</li>
+        <li>Obra #003 — Agendada para amanhã — Status: Programada</li>
       </ul>
-      <button>Gerenciar Permissões</button>
     </section>
+
+    <!-- SEÇÃO: ATUALIZAR STATUS -->
+    <section class="bloco bloco-atualizar">
+      <h2>🔄 Atualizar Status de Pedido</h2>
+      <select id="pedido">
+        <option>Pedido #001 - Cimento</option>
+        <option>Pedido #002 - Areia</option>
+      </select>
+      <select id="status">
+        <option>Separado</option>
+        <option>Em rota</option>
+        <option>Entregue</option>
+      </select>
+      <button onclick="atualizarPedido()">Atualizar</button>
+      <p id="resposta_pedido">...</p>
+    </section>
+
   </main>
+
+  <footer>
+    <p>ConstroiVerse © 2025 — Painel do Lojista</p>
+  </footer>
+
+  <script>
+    function atualizarPedido() {
+      const pedido = document.getElementById('pedido').value;
+      const status = document.getElementById('status').value;
+      document.getElementById('resposta_pedido').innerText = `✅ Pedido "${pedido}" atualizado para "${status}"`;
+    }
+  </script>
+
 </body>
 </html>
