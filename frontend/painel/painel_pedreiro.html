@@ -1,68 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Pedreiro</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Painel do Pedreiro - ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="painel-pedreiro">
-
+<body>
   <header>
-    <h1>🧱 ConstroiVerse — Painel do Mestre de Obra</h1>
-    <p>Execução com qualidade e organização</p>
+    <h1>Painel do Pedreiro</h1>
+    <p>Acompanhe suas tarefas, etapas da obra e materiais entregues.</p>
   </header>
 
   <main>
-
-    <!-- TAREFAS -->
-    <section class="bloco bloco-minhas-tarefas">
-      <h2>📋 Minhas Tarefas do Dia</h2>
-      <ul id="lista-tarefas">
-        <li>Carregando...</li>
-      </ul>
-    </section>
-
-    <!-- ATUALIZAÇÃO -->
-    <section class="bloco bloco-status">
-      <h2>🔄 Atualizar Status</h2>
-      <select id="tarefa">
-        <option>Parede da sala</option>
-        <option>Contra piso</option>
-      </select>
-      <select id="status">
-        <option>Concluída</option>
-        <option>Em andamento</option>
-        <option>Parada</option>
-      </select>
-      <button onclick="atualizarTarefa()">Atualizar</button>
-      <p id="resposta_status">...</p>
-    </section>
-
-    <!-- FERRAMENTAS -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🔧 Ferramentas do Pedreiro</h2>
+    <section>
+      <h2>Tarefas da semana</h2>
       <ul>
-        <li>🧱 Colher de pedreiro</li>
-        <li>📏 Trena e nível de bolha</li>
-        <li>🔩 Desempenadeira e prumo</li>
-        <li>🪚 Serra mármore e carrinho de mão</li>
+        <li>Segunda: Levantar parede da cozinha</li>
+        <li>Terça: Revestimento do banheiro social</li>
+        <li>Quarta: Instalação de alvenaria externa</li>
       </ul>
     </section>
 
+    <section>
+      <h2>Materiais entregues</h2>
+      <ul>
+        <li>Cimento CP-II (20 sacos)</li>
+        <li>Areia média (5m³)</li>
+        <li>Blocos cerâmicos (300 unidades)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ferramentas do Pedreiro</h2>
+      <ul>
+        <li>Colher de pedreiro</li>
+        <li>Prumo e nível</li>
+        <li>Misturador de argamassa</li>
+      </ul>
+    </section>
   </main>
-
-  <footer>
-    <p>ConstroiVerse © 2025 — Profissional de Execução</p>
-  </footer>
-
-  <script src="/static/dashboard.js"></script>
-  <script>
-    function atualizarTarefa() {
-      const tarefa = document.getElementById('tarefa').value;
-      const status = document.getElementById('status').value;
-      document.getElementById('resposta_status').innerText = `✅ "${tarefa}" atualizado para "${status}"`;
-    }
-  </script>
 </body>
 </html>
