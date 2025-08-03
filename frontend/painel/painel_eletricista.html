@@ -2,49 +2,43 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Eletricista | ConstroiVerse</title>
+  <title>Painel do Eletricista - ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>⚡ Painel do Eletricista</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>Painel do Eletricista</h1>
+    <p>Gerencie instalações elétricas por obra e acompanhe entregas de materiais.</p>
   </header>
 
   <main>
     <section>
-      <h2>📋 Tarefas Delegadas</h2>
-      <div id="tarefas-eletricista">Carregando tarefas...</div>
-    </section>
-
-    <section>
-      <h2>🧰 Ferramentas Recomendadas</h2>
+      <h2>Instalações Pendentes</h2>
       <ul>
-        <li>Alicate universal</li>
-        <li>Multímetro</li>
-        <li>Fita isolante</li>
-        <li>Detector de tensão</li>
-        <li>Chave de teste</li>
+        <li>Distribuição dos disjuntores no quadro - Obra #274</li>
+        <li>Iluminação externa - Obra #275</li>
+        <li>Tomadas da cozinha - Obra #278</li>
       </ul>
     </section>
 
     <section>
-      <h2>✅ Status</h2>
-      <button onclick="marcarComoConcluido()">Finalizar Tarefa</button>
+      <h2>Materiais Disponíveis</h2>
+      <ul>
+        <li>Fios 4mm e 6mm</li>
+        <li>Tomadas e interruptores Tramontina</li>
+        <li>Dutos e eletrocalhas</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ferramentas do Eletricista</h2>
+      <ul>
+        <li>Multímetro</li>
+        <li>Alicate desencapador</li>
+        <li>Fita isolante</li>
+        <li>Detector de tensão</li>
+      </ul>
     </section>
   </main>
-
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
-
-  <script>
-    function marcarComoConcluido() {
-      alert("Tarefa marcada como concluída.");
-    }
-  </script>
 </body>
 </html>
