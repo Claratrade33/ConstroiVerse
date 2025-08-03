@@ -1,67 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Painel do Cliente</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>ConstroiVerse — Minha Obra</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body class="painel-cliente">
 
   <header>
-    <h1>🏗️ ConstroiVerse</h1>
-    <p>Bem-vindo, <span id="nome-usuario">Cliente</span></p>
+    <h1>🏠 ConstroiVerse — Minha Obra</h1>
+    <p>Acompanhe sua construção em tempo real, de onde estiver</p>
   </header>
 
   <main>
-    <!-- SEÇÃO: ORÇAMENTO INTELIGENTE -->
-    <section class="bloco bloco-ia">
-      <h2>📋 Solicitar Orçamento Inteligente</h2>
-      <textarea id="descricao" placeholder="Ex: Construir casa com 2 quartos, 1 banheiro, área gourmet..."></textarea>
-      <button onclick="enviarParaClarice()">Gerar Orçamento com IA</button>
+
+    <!-- OBRAS DO CLIENTE -->
+    <section class="bloco bloco-obras">
+      <h2>🔍 Minhas Obras</h2>
+      <ul id="lista-obras">
+        <li>
+          <strong>Obra 001 — Casa Praia</strong><br>
+          Andamento: Pintura dos quartos<br>
+          Materiais entregues: ✅ (tinta Suvinil, rolo, fita)<br>
+          Responsável: João (mestre de obra)<br>
+          Última atualização: 12h atrás<br>
+          Atrasos? ❌<br>
+        </li>
+      </ul>
     </section>
 
-    <!-- SEÇÃO: RESPOSTA DA IA -->
-    <section class="bloco bloco-resposta">
-      <h2>💬 Resposta da Clarice:</h2>
-      <pre id="resposta">Aguardando sua descrição da obra...</pre>
+    <!-- SOLICITAÇÃO DE ORÇAMENTO -->
+    <section class="bloco bloco-orcamento">
+      <h2>🛒 Solicitar Orçamento</h2>
+      <p>Escolha uma loja e envie o que você precisa:</p>
+      <select>
+        <option>Loja Construmais</option>
+        <option>Loja Brasil MatCom</option>
+      </select><br><br>
+      <textarea placeholder="Ex: 20 sacos de cimento, 10 metros de piso 60x60..."></textarea><br>
+      <button onclick="alert('📩 Pedido de orçamento enviado!')">Enviar para loja</button>
     </section>
 
-    <!-- SEÇÃO: STATUS DA OBRA -->
-    <section class="bloco bloco-status">
-      <h2>📊 Andamento da Obra</h2>
-      <div class="etapas">
-        <div class="etapa">🟢 Fundação: Concluída</div>
-        <div class="etapa">🟡 Alvenaria: Em andamento</div>
-        <div class="etapa">⚪ Elétrica: Pendente</div>
-        <div class="etapa">⚪ Acabamento: Pendente</div>
-      </div>
+    <!-- SOLICITAR PROFISSIONAL -->
+    <section class="bloco bloco-profissionais">
+      <h2>🧑‍🔧 Solicitar Profissional da Vitrine</h2>
+      <p>Busque por categoria:</p>
+      <select>
+        <option>Pedreiro</option>
+        <option>Pintor</option>
+        <option>Encanador</option>
+        <option>Eletricista</option>
+        <option>Arquiteto</option>
+        <option>Engenheiro</option>
+      </select><br><br>
+      <button onclick="alert('📩 Solicitação enviada. A equipe responderá em breve.')">Solicitar agora</button>
     </section>
+
+    <!-- AVALIAÇÃO FINAL -->
+    <section class="bloco bloco-avaliacao">
+      <h2>✅ Avaliar Equipe após Obra</h2>
+      <button onclick="alert('✅ Avaliação registrada!')">Avaliar Profissionais</button>
+    </section>
+
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Todos os direitos reservados</p>
+    <p>ConstroiVerse © 2025 — Construção com transparência e inteligência</p>
   </footer>
-
-  <script>
-    async function enviarParaClarice() {
-      const descricao = document.getElementById('descricao').value;
-      document.getElementById('resposta').innerText = "⏳ Processando com Clarice...";
-
-      try {
-        const response = await fetch('/ia/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ descricao })
-        });
-
-        const data = await response.json();
-        document.getElementById('resposta').innerText = JSON.stringify(data, null, 2);
-      } catch (error) {
-        document.getElementById('resposta').innerText = "Erro ao falar com a Clarice 😢";
-      }
-    }
-  </script>
-
 </body>
 </html>
