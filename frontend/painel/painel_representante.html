@@ -1,97 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Painel do Fabricante</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Representante | ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body class="painel-fabricante">
-
+<body>
   <header>
-    <h1>🏭 ConstroiVerse — Fabricante de Materiais</h1>
-    <p>Produção conectada à construção real</p>
+    <h1>🤝 Painel do Representante</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
-
-    <!-- PEDIDOS RECEBIDOS -->
-    <section class="bloco bloco-pedidos">
-      <h2>📦 Pedidos Atuais</h2>
-      <ul>
-        <li>Obra #001 — 200 blocos cerâmicos</li>
-        <li>Obra #004 — 40 sacos de argamassa</li>
-      </ul>
+    <section>
+      <h2>📇 Meu Portfólio</h2>
+      <p>Monte sua apresentação e envie para fabricantes ou lojas.</p>
+      <textarea placeholder="Descreva seus produtos, regiões de atuação, resultados..."></textarea>
+      <button onclick="gerarCurriculo()">Gerar Currículo Inteligente</button>
     </section>
 
-    <!-- CONFIGURAR TIPO DE VENDA -->
-    <section class="bloco bloco-configuracao">
-      <h2>⚙️ Política de Venda</h2>
-      <p>Este fabricante aceita vendas diretas para CNPJ?</p>
-      <label><input type="radio" name="venda" value="sim" checked> ✅ Sim, aceito vendas diretas para construtoras</label><br>
-      <label><input type="radio" name="venda" value="nao"> 🚫 Não, apenas via lojas</label>
+    <section>
+      <h2>🏢 Fabricantes disponíveis</h2>
+      <div id="fabricantes-disponiveis">Carregando marcas...</div>
     </section>
 
-    <!-- REPRESENTANTES CANDIDATOS -->
-    <section class="bloco bloco-representantes">
-      <h2>📥 Representantes Interessados</h2>
-      <ul>
-        <li>
-          <strong>João Oliveira</strong> — Região: SP<br>
-          <button onclick="verApresentacao('joao')">📄 Ver Apresentação</button>
-          <button>✅ Aceitar</button>
-          <button>❌ Recusar</button>
-        </li>
-        <li>
-          <strong>Maria Souza</strong> — Região: RJ<br>
-          <button onclick="verApresentacao('maria')">📄 Ver Apresentação</button>
-          <button>✅ Aceitar</button>
-          <button>❌ Recusar</button>
-        </li>
-      </ul>
+    <section>
+      <h2>📬 Enviar apresentação para lojas</h2>
+      <button onclick="enviarApresentacao()">Enviar Agora</button>
     </section>
-
-    <!-- VISUALIZAÇÃO DE APRESENTAÇÃO -->
-    <section class="bloco bloco-apresentacao">
-      <h2>🧾 Apresentação do Representante</h2>
-      <pre id="apresentacao_fabricante">Selecione um representante para visualizar.</pre>
-    </section>
-
-    <!-- FERRAMENTAS DO FABRICANTE -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🧰 Ferramentas do Fabricante</h2>
-      <ul>
-        <li>🏭 Controle de produção por lote</li>
-        <li>📊 Painel de pedidos e representantes</li>
-        <li>💼 Política de vendas configurável</li>
-        <li>🧠 Integração com IA e orçamentos inteligentes</li>
-      </ul>
-    </section>
-
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Indústria Inteligente</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
 
-  <script src="/static/dashboard.js"></script>
   <script>
-    function verApresentacao(nome) {
-      const apresentacoes = {
-        joao: "João representa Suvinil, com crescimento de 22% em 2 meses. Atua no varejo de SP e já atendeu 12 lojas.",
-        maria: "Maria é destaque em metais e louças. Atua no RJ e PE com foco em acabamentos e fidelização de clientes."
-      };
-      document.getElementById('apresentacao_fabricante').innerText = apresentacoes[nome] || "Apresentação não encontrada.";
+    function gerarCurriculo() {
+      alert("Currículo gerado com sucesso!");
     }
 
-    // Opcional: salvar política de venda
-    document.querySelectorAll('input[name="venda"]').forEach(input => {
-      input.addEventListener('change', () => {
-        const escolha = input.value;
-        alert(`✅ Preferência atualizada: ${escolha === 'sim' ? 'Aceita CNPJ' : 'Somente via lojas'}`);
-        // Aqui você pode fazer um POST para salvar no backend a política
-      });
-    });
+    function enviarApresentacao() {
+      alert("Apresentação enviada para as lojas selecionadas.");
+    }
   </script>
 </body>
 </html>
