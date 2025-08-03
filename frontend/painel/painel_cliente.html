@@ -1,24 +1,67 @@
-<!-- frontend/painel/painel_cliente.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Cliente | ConstroiVerse</title>
-  <link rel="stylesheet" href="../style/style.css" />
+  <meta charset="UTF-8">
+  <title>ConstroiVerse — Painel do Cliente</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <div class="painel-container">
-    <h1>🏠 Painel do Cliente</h1>
-    <p>Olá! Aqui você acompanha tudo sobre sua obra:</p>
+<body class="painel-cliente">
 
-    <div class="menu">
-      <button onclick="window.location.href='/andamento_obra'">🚧 Andamento da Obra</button>
-      <button onclick="window.location.href='/orçamentos_recebidos'">📋 Orçamentos Recebidos</button>
-      <button onclick="window.location.href='/alertas_notificacoes'">🔔 Alertas e Notificações</button>
-      <button onclick="window.location.href='/relatorios_entregues'">📑 Relatórios Finais</button>
-      <button onclick="window.location.href='/'">🔙 Voltar ao Início</button>
-    </div>
-  </div>
+  <header>
+    <h1>🏗️ ConstroiVerse</h1>
+    <p>Bem-vindo, <span id="nome-usuario">Cliente</span></p>
+  </header>
+
+  <main>
+    <!-- SEÇÃO: ORÇAMENTO INTELIGENTE -->
+    <section class="bloco bloco-ia">
+      <h2>📋 Solicitar Orçamento Inteligente</h2>
+      <textarea id="descricao" placeholder="Ex: Construir casa com 2 quartos, 1 banheiro, área gourmet..."></textarea>
+      <button onclick="enviarParaClarice()">Gerar Orçamento com IA</button>
+    </section>
+
+    <!-- SEÇÃO: RESPOSTA DA IA -->
+    <section class="bloco bloco-resposta">
+      <h2>💬 Resposta da Clarice:</h2>
+      <pre id="resposta">Aguardando sua descrição da obra...</pre>
+    </section>
+
+    <!-- SEÇÃO: STATUS DA OBRA -->
+    <section class="bloco bloco-status">
+      <h2>📊 Andamento da Obra</h2>
+      <div class="etapas">
+        <div class="etapa">🟢 Fundação: Concluída</div>
+        <div class="etapa">🟡 Alvenaria: Em andamento</div>
+        <div class="etapa">⚪ Elétrica: Pendente</div>
+        <div class="etapa">⚪ Acabamento: Pendente</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>ConstroiVerse © 2025 — Todos os direitos reservados</p>
+  </footer>
+
+  <script>
+    async function enviarParaClarice() {
+      const descricao = document.getElementById('descricao').value;
+      document.getElementById('resposta').innerText = "⏳ Processando com Clarice...";
+
+      try {
+        const response = await fetch('/ia/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ descricao })
+        });
+
+        const data = await response.json();
+        document.getElementById('resposta').innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById('resposta').innerText = "Erro ao falar com a Clarice 😢";
+      }
+    }
+  </script>
+
 </body>
 </html>
