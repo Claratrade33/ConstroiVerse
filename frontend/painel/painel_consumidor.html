@@ -1,47 +1,50 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Minha Obra | ConstroiVerse</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <title>Painel do Consumidor Final - ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <header>
-    <h1>👤 Painel do Cliente</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>🏡 Painel do Consumidor Final</h1>
+    <a href="/">Sair</a>
   </header>
 
   <main>
     <section>
-      <h2>📍 Obra em Andamento</h2>
-      <p>Acompanhe sua obra em tempo real, mesmo à distância.</p>
-      <div id="status-obra">Consultando atualizações...</div>
-    </section>
-
-    <section>
-      <h2>📦 Entregas e Materiais</h2>
-      <p>Saiba se o material chegou, quem recebeu e se foi utilizado.</p>
-      <div id="entregas">Carregando entregas...</div>
-    </section>
-
-    <section>
-      <h2>📝 Avaliação Final</h2>
-      <p>Quando a obra terminar, avalie todos os profissionais envolvidos.</p>
-      <button onclick="avaliarObra()">Avaliar Profissionais</button>
+      <h2>Obras de Construtoras Disponíveis</h2>
+      <div id="obrasListadas"></div>
     </section>
   </main>
 
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
-
   <script>
-    function avaliarObra() {
-      alert("Avaliação registrada com sucesso.");
+    const consumidorId = localStorage.getItem("userId");
+
+    async function carregarObras() {
+      const response = await fetch(`/api/obras_listadas`);
+      const obras = await response.json();
+      const container = document.getElementById("obrasListadas");
+      container.innerHTML = obras.map(obra => `
+        <div class="card">
+          <h3>${obra.nome}</h3>
+          <p>${obra.descricao}</p>
+          <button onclick="solicitarContato('${obra._id}')">Solicitar contato com corretor</button>
+        </div>
+      `).join("");
     }
+
+    async function solicitarContato(obraId) {
+      await fetch(`/api/solicitar_contato_corretor`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ consumidorId, obraId })
+      });
+      alert("Solicitação enviada à construtora!");
+    }
+
+    carregarObras();
   </script>
 </body>
 </html>
