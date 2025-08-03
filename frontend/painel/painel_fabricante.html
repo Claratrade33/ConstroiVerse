@@ -1,39 +1,57 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Painel do Fabricante</title>
+  <title>Painel do Fabricante - ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <div class="painel">
-    <h2>🏭 Painel do Fabricante</h2>
+  <header>
+    <h1>Painel do Fabricante</h1>
+    <p>Bem-vindo, Fabricante! Gerencie sua produção, receba orçamentos e visualize representantes.</p>
+  </header>
 
+  <main>
     <section>
-      <h3>🔗 Aceita venda direta para CNPJ?</h3>
-      <select id="vendaDireta">
-        <option value="sim">Sim</option>
-        <option value="nao">Não</option>
-      </select>
+      <h2>Suas Linhas de Produtos</h2>
+      <ul id="lista-produtos">
+        <!-- Produtos cadastrados aparecerão aqui -->
+      </ul>
+      <button onclick="window.location.href='/cadastrar_produto'">Cadastrar Novo Produto</button>
     </section>
 
     <section>
-      <h3>📝 Pedidos Recebidos de Construtoras</h3>
-      <ul id="listaPedidosConstrutoras"></ul>
+      <h2>Receber Representantes</h2>
+      <p>Deseja que representantes se cadastrem para vender sua marca?</p>
+      <label><input type="checkbox" id="aceita-representantes" /> Sim, aceitar representantes</label>
     </section>
 
     <section>
-      <h3>🧑‍💼 Representantes Ativos</h3>
-      <ul id="listaRepresentantes"></ul>
+      <h2>Vendas diretas para CNPJ?</h2>
+      <label><input type="checkbox" id="venda-direta" /> Sim, aceito vendas diretas para construtoras</label>
     </section>
 
     <section>
-      <h3>🎯 Marcas que você Fabrica</h3>
-      <input type="text" placeholder="Ex: DECA, Portobello..." />
-      <button>Adicionar</button>
+      <h2>Representantes disponíveis</h2>
+      <div id="representantes-disponiveis">
+        <!-- Lista de representantes por pontuação, região, categoria -->
+      </div>
     </section>
-  </div>
+  </main>
 
-  <script src="/static/js/fabricante.js"></script>
+  <script>
+    // Simulação: puxar dados do backend futuramente
+    const representantes = [
+      { nome: 'Carlos Mendes', pontuacao: 9.4, categoria: 'Tintas', regiao: 'SP' },
+      { nome: 'Ana Paula', pontuacao: 8.7, categoria: 'Acabamentos', regiao: 'RJ' },
+    ];
+
+    const lista = document.getElementById('representantes-disponiveis');
+    representantes.forEach(rep => {
+      const div = document.createElement('div');
+      div.innerHTML = `<strong>${rep.nome}</strong> - ${rep.categoria} (${rep.regiao}) - ⭐ ${rep.pontuacao}`;
+      lista.appendChild(div);
+    });
+  </script>
 </body>
 </html>
