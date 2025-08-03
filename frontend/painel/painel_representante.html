@@ -10,17 +10,17 @@
 
   <header>
     <h1>💼 ConstroiVerse — Representante Comercial</h1>
-    <p>Suas vendas, sua comissão, sua rota</p>
+    <p>Portfólio inteligente e conexão com o mercado</p>
   </header>
 
   <main>
 
-    <!-- PRODUTOS -->
+    <!-- PRODUTOS OFERTADOS -->
     <section class="bloco bloco-produtos">
-      <h2>🛒 Meus Produtos</h2>
+      <h2>🛒 Meus Produtos Ativos</h2>
       <ul>
         <li>Tijolo ecológico — R$2,80/un — 12 vendas</li>
-        <li>Massa corrida — R$89,90/balde — 7 vendas</li>
+        <li>Massa corrida Premium — R$89,90 — 7 vendas</li>
       </ul>
     </section>
 
@@ -28,48 +28,93 @@
     <section class="bloco bloco-comissoes">
       <h2>💰 Minhas Comissões</h2>
       <ul>
-        <li>Total do mês: R$ 8.490</li>
-        <li>Comissão prevista: R$ 1.273,50</li>
+        <li>Vendas no mês: R$ 8.490</li>
+        <li>Comissão atual: R$ 1.273,50</li>
       </ul>
     </section>
-<section class="bloco bloco-portifolio">
-  <h2>📄 Montar Currículo Inteligente</h2>
 
-  <p>Selecione os segmentos e produtos que deseja incluir no seu portfólio:</p>
+    <!-- CURRÍCULO INTELIGENTE -->
+    <section class="bloco bloco-portifolio">
+      <h2>📄 Montar Currículo Inteligente</h2>
 
-  <label><input type="checkbox" class="produto" value="Tintas Suvinil"> Tintas — Suvinil</label><br>
-  <label><input type="checkbox" class="produto" value="Pisos Portobello"> Pisos — Portobello</label><br>
-  <label><input type="checkbox" class="produto" value="Louças Celite"> Louças — Celite</label><br>
-  <label><input type="checkbox" class="produto" value="Metais Deca"> Metais — Deca</label><br>
-  <label><input type="checkbox" class="produto" value="Argamassa Quartzolit"> Argamassa — Quartzolit</label><br>
+      <p>Escolha os produtos/segmentos que deseja incluir:</p>
+      <label><input type="checkbox" class="produto" value="Tintas Suvinil"> Tintas — Suvinil</label><br>
+      <label><input type="checkbox" class="produto" value="Pisos Portobello"> Pisos — Portobello</label><br>
+      <label><input type="checkbox" class="produto" value="Louças Celite"> Louças — Celite</label><br>
+      <label><input type="checkbox" class="produto" value="Metais Deca"> Metais — Deca</label><br>
 
-  <textarea id="descricao_portfolio" placeholder="Adicione uma observação pessoal (opcional)..."></textarea>
+      <textarea id="descricao_portfolio" placeholder="Observações (opcional)..."></textarea>
 
-  <button onclick="gerarApresentacao()">✨ Gerar Apresentação com IA</button>
-  <pre id="apresentacao_gerada">...</pre>
+      <button onclick="gerarApresentacao()">✨ Gerar Apresentação com IA</button>
+      <pre id="apresentacao_gerada">...</pre>
 
-  <div class="bloco-envio">
-    <button onclick="enviarParaFabricante()">📤 Enviar para Fabricante</button>
-    <button onclick="enviarParaLoja()">📩 Oferecer para Loja</button>
-  </div>
-</section>
+      <div class="bloco-envio">
+        <button onclick="enviarParaFabricante()">📤 Enviar para Fabricante</button>
+        <button onclick="enviarParaLoja()">📩 Enviar para Loja</button>
+      </div>
+    </section>
+
     <!-- FERRAMENTAS -->
     <section class="bloco bloco-ferramentas">
-      <h2>📦 Ferramentas do Representante</h2>
+      <h2>🧰 Ferramentas do Representante</h2>
       <ul>
-        <li>📱 App de vendas com catálogo</li>
-        <li>🛍️ Link de pedidos personalizados</li>
+        <li>📱 App de vendas com catálogo inteligente</li>
+        <li>📦 Acesso ao estoque e margens em tempo real</li>
         <li>📊 Painel de comissões e histórico</li>
-        <li>🧠 Sugerir produtos com IA Clarice</li>
+        <li>🧠 Geração de currículo com IA Clarice</li>
       </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Representação Comercial Integrada</p>
+    <p>ConstroiVerse © 2025 — Representante Integrado</p>
   </footer>
 
   <script src="/static/dashboard.js"></script>
+  <script>
+    async function gerarApresentacao() {
+      const produtosSelecionados = Array.from(document.querySelectorAll('.produto:checked')).map(p => p.value);
+      const descricaoExtra = document.getElementById('descricao_portfolio').value;
+
+      if (produtosSelecionados.length === 0) {
+        alert('Selecione pelo menos 1 produto.');
+        return;
+      }
+
+      document.getElementById('apresentacao_gerada').innerText = '⏳ Gerando apresentação com IA...';
+
+      const response = await fetch('/ia/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          descricao: `Sou um representante comercial. Quero uma apresentação para os produtos: ${produtosSelecionados.join(', ')}. Observações: ${descricaoExtra}`
+        })
+      });
+
+      const data = await response.json();
+      document.getElementById('apresentacao_gerada').innerText = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+    }
+
+    function enviarParaFabricante() {
+      const curriculo = document.getElementById('apresentacao_gerada').innerText;
+      if (!curriculo || curriculo.includes('⏳')) {
+        alert('Gere a apresentação antes de enviar!');
+        return;
+      }
+      alert('✅ Apresentação enviada ao fabricante!');
+      // Aqui entraria um POST para /fabricante/receber_apresentacao
+    }
+
+    function enviarParaLoja() {
+      const curriculo = document.getElementById('apresentacao_gerada').innerText;
+      if (!curriculo || curriculo.includes('⏳')) {
+        alert('Gere a apresentação antes de enviar!');
+        return;
+      }
+      alert('✅ Apresentação enviada para loja!');
+      // Aqui entraria um POST para /loja/receber_apresentacao
+    }
+  </script>
 </body>
 </html>
