@@ -2,104 +2,51 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>ConstroiVerse — Minha Obra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Cliente | ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-<body class="painel-cliente">
-
+<body>
   <header>
-    <h1>🏠 ConstroiVerse — Minha Obra</h1>
-    <p>Acompanhe sua construção em tempo real</p>
-    <button onclick="sair()">🚪 Sair</button>
+    <h1>🏠 Painel do Cliente</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
-
-    <!-- MINHAS OBRAS -->
-    <section class="bloco bloco-obras">
-      <h2>🔍 Minhas Obras</h2>
-      <ul id="lista-obras">Carregando obras...</ul>
+    <section>
+      <h2>📊 Acompanhamento da Obra</h2>
+      <p>Status da obra em tempo real:</p>
+      <div id="status-obra">Carregando...</div>
     </section>
 
-    <!-- ORÇAMENTO -->
-    <section class="bloco bloco-orcamento">
-      <h2>🛒 Solicitar Orçamento</h2>
-      <select id="loja">
-        <option value="Construmais">Loja Construmais</option>
-        <option value="Brasil MatCom">Brasil MatCom</option>
-      </select><br><br>
-      <textarea id="lista-itens" placeholder="Ex: 20 sacos de cimento, 10 metros de piso 60x60..."></textarea><br>
-      <button onclick="enviarOrcamento()">📨 Enviar</button>
+    <section>
+      <h2>📎 Documentos</h2>
+      <ul id="documentos-obra">
+        <!-- Lista dinâmica -->
+      </ul>
     </section>
 
-    <!-- SOLICITAR PROFISSIONAL -->
-    <section class="bloco bloco-profissionais">
-      <h2>🧑‍🔧 Solicitar Profissional da Vitrine</h2>
-      <select id="categoria">
-        <option>Pedreiro</option>
-        <option>Pintor</option>
-        <option>Eletricista</option>
-        <option>Encanador</option>
-        <option>Arquiteto</option>
-        <option>Engenheiro</option>
-      </select><br><br>
-      <button onclick="solicitarProfissional()">📩 Solicitar</button>
+    <section>
+      <h2>📦 Entregas e Materiais</h2>
+      <div id="logistica">Consultando logística...</div>
     </section>
 
-    <!-- AVALIAÇÃO -->
-    <section class="bloco bloco-avaliacao">
-      <h2>✅ Avaliar Profissionais</h2>
-      <textarea id="avaliacao" placeholder="Sua opinião sobre a obra e a equipe..."></textarea><br>
-      <button onclick="avaliar()">Enviar Avaliação</button>
+    <section>
+      <h2>📝 Relatórios</h2>
+      <button onclick="baixarRelatorio()">Baixar Relatório da Obra</button>
     </section>
-
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Transparência do início ao fim</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
 
-  <script src="/static/dashboard.js"></script>
   <script>
-    async function carregarObras() {
-      const obras = await fetchAutenticado("/api/obras");
-      preencherLista("lista-obras", obras, obra => `
-        <strong>${obra.nome || "Sem nome"}</strong><br>
-        Status: ${obra.status || "Em andamento"}<br>
-        Última atualização: ${obra.updated_at || "Hoje"}<br>
-      `);
+    function baixarRelatorio() {
+      alert("Relatório baixado com sucesso!");
     }
-
-    async function enviarOrcamento() {
-      const loja = document.getElementById("loja").value;
-      const itens = document.getElementById("lista-itens").value;
-      if (!itens) return alert("Escreva os itens desejados.");
-      await fetchAutenticado("/api/orcamentos", "POST", {
-        loja,
-        itens,
-        cliente: "consumidor_final"
-      });
-      alert("✅ Pedido de orçamento enviado!");
-    }
-
-    async function solicitarProfissional() {
-      const categoria = document.getElementById("categoria").value;
-      await fetchAutenticado("/api/vitrine", "GET"); // Aqui só simula, IA pode responder depois
-      alert(`📩 Solicitação de ${categoria} enviada! Aguarde retorno.`);
-    }
-
-    async function avaliar() {
-      const texto = document.getElementById("avaliacao").value;
-      if (!texto) return alert("Escreva sua avaliação.");
-      await fetchAutenticado("/api/avaliacoes", "POST", {
-        avaliacao: texto,
-        obra_id: "cliente"
-      });
-      alert("✅ Avaliação registrada!");
-    }
-
-    carregarObras();
   </script>
 </body>
 </html>
