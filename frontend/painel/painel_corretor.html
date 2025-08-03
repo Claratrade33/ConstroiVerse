@@ -16,19 +16,20 @@
 
   <main>
     <section>
-      <h2>📋 Obras Disponíveis</h2>
-      <div id="obras-disponiveis">Consultando...</div>
+      <h2>📋 Obras disponíveis para venda</h2>
+      <div id="obras-disponiveis">Carregando lista...</div>
     </section>
 
     <section>
-      <h2>📩 Solicitações de Habilitação</h2>
-      <p>Veja obras para as quais você pode se habilitar como corretor.</p>
-      <button onclick="solicitarHabilitacao()">Solicitar Habilitação</button>
+      <h2>✅ Solicitar habilitação</h2>
+      <p>Escolha uma obra e solicite autorização para vender o imóvel.</p>
+      <button onclick="solicitar()">Solicitar Habilitação</button>
     </section>
 
     <section>
-      <h2>🛠️ Acompanhamento das Obras</h2>
-      <div id="status-obras">Carregando status das obras...</div>
+      <h2>📊 Acompanhar obras em andamento</h2>
+      <p>Veja o status das obras que você está vendendo.</p>
+      <div id="obras-andamento">Carregando informações...</div>
     </section>
   </main>
 
@@ -37,8 +38,8 @@
   </footer>
 
   <script>
-    function solicitarHabilitacao() {
-      alert("Solicitação enviada para análise da construtora.");
+    function solicitar() {
+      alert("Solicitação enviada à construtora.");
     }
   </script>
 </body>
