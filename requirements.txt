@@ -1,8 +1,5 @@
-Flask==2.3.3
-gunicorn==21.2.0
-openai==1.14.3
-cryptography==42.0.5
-requests==2.31.0
-python-binance==1.0.17
-fpdf==1.7.2
-python-dotenv==1.0.1
+flask
+flask-cors
+flask_sqlalchemy
+python-dotenv
+pyjwt
