@@ -1,48 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Painel do Engenheiro | ConstroiVerse</title>
+  <meta charset="UTF-8" />
+  <title>Painel do Engenheiro - ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>📐 Painel do Engenheiro</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>Painel do Engenheiro</h1>
+    <p>Gerencie obras, aprove etapas e visualize relatórios técnicos.</p>
   </header>
 
   <main>
     <section>
-      <h2>📊 Acompanhamento de Obras</h2>
-      <ul>
-        <li>Obra 1 - 45% concluída - Risco: baixo</li>
-        <li>Obra 2 - 60% concluída - Risco: médio</li>
+      <h2>Obras sob sua responsabilidade</h2>
+      <ul id="obras-engenheiro">
+        <!-- Lista de obras será populada via JS -->
       </ul>
     </section>
 
     <section>
-      <h2>✅ Aprovação Técnica</h2>
-      <p>Etapas aguardando aprovação:</p>
-      <ul>
-        <li>Estrutura de concreto - aguardando verificação</li>
-        <li>Instalação elétrica - aprovado ✅</li>
-      </ul>
+      <h2>Aprovação técnica</h2>
+      <p>Valide ou recuse as etapas das obras diretamente pela plataforma.</p>
     </section>
 
     <section>
-      <h2>🛠️ Ferramentas de Engenheiro</h2>
+      <h2>Relatórios de risco e cronograma</h2>
+      <button>Baixar relatório completo</button>
+    </section>
+
+    <section>
+      <h2>Ferramentas do Engenheiro</h2>
       <ul>
-        <li>Leitura de projetos integrados</li>
-        <li>Histórico técnico da obra</li>
-        <li>Emissão de ART automatizada</li>
+        <li>Nível a laser</li>
+        <li>Trena digital</li>
+        <li>Software de cálculo estrutural</li>
+        <li>Notebook com AutoCAD</li>
       </ul>
     </section>
   </main>
 
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
+  <script>
+    const obras = ['Edifício Central Park', 'Residencial Sol Nascente', 'Galpão Industrial XPTO'];
+    const listaObras = document.getElementById('obras-engenheiro');
+    obras.forEach(obra => {
+      const li = document.createElement('li');
+      li.textContent = obra;
+      listaObras.appendChild(li);
+    });
+  </script>
 </body>
 </html>
