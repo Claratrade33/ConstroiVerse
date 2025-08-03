@@ -1,44 +1,109 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Vitrine de Profissionais | ConstroiVerse</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vitrine de Profissionais - ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <header>
-    <h1>🌐 Vitrine de Profissionais</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>🔍 Vitrine de Profissionais</h1>
+    <p>Veja e convide profissionais da construção civil por especialidade, reputação ou localização.</p>
   </header>
 
-  <main>
-    <section>
-      <h2>🔎 Buscar por Especialidade</h2>
-      <input type="text" placeholder="Ex: pedreiro, arquiteto, engenheiro..." />
-      <button>Buscar</button>
-    </section>
+  <section class="filtros-vitrine">
+    <select id="filtro-categoria">
+      <option value="">Todas as categorias</option>
+      <option>Arquiteto</option>
+      <option>Engenheiro</option>
+      <option>Mestre de Obra</option>
+      <option>Pedreiro</option>
+      <option>Pintor</option>
+      <option>Eletricista</option>
+      <option>Encanador</option>
+      <option>Representante Comercial</option>
+      <option>Corretor</option>
+    </select>
 
-    <section>
-      <h2>📋 Resultados</h2>
-      <ul>
-        <li>João Silva - Pedreiro - ⭐⭐⭐⭐☆ (32 avaliações) - São Paulo</li>
-        <li>Ana Costa - Arquiteta - ⭐⭐⭐⭐⭐ (48 avaliações) - Rio de Janeiro</li>
-        <li>Paulo Mendes - Engenheiro - ⭐⭐⭐⭐☆ (21 avaliações) - Belo Horizonte</li>
-      </ul>
-    </section>
+    <select id="filtro-regiao">
+      <option value="">Todas as regiões</option>
+      <option>São Paulo</option>
+      <option>Rio de Janeiro</option>
+      <option>Minas Gerais</option>
+      <option>Bahia</option>
+      <option>Paraná</option>
+    </select>
 
-    <section>
-      <h2>👥 Filtros</h2>
-      <p>Região: <select><option>Todos</option><option>SP</option><option>RJ</option></select></p>
-      <p>Especialidade: <select><option>Todos</option><option>Pedreiro</option><option>Engenheiro</option><option>Arquiteto</option></select></p>
-      <p>Reputação mínima: ⭐⭐⭐⭐☆</p>
-    </section>
-  </main>
+    <select id="filtro-nota">
+      <option value="">Todas as reputações</option>
+      <option value="5">⭐⭐⭐⭐⭐</option>
+      <option value="4">⭐⭐⭐⭐</option>
+      <option value="3">⭐⭐⭐</option>
+    </select>
 
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
+    <button onclick="aplicarFiltros()">Filtrar</button>
+  </section>
+
+  <section id="lista-profissionais" class="lista-profissionais">
+    <!-- Lista dinâmica via JavaScript -->
+  </section>
+
+  <script>
+    const profissionais = [
+      { nome: "João Silva", categoria: "Pedreiro", regiao: "São Paulo", nota: 5 },
+      { nome: "Maria Costa", categoria: "Arquiteto", regiao: "Minas Gerais", nota: 4 },
+      { nome: "Carlos Pereira", categoria: "Engenheiro", regiao: "Paraná", nota: 5 },
+      { nome: "Fernanda Lima", categoria: "Pintor", regiao: "Bahia", nota: 3 },
+      { nome: "Lucas Andrade", categoria: "Eletricista", regiao: "Rio de Janeiro", nota: 4 },
+      { nome: "Ana Torres", categoria: "Representante Comercial", regiao: "São Paulo", nota: 5 },
+      { nome: "Eduardo Gomes", categoria: "Mestre de Obra", regiao: "São Paulo", nota: 5 },
+      { nome: "Patrícia Ramos", categoria: "Encanador", regiao: "Minas Gerais", nota: 4 },
+      { nome: "Letícia Souza", categoria: "Corretor", regiao: "Bahia", nota: 5 }
+    ];
+
+    function aplicarFiltros() {
+      const cat = document.getElementById("filtro-categoria").value;
+      const reg = document.getElementById("filtro-regiao").value;
+      const nota = document.getElementById("filtro-nota").value;
+
+      const filtrado = profissionais.filter(p => {
+        return (!cat || p.categoria === cat) &&
+               (!reg || p.regiao === reg) &&
+               (!nota || p.nota >= parseInt(nota));
+      });
+
+      mostrarProfissionais(filtrado);
+    }
+
+    function mostrarProfissionais(lista) {
+      const div = document.getElementById("lista-profissionais");
+      div.innerHTML = "";
+
+      if (lista.length === 0) {
+        div.innerHTML = "<p>Nenhum profissional encontrado com os filtros selecionados.</p>";
+        return;
+      }
+
+      lista.forEach(p => {
+        const box = document.createElement("div");
+        box.className = "card-profissional";
+        box.innerHTML = `
+          <h3>${p.nome}</h3>
+          <p><strong>Categoria:</strong> ${p.categoria}</p>
+          <p><strong>Região:</strong> ${p.regiao}</p>
+          <p><strong>Reputação:</strong> ${"⭐".repeat(p.nota)}</p>
+          <button onclick="convidar('${p.nome}')">Convidar</button>
+        `;
+        div.appendChild(box);
+      });
+    }
+
+    function convidar(nome) {
+      alert(`Convite enviado para ${nome}!`);
+    }
+
+    window.onload = () => mostrarProfissionais(profissionais);
+  </script>
 </body>
 </html>
