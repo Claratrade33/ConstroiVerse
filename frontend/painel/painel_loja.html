@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>ConstroiVerse — Painel da Loja de Materiais</title>
+  <title>ConstroiVerse — Loja de Materiais</title>
   <link rel="stylesheet" href="/static/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -10,58 +10,46 @@
 
   <header>
     <h1>🏬 ConstroiVerse — Loja de Materiais</h1>
-    <p>Bem-vindo, Lojista</p>
+    <p>Controle de pedidos, rota e estoque</p>
   </header>
 
   <main>
 
-    <!-- SEÇÃO: PEDIDOS RECEBIDOS -->
+    <!-- PEDIDOS RECEBIDOS -->
     <section class="bloco bloco-pedidos">
-      <h2>📦 Pedidos de Obras</h2>
+      <h2>📦 Pedidos Recebidos</h2>
       <ul>
-        <li>Obra #001 — 20 sacos de cimento — 🟡 Em separação</li>
-        <li>Obra #002 — 5m³ de areia lavada — ⚪ Pendente</li>
+        <li>Obra #001 — 20 sacos de cimento — 🟡 Separando</li>
+        <li>Obra #002 — 5m³ de areia — ⚪ Pendente</li>
       </ul>
     </section>
 
-    <!-- SEÇÃO: ENTREGAS COM GPS -->
+    <!-- ENTREGAS EM ROTA -->
     <section class="bloco bloco-entregas">
-      <h2>🚚 Entregas em Rota (Logística)</h2>
+      <h2>🚚 Entregas em Rota</h2>
       <ul>
-        <li>Obra #001 — Entrega prevista: 11h35 — Status: A caminho</li>
-        <li>Obra #003 — Agendada para amanhã — Status: Programada</li>
+        <li>Obra #001 — Previsão: 11h30 — A caminho</li>
+        <li>Obra #003 — Agendada para amanhã</li>
       </ul>
     </section>
 
-    <!-- SEÇÃO: ATUALIZAR STATUS -->
-    <section class="bloco bloco-atualizar">
-      <h2>🔄 Atualizar Status de Pedido</h2>
-      <select id="pedido">
-        <option>Pedido #001 - Cimento</option>
-        <option>Pedido #002 - Areia</option>
-      </select>
-      <select id="status">
-        <option>Separado</option>
-        <option>Em rota</option>
-        <option>Entregue</option>
-      </select>
-      <button onclick="atualizarPedido()">Atualizar</button>
-      <p id="resposta_pedido">...</p>
+    <!-- FERRAMENTAS DO LOJISTA -->
+    <section class="bloco bloco-ferramentas">
+      <h2>🛠️ Ferramentas do Lojista</h2>
+      <ul>
+        <li>🖥️ Sistema ERP integrado</li>
+        <li>📦 Controle de estoque e pedidos</li>
+        <li>🗺️ Roteador de entregas (GPS)</li>
+        <li>📱 Aplicativo de despacho logístico</li>
+      </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Painel do Lojista</p>
+    <p>ConstroiVerse © 2025 — Loja Parceira</p>
   </footer>
 
-  <script>
-    function atualizarPedido() {
-      const pedido = document.getElementById('pedido').value;
-      const status = document.getElementById('status').value;
-      document.getElementById('resposta_pedido').innerText = `✅ Pedido "${pedido}" atualizado para "${status}"`;
-    }
-  </script>
-
+  <script src="/static/dashboard.js"></script>
 </body>
 </html>
