@@ -1,67 +1,49 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>ConstroiVerse — Encanador</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel do Encanador | ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
-<body class="painel-encanador">
-
+<body>
   <header>
-    <h1>🚿 ConstroiVerse — Painel do Encanador</h1>
-    <p>Sistema hidráulico da obra sob controle</p>
+    <h1>🚿 Painel do Encanador</h1>
+    <nav>
+      <a href="/logout">Sair</a>
+    </nav>
   </header>
 
   <main>
-
-    <!-- TAREFAS -->
-    <section class="bloco bloco-minhas-tarefas">
-      <h2>🧰 Minhas Tarefas</h2>
-      <ul id="lista-tarefas">
-        <li>Carregando...</li>
-      </ul>
+    <section>
+      <h2>📋 Tarefas Delegadas</h2>
+      <div id="tarefas-encanador">Carregando tarefas...</div>
     </section>
 
-    <!-- ATUALIZAÇÃO -->
-    <section class="bloco bloco-status">
-      <h2>📍 Atualizar Execução</h2>
-      <select id="tarefa">
-        <option>Entrada do banheiro</option>
-        <option>Caixa d'água</option>
-      </select>
-      <select id="status">
-        <option>Concluído</option>
-        <option>Em execução</option>
-        <option>Parado</option>
-      </select>
-      <button onclick="atualizarTarefa()">Atualizar</button>
-      <p id="resposta_status">...</p>
-    </section>
-
-    <!-- FERRAMENTAS -->
-    <section class="bloco bloco-ferramentas">
-      <h2>🧰 Ferramentas do Encanador</h2>
+    <section>
+      <h2>🧰 Ferramentas Recomendadas</h2>
       <ul>
-        <li>🔧 Chave de grifo e chave inglesa</li>
-        <li>🪠 Cortador de tubo PVC</li>
-        <li>🧪 Vedantes e adesivos</li>
-        <li>📐 Trena e fita de rosca</li>
+        <li>Chave de grifo</li>
+        <li>Veda rosca</li>
+        <li>Cortador de PVC</li>
+        <li>Chave inglesa</li>
+        <li>Nível</li>
       </ul>
     </section>
 
+    <section>
+      <h2>✅ Status</h2>
+      <button onclick="marcarComoConcluido()">Finalizar Tarefa</button>
+    </section>
   </main>
 
   <footer>
-    <p>ConstroiVerse © 2025 — Painel Hidráulico</p>
+    <p>© 2025 ConstroiVerse</p>
   </footer>
 
-  <script src="/static/dashboard.js"></script>
   <script>
-    function atualizarTarefa() {
-      const tarefa = document.getElementById('tarefa').value;
-      const status = document.getElementById('status').value;
-      document.getElementById('resposta_status').innerText = `✅ "${tarefa}" atualizado para "${status}"`;
+    function marcarComoConcluido() {
+      alert("Tarefa marcada como concluída.");
     }
   </script>
 </body>
