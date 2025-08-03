@@ -1,24 +1,73 @@
-<!-- frontend/painel/painel_corretor.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Corretor | ConstroiVerse</title>
-  <link rel="stylesheet" href="../style/style.css" />
+  <meta charset="UTF-8">
+  <title>ConstroiVerse — Painel do Corretor</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <div class="painel-container">
-    <h1>🏠 Painel do Corretor de Imóveis</h1>
-    <p>Bem-vindo ao seu espaço de vendas e comissões:</p>
+<body class="painel-corretor">
 
-    <div class="menu">
-      <button onclick="window.location.href='/imoveis_disponiveis'">📋 Imóveis Disponíveis</button>
-      <button onclick="window.location.href='/visitas_agendadas'">📅 Visitas Agendadas</button>
-      <button onclick="window.location.href='/status_obras'">🏗️ Status das Obras</button>
-      <button onclick="window.location.href='/comissoes'">💰 Comissões e Pagamentos</button>
-      <button onclick="window.location.href='/'">🔙 Voltar ao Início</button>
-    </div>
-  </div>
+  <header>
+    <h1>🏘️ ConstroiVerse — Painel do Corretor de Imóveis</h1>
+    <p>Visualização de imóveis, comissões e integração com obras</p>
+  </header>
+
+  <main>
+
+    <!-- LISTA DE IMÓVEIS VINCULADOS -->
+    <section class="bloco bloco-imoveis">
+      <h2>🏠 Imóveis em Captação</h2>
+      <ul>
+        <li>Casa Vila Verde — Valor: R$ 380.000 — Status: Em obra (75%)</li>
+        <li>Edifício Solaris — Valor: R$ 680.000 — Status: Em acabamento</li>
+      </ul>
+    </section>
+
+    <!-- COMISSÃO ESTIMADA -->
+    <section class="bloco bloco-comissao">
+      <h2>💰 Comissão Estimada</h2>
+      <ul>
+        <li>Imóveis captados: 2</li>
+        <li>Total de comissões previstas: R$ 28.600</li>
+      </ul>
+    </section>
+
+    <!-- IA PARA ARGUMENTO DE VENDA -->
+    <section class="bloco bloco-ia">
+      <h2>🧠 Criar Argumento de Venda com IA</h2>
+      <textarea id="descricao_imovel" placeholder="Ex: Casa com piscina em área nobre, cliente busca segurança..."></textarea>
+      <button onclick="criarArgumento()">Gerar com IA</button>
+      <pre id="resposta_imovel">...</pre>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>ConstroiVerse © 2025 — Painel do Corretor Integrado</p>
+  </footer>
+
+  <script>
+    async function criarArgumento() {
+      const descricao = document.getElementById('descricao_imovel').value;
+      document.getElementById('resposta_imovel').innerText = "⏳ Gerando argumento com Clarice...";
+
+      try {
+        const response = await fetch('/ia/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            descricao: `Sou corretor e preciso de um argumento de venda para o seguinte imóvel: ${descricao}`
+          })
+        });
+
+        const data = await response.json();
+        document.getElementById('resposta_imovel').innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById('resposta_imovel').innerText = "Erro ao acessar a IA.";
+      }
+    }
+  </script>
+
 </body>
 </html>
