@@ -1,48 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Painel da Loja | ConstroiVerse</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel da Loja</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
   <header>
-    <h1>🏬 Painel da Loja de Materiais</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>Loja de Materiais</h1>
   </header>
 
-  <main>
-    <section>
-      <h2>📦 Pedidos Recebidos</h2>
-      <ul>
-        <li>Pedido #001 - Obra de João - 10 sacos de cimento - Entregar até 10/08</li>
-        <li>Pedido #002 - Cliente Maria - 20m² de piso Portinari - Entregar até 12/08</li>
-      </ul>
-    </section>
+  <section>
+    <h2>Pedidos Recebidos</h2>
+    <div id="pedidos-container">
+      <!-- Lista de pedidos de materiais de obras -->
+    </div>
+  </section>
 
-    <section>
-      <h2>📍 Logística e Entregas</h2>
-      <p>Entregas agendadas:</p>
-      <ul>
-        <li>08/08 - Bairro Vila Nova</li>
-        <li>09/08 - Centro</li>
-      </ul>
-    </section>
+  <section>
+    <h2>Estoque Atual</h2>
+    <div id="estoque-container">
+      <!-- Tabela de estoque -->
+    </div>
+  </section>
 
-    <section>
-      <h2>🧰 Ferramentas e Estoque</h2>
-      <ul>
-        <li>Controle de estoque em tempo real</li>
-        <li>Relatório de vendas por período</li>
-        <li>Requisições pendentes para fabricantes</li>
-      </ul>
-    </section>
-  </main>
+  <section>
+    <h2>Rota de Entregas (GPS)</h2>
+    <div id="rota-entrega">
+      <!-- Integração com mapa -->
+    </div>
+  </section>
+
+  <section>
+    <h2>Representantes Cadastrados</h2>
+    <div id="representantes-lista">
+      <!-- Lista de representantes por marca e região -->
+    </div>
+  </section>
+
+  <section>
+    <h2>Solicitar Representante</h2>
+    <form id="form-representante">
+      <input type="text" placeholder="Categoria (ex: pisos, tintas, etc)" required />
+      <button type="submit">Solicitar</button>
+    </form>
+  </section>
 
   <footer>
-    <p>© 2025 ConstroiVerse</p>
+    <p>&copy; ConstroiVerse - Loja</p>
   </footer>
+
+  <script src="/static/js/loja.js"></script>
 </body>
 </html>
