@@ -2,55 +2,50 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel da Loja</title>
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <title>Painel da Loja - ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>Loja de Materiais</h1>
+    <h1>Painel da Loja de Materiais</h1>
+    <p>Gerencie seu estoque, pedidos recebidos e entregas em rota.</p>
   </header>
 
-  <section>
-    <h2>Pedidos Recebidos</h2>
-    <div id="pedidos-container">
-      <!-- Lista de pedidos de materiais de obras -->
-    </div>
-  </section>
+  <main>
+    <section>
+      <h2>Estoque atual</h2>
+      <ul id="estoque-loja">
+        <!-- Lista de insumos disponíveis -->
+        <li>Areia fina - 12m³</li>
+        <li>Cimento CP-II - 90 sacos</li>
+        <li>Tinta branca - 50 latas</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>Estoque Atual</h2>
-    <div id="estoque-container">
-      <!-- Tabela de estoque -->
-    </div>
-  </section>
+    <section>
+      <h2>Pedidos recebidos das obras</h2>
+      <div id="pedidos">
+        <p><strong>Obra:</strong> Casa Verde | <strong>Material:</strong> Areia | <strong>Qtd:</strong> 5m³</p>
+        <p><strong>Obra:</strong> Edifício Sol | <strong>Material:</strong> Tinta | <strong>Qtd:</strong> 10 latas</p>
+      </div>
+    </section>
 
-  <section>
-    <h2>Rota de Entregas (GPS)</h2>
-    <div id="rota-entrega">
-      <!-- Integração com mapa -->
-    </div>
-  </section>
+    <section>
+      <h2>Entregas em rota</h2>
+      <ul>
+        <li>Pedido #123 - Em trânsito (GPS: 3km da obra)</li>
+        <li>Pedido #124 - Aguardando carregamento</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>Representantes Cadastrados</h2>
-    <div id="representantes-lista">
-      <!-- Lista de representantes por marca e região -->
-    </div>
-  </section>
-
-  <section>
-    <h2>Solicitar Representante</h2>
-    <form id="form-representante">
-      <input type="text" placeholder="Categoria (ex: pisos, tintas, etc)" required />
-      <button type="submit">Solicitar</button>
-    </form>
-  </section>
-
-  <footer>
-    <p>&copy; ConstroiVerse - Loja</p>
-  </footer>
-
-  <script src="/static/js/loja.js"></script>
+    <section>
+      <h2>Ferramentas da Loja</h2>
+      <ul>
+        <li>Sistema de controle de estoque</li>
+        <li>Emissor de nota fiscal</li>
+        <li>Integração com transportadora</li>
+      </ul>
+    </section>
+  </main>
 </body>
 </html>
