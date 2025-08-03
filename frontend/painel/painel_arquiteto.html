@@ -1,23 +1,66 @@
-<!-- frontend/painel/painel_arquiteto.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Arquiteto | ConstroiVerse</title>
-  <link rel="stylesheet" href="../style/style.css" />
+  <meta charset="UTF-8">
+  <title>ConstroiVerse — Painel do Arquiteto</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-  <div class="painel-container">
-    <h1>🧱 Painel do Arquiteto</h1>
-    <p>Bem-vindo ao ConstroiVerse.</p>
+<body class="painel-arquiteto">
 
-    <div class="menu">
-      <button onclick="window.location.href='/projetos'">📐 Meus Projetos</button>
-      <button onclick="window.location.href='/orcamentos'">💸 Gerar Orçamento</button>
-      <button onclick="window.location.href='/materiais'">🏗️ Solicitar Materiais</button>
-      <button onclick="window.location.href='/'">🔙 Voltar ao Início</button>
-    </div>
-  </div>
+  <header>
+    <h1>🏛️ ConstroiVerse — Arquiteto</h1>
+    <p>Bem-vindo, Arquiteto(a)</p>
+  </header>
+
+  <main>
+
+    <!-- SEÇÃO: UPLOAD DE PROJETO -->
+    <section class="bloco bloco-upload">
+      <h2>📐 Enviar Projeto Arquitetônico</h2>
+      <input type="file" id="projeto" />
+      <button onclick="enviarProjeto()">Enviar para Orçamento</button>
+    </section>
+
+    <!-- SEÇÃO: ORÇAMENTO AUTOMÁTICO POR AMBIENTE -->
+    <section class="bloco bloco-orcamento">
+      <h2>💡 Sugestão de Orçamento por Ambiente</h2>
+      <textarea id="descricao_ambiente" placeholder="Ex: Sala com piso de madeira e iluminação embutida..."></textarea>
+      <button onclick="gerarOrcamentoAmbiente()">Gerar com IA</button>
+      <pre id="resposta_ambiente">...</pre>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>ConstroiVerse © 2025 — Arquiteto Integrado</p>
+  </footer>
+
+  <script>
+    function enviarProjeto() {
+      alert('📁 Função de upload de projeto ainda será conectada ao backend!');
+    }
+
+    async function gerarOrcamentoAmbiente() {
+      const descricao = document.getElementById('descricao_ambiente').value;
+      document.getElementById('resposta_ambiente').innerText = "⏳ Gerando orçamento...";
+
+      try {
+        const response = await fetch('/ia/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            descricao: `Sou arquiteto e quero um orçamento detalhado para o seguinte ambiente: ${descricao}`
+          })
+        });
+
+        const data = await response.json();
+        document.getElementById('resposta_ambiente').innerText = JSON.stringify(data, null, 2);
+      } catch (error) {
+        document.getElementById('resposta_ambiente').innerText = "Erro ao acessar a IA Clarice.";
+      }
+    }
+  </script>
+
 </body>
 </html>
