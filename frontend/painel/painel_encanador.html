@@ -2,49 +2,42 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Encanador | ConstroiVerse</title>
+  <title>Painel do Encanador - ConstroiVerse</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <header>
-    <h1>🚿 Painel do Encanador</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>Painel do Encanador</h1>
+    <p>Gerencie suas instalações hidráulicas e veja os materiais disponíveis.</p>
   </header>
 
   <main>
     <section>
-      <h2>📋 Tarefas Delegadas</h2>
-      <div id="tarefas-encanador">Carregando tarefas...</div>
-    </section>
-
-    <section>
-      <h2>🧰 Ferramentas Recomendadas</h2>
+      <h2>Instalações Agendadas</h2>
       <ul>
-        <li>Chave de grifo</li>
-        <li>Veda rosca</li>
-        <li>Cortador de PVC</li>
-        <li>Chave inglesa</li>
-        <li>Nível</li>
+        <li>Banheiro suíte - Água fria</li>
+        <li>Cozinha - Esgoto</li>
+        <li>Área de serviço - Máquina de lavar</li>
       </ul>
     </section>
 
     <section>
-      <h2>✅ Status</h2>
-      <button onclick="marcarComoConcluido()">Finalizar Tarefa</button>
+      <h2>Materiais Recebidos</h2>
+      <ul>
+        <li>Tubos PVC 50mm (12m)</li>
+        <li>Joelho 90° (10 unid.)</li>
+        <li>Caixa sifonada Tigre</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ferramentas do Encanador</h2>
+      <ul>
+        <li>Chave grifo</li>
+        <li>Serra para PVC</li>
+        <li>Fita veda rosca</li>
+      </ul>
     </section>
   </main>
-
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
-
-  <script>
-    function marcarComoConcluido() {
-      alert("Tarefa marcada como concluída.");
-    }
-  </script>
 </body>
 </html>
