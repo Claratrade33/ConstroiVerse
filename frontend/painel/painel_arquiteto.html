@@ -1,50 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Arquiteto | ConstroiVerse</title>
+  <title>Painel do Arquiteto</title>
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <header>
-    <h1>🏛️ Painel do Arquiteto</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
-  </header>
-
-  <main>
-    <section>
-      <h2>📁 Projetos enviados</h2>
-      <p>Visualize os projetos e acompanhe a evolução.</p>
-      <ul id="projetos-arquiteto">
-        <!-- Lista dinâmica -->
-      </ul>
-    </section>
+  <div class="painel">
+    <h2>🎨 Painel do Arquiteto</h2>
 
     <section>
-      <h2>📤 Enviar novo projeto</h2>
-      <form method="POST" enctype="multipart/form-data" action="/upload_projeto">
-        <input type="file" name="projeto" required />
-        <button type="submit">Enviar</button>
+      <h3>📤 Enviar Projeto</h3>
+      <form id="formUploadProjeto" enctype="multipart/form-data">
+        <input type="file" name="projeto_pdf" accept=".pdf" required />
+        <button type="submit">Enviar Projeto</button>
       </form>
     </section>
 
     <section>
-      <h2>🧰 Ferramentas do Arquiteto</h2>
-      <ul>
-        <li>AutoCAD</li>
-        <li>SketchUp</li>
-        <li>Revit</li>
-        <li>Lumion</li>
-        <li>Normas de acessibilidade</li>
-      </ul>
+      <h3>📊 Orçamentos Gerados</h3>
+      <ul id="listaOrcamentos"></ul>
     </section>
-  </main>
 
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
+    <section>
+      <h3>✨ Acabamentos Sugeridos pela IA</h3>
+      <ul id="acabamentosSugeridos"></ul>
+    </section>
+
+    <section>
+      <h3>📩 Comunicação com Cliente e Engenheiro</h3>
+      <textarea placeholder="Mensagem..."></textarea>
+      <button>Enviar Mensagem</button>
+    </section>
+  </div>
+
+  <script src="/static/js/arquiteto.js"></script>
 </body>
 </html>
