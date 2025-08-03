@@ -1,15 +1,15 @@
-from flask import Flask, jsonify, request
+from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
 import openai
 import jwt
 import datetime
 import os
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend', template_folder='../frontend/painel')
 CORS(app)
 
 # Variáveis de ambiente
@@ -27,13 +27,26 @@ db = client['constroiverse']
 usuarios_collection = db['usuarios']
 mensagens_collection = db['mensagens']
 
-# Rota de teste
-@app.route("/")
+# ROTA INICIAL (painel padrão)
+@app.route('/')
+def home():
+    return render_template('painel_construtora.html')
+
+# ROTAS DINÂMICAS PARA OS DEMAIS PANEIS
+@app.route('/painel/<perfil>')
+def render_painel(perfil):
+    try:
+        return render_template(f'painel_{perfil}.html')
+    except:
+        return f"Painel '{perfil}' não encontrado.", 404
+
+# API - Rota de status
+@app.route("/api")
 def index():
     return jsonify({"status": "ConstroiVerse API está rodando 🏗️"}), 200
 
-# Autenticação
-@app.route("/login", methods=["POST"])
+# API - Login
+@app.route("/api/login", methods=["POST"])
 def login():
     data = request.json
     user = usuarios_collection.find_one({
@@ -49,8 +62,8 @@ def login():
     else:
         return jsonify({"error": "Credenciais inválidas"}), 401
 
-# Cadastro
-@app.route("/register", methods=["POST"])
+# API - Cadastro
+@app.route("/api/register", methods=["POST"])
 def register():
     data = request.json
     if usuarios_collection.find_one({"username": data["username"]}):
@@ -62,14 +75,13 @@ def register():
     })
     return jsonify({"message": "Cadastro realizado com sucesso!"}), 201
 
-# IA Clarice: responder perguntas
-@app.route("/ia", methods=["POST"])
+# API - IA Clarice
+@app.route("/api/ia", methods=["POST"])
 def ia_clarice():
     data = request.json
     prompt = data.get("mensagem", "")
     if not prompt:
         return jsonify({"erro": "Mensagem ausente"}), 400
-
     try:
         response = openai.ChatCompletion.create(
             model="gpt-4",
@@ -88,8 +100,8 @@ def ia_clarice():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-# Rota protegida de exemplo
-@app.route("/usuario", methods=["GET"])
+# API - Usuário autenticado
+@app.route("/api/usuario", methods=["GET"])
 def get_usuario():
     token = request.headers.get("Authorization")
     if not token:
@@ -105,5 +117,7 @@ def get_usuario():
     except Exception:
         return jsonify({"error": "Token inválido"}), 401
 
+# EXECUÇÃO
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host="0.0.0.0", port=port, debug=True)
