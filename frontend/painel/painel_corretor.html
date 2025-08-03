@@ -1,46 +1,69 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel do Corretor | ConstroiVerse</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <title>Painel do Corretor - ConstroiVerse</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <header>
-    <h1>🏡 Painel do Corretor</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
+    <h1>👔 Painel do Corretor</h1>
+    <a href="/">Sair</a>
   </header>
 
   <main>
     <section>
-      <h2>📋 Obras disponíveis para venda</h2>
-      <div id="obras-disponiveis">Carregando lista...</div>
+      <h2>Obras disponíveis para venda</h2>
+      <div id="obrasDisponiveis"></div>
     </section>
 
     <section>
-      <h2>✅ Solicitar habilitação</h2>
-      <p>Escolha uma obra e solicite autorização para vender o imóvel.</p>
-      <button onclick="solicitar()">Solicitar Habilitação</button>
-    </section>
-
-    <section>
-      <h2>📊 Acompanhar obras em andamento</h2>
-      <p>Veja o status das obras que você está vendendo.</p>
-      <div id="obras-andamento">Carregando informações...</div>
+      <h2>Solicitações enviadas</h2>
+      <div id="solicitacoesEnviadas"></div>
     </section>
   </main>
 
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
-
   <script>
-    function solicitar() {
-      alert("Solicitação enviada à construtora.");
+    const corretorId = localStorage.getItem("userId")
+
+    async function carregarObrasDisponiveis() {
+      const response = await fetch(`/api/obras_disponiveis`);
+      const obras = await response.json();
+      const container = document.getElementById("obrasDisponiveis");
+      container.innerHTML = obras.map(obra => `
+        <div class="card">
+          <h3>${obra.nome}</h3>
+          <p>${obra.descricao}</p>
+          <button onclick="solicitarHabilitacao('${obra._id}')">Solicitar habilitação</button>
+        </div>
+      `).join("");
     }
+
+    async function solicitarHabilitacao(obraId) {
+      await fetch(`/api/solicitar_habilitacao`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ corretorId, obraId })
+      });
+      alert("Solicitação enviada!");
+      carregarSolicitacoes();
+    }
+
+    async function carregarSolicitacoes() {
+      const response = await fetch(`/api/solicitacoes_corretor/${corretorId}`);
+      const dados = await response.json();
+      const container = document.getElementById("solicitacoesEnviadas");
+      container.innerHTML = dados.map(s => `
+        <div class="card">
+          <p><strong>Obra:</strong> ${s.nomeObra}</p>
+          <p><strong>Status:</strong> ${s.status}</p>
+        </div>
+      `).join("");
+    }
+
+    carregarObrasDisponiveis();
+    carregarSolicitacoes();
   </script>
 </body>
 </html>
