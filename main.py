@@ -1,44 +1,43 @@
 import os
-from flask import Flask
+from flask import Flask, render_template, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
-# Carrega variáveis do .env
+# Load .env
 load_dotenv()
 
-# Inicialização do Flask
-app = Flask(__name__)
+# Configuração Flask
+app = Flask(__name__, template_folder='frontend/painel', static_folder='frontend/static')
 CORS(app)
 
-# Configurações básicas
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'segredo-padrao')
+# Conexão MongoDB
+MONGO_URI = os.getenv('MONGO_URI')
+client = MongoClient(MONGO_URI)
+db = client['constroiverse']
 
-# Importação dos blueprints
+# Blueprints
 from backend.controllers.auth_controller import auth_bp
 from backend.controllers.obra_controller import obra_bp
-from backend.controllers.ia_controller import ia_bp
-from backend.controllers.orcamento_controller import orcamento_bp
 from backend.controllers.perfil_controller import perfil_bp
-from backend.controllers.painel_controller import painel_bp
-from backend.controllers.profissional_controller import profissional_bp
 from backend.controllers.vitrine_controller import vitrine_bp
+from backend.controllers.fabricante_controller import fabricante_bp
+from backend.controllers.representante_controller import representante_bp
 
-# Registro dos blueprints
+# Registrar rotas
 app.register_blueprint(auth_bp)
 app.register_blueprint(obra_bp)
-app.register_blueprint(ia_bp)
-app.register_blueprint(orcamento_bp)
 app.register_blueprint(perfil_bp)
-app.register_blueprint(painel_bp)
-app.register_blueprint(profissional_bp)
 app.register_blueprint(vitrine_bp)
+app.register_blueprint(fabricante_bp)
+app.register_blueprint(representante_bp)
 
-# Rota inicial
+# Rota principal (opcional, pode remover se usar SPA)
 @app.route('/')
 def index():
-    return {'status': 'ConstroiVerse ativo com sucesso'}
+    return jsonify({"status": "API ConstroiVerse ativa"})
 
-# Execução no Render
+# Rodar no Render
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
