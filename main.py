@@ -1,42 +1,44 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask
 from flask_cors import CORS
-from pymongo import MongoClient
 from dotenv import load_dotenv
 
-# Carrega variáveis de ambiente do .env
+# Carrega variáveis do .env
 load_dotenv()
 
-# Inicializa o app Flask
+# Inicialização do Flask
 app = Flask(__name__)
 CORS(app)
 
-# Configurações
-MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
-client = MongoClient(MONGO_URI)
-db = client['constroiverse']
+# Configurações básicas
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'segredo-padrao')
 
-# Banco disponível globalmente
-app.db = db
+# Importação dos blueprints
+from backend.controllers.auth_controller import auth_bp
+from backend.controllers.obra_controller import obra_bp
+from backend.controllers.ia_controller import ia_bp
+from backend.controllers.orcamento_controller import orcamento_bp
+from backend.controllers.perfil_controller import perfil_bp
+from backend.controllers.painel_controller import painel_bp
+from backend.controllers.profissional_controller import profissional_bp
+from backend.controllers.vitrine_controller import vitrine_bp
 
-# Importa e registra as rotas dos controllers
-from controllers.auth_controller import auth_bp
-from controllers.ia_controller import ia_bp
-from controllers.obra_controller import obra_bp
-from controllers.orcamento_controller import orcamento_bp
+# Registro dos blueprints
+app.register_blueprint(auth_bp)
+app.register_blueprint(obra_bp)
+app.register_blueprint(ia_bp)
+app.register_blueprint(orcamento_bp)
+app.register_blueprint(perfil_bp)
+app.register_blueprint(painel_bp)
+app.register_blueprint(profissional_bp)
+app.register_blueprint(vitrine_bp)
 
-# Registra blueprints
-app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(ia_bp, url_prefix='/api/ia')
-app.register_blueprint(obra_bp, url_prefix='/api/obras')
-app.register_blueprint(orcamento_bp, url_prefix='/api/orcamentos')
-
-# Rota raiz de status
+# Rota inicial
 @app.route('/')
-def status():
-    return jsonify({"status": "API ConstroiVerse ativa com sucesso 🚀"})
+def index():
+    return {'status': 'ConstroiVerse ativo com sucesso'}
 
-# Inicia o servidor
+# Execução no Render
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
