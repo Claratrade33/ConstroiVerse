@@ -10,12 +10,13 @@ def listar_materiais():
     materiais = list(materiais_collection.find({}, {'_id': 0}))
     return jsonify(materiais)
 
-# Adicionar material
+# Adicionar novo material
 @materiais_controller.route('/materiais', methods=['POST'])
 def adicionar_material():
     dados = request.get_json()
-    if not dados.get('nome') or not dados.get('quantidade') or not dados.get('obra'):
-        return jsonify({'erro': 'Campos obrigatórios: nome, quantidade, obra'}), 400
+    campos_obrigatorios = ['nome', 'quantidade', 'obra', 'fabricante']
+    if not all(campo in dados for campo in campos_obrigatorios):
+        return jsonify({'erro': f'Campos obrigatórios: {campos_obrigatorios}'}), 400
 
     materiais_collection.insert_one(dados)
-    return jsonify({'mensagem': 'Material cadastrado com sucesso'})
+    return jsonify({'mensagem': 'Material adicionado com sucesso'})
