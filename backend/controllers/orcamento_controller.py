@@ -1,56 +1,34 @@
 from flask import Blueprint, request, jsonify
 from models.orcamento import Orcamento
-from main import db
-from datetime import datetime
+from database import db
+from services.clarice import gerar_orcamento_ia
 
-orcamento_bp = Blueprint('orcamento', __name__)
+orcamento_controller = Blueprint('orcamento_controller', __name__)
 
-# 🔹 Salvar novo orçamento
-@orcamento_bp.route('/orcamentos', methods=['POST'])
-def salvar_orcamento():
-    data = request.json
+@orcamento_controller.route('/orcamento', methods=['POST'])
+def criar_orcamento():
+    dados = request.json
+    try:
+        novo_orcamento = Orcamento(**dados)
+        db.session.add(novo_orcamento)
+        db.session.commit()
+        return jsonify({'mensagem': 'Orçamento criado com sucesso!'}), 201
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 400
 
-    novo = Orcamento(
-        cliente_id=data.get('cliente_id'),
-        obra_id=data.get('obra_id'),
-        descricao_input=data.get('descricao_input'),
-        resposta_ia=data.get('resposta_ia'),
-        total_estimado=data.get('total_estimado')
-    )
+@orcamento_controller.route('/orcamento/gerar', methods=['POST'])
+def gerar_orcamento_automatico():
+    dados = request.json
+    try:
+        resultado = gerar_orcamento_ia(dados)
+        return jsonify(resultado), 200
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 400
 
-    db.session.add(novo)
-    db.session.commit()
-    return jsonify({'msg': 'Orçamento salvo com sucesso', 'orcamento_id': novo.id})
-
-# 🔹 Listar orçamentos de um cliente
-@orcamento_bp.route('/orcamentos', methods=['GET'])
+@orcamento_controller.route('/orcamentos', methods=['GET'])
 def listar_orcamentos():
-    cliente_id = request.args.get('cliente_id')
-    if not cliente_id:
-        return jsonify({'erro': 'ID do cliente é obrigatório'}), 400
-
-    orcamentos = Orcamento.query.filter_by(cliente_id=cliente_id).all()
-    lista = []
-    for o in orcamentos:
-        lista.append({
-            'id': o.id,
-            'descricao': o.descricao_input,
-            'total_estimado': o.total_estimado,
-            'data': o.data_criacao.strftime('%Y-%m-%d'),
-        })
-    return jsonify(lista)
-
-# 🔹 Ver orçamento específico
-@orcamento_bp.route('/orcamentos/<int:orcamento_id>', methods=['GET'])
-def detalhe_orcamento(orcamento_id):
-    o = Orcamento.query.get(orcamento_id)
-    if not o:
-        return jsonify({'erro': 'Orçamento não encontrado'}), 404
-
-    return jsonify({
-        'id': o.id,
-        'descricao': o.descricao_input,
-        'resposta_ia': o.resposta_ia,
-        'total_estimado': o.total_estimado,
-        'data': o.data_criacao.strftime('%Y-%m-%d'),
-    })
+    try:
+        orcamentos = Orcamento.query.all()
+        return jsonify([o.serialize() for o in orcamentos]), 200
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 500
