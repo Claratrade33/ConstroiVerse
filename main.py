@@ -1,129 +1,136 @@
+import os
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
-import openai
-import jwt
-import datetime
-import os
 from dotenv import load_dotenv
+import datetime
 
-# Carrega variáveis de ambiente
+# Carregar variáveis de ambiente
 load_dotenv()
 
-# Caminhos absolutos para templates e estáticos
+# Diretórios para HTML/CSS/JS
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'frontend', 'painel')
-STATIC_DIR = os.path.join(BASE_DIR, 'frontend')
+STATIC_DIR = os.path.join(BASE_DIR, 'frontend', 'static')
 
 # Inicializa o app Flask
 app = Flask(__name__, static_folder=STATIC_DIR, template_folder=TEMPLATE_DIR)
 CORS(app)
 
-# Configurações do sistema
-SECRET_KEY = os.getenv('SECRET_KEY')
-MONGO_URI = os.getenv('MONGO_URI')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-
-app.config['SECRET_KEY'] = SECRET_KEY
-openai.api_key = OPENAI_API_KEY
+# Configurações
+SECRET_KEY = os.getenv('SECRET_KEY', 'CHAVESECRETA')
+MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
 
 # Conexão com MongoDB
 client = MongoClient(MONGO_URI)
 db = client['constroiverse']
-usuarios_collection = db['usuarios']
-mensagens_collection = db['mensagens']
 
-# Rota inicial
+# Coleções
+usuarios_collection = db['usuarios']
+obras_collection = db['obras']
+profissionais_collection = db['profissionais']
+documentos_collection = db['documentos']
+licitacoes_collection = db['licitacoes']
+materiais_collection = db['materiais']
+fabricantes_collection = db['fabricantes']
+
+### --- Dados de EXEMPLO (cadastra só se não existir nada) ---
+def inserir_exemplos():
+    if obras_collection.count_documents({}) == 0:
+        obras_collection.insert_many([
+            {
+                "nome": "Edifício Jardim Europa",
+                "status": "Em execução",
+                "roi": "18%",
+                "profissionais": ["Eng. Fulano de Tal", "Arq. Maria Silva"],
+                "documentos": ["Planta Baixa.pdf", "ART.pdf"],
+                "materiais": ["Concreto Usinado", "Tinta Suvinil Premium"],
+                "licitacoes": ["Licitação 001"],
+                "fabricantes": ["Suvinil", "Votorantim"]
+            },
+            {
+                "nome": "Residencial Solar",
+                "status": "Em licitação",
+                "roi": "22%",
+                "profissionais": ["Eng. Pedro Gomes"],
+                "documentos": ["Memorial Descritivo.pdf"],
+                "materiais": ["Bloco Estrutural", "Cimento Votoran"],
+                "licitacoes": ["Licitação 002"],
+                "fabricantes": ["Votorantim"]
+            }
+        ])
+    if profissionais_collection.count_documents({}) == 0:
+        profissionais_collection.insert_many([
+            {"nome": "Eng. Fulano de Tal", "especialidade": "Engenheiro Civil"},
+            {"nome": "Arq. Maria Silva", "especialidade": "Arquiteta"},
+            {"nome": "Eng. Pedro Gomes", "especialidade": "Engenheiro de Obras"}
+        ])
+    if documentos_collection.count_documents({}) == 0:
+        documentos_collection.insert_many([
+            {"nome": "Planta Baixa.pdf", "obra": "Edifício Jardim Europa"},
+            {"nome": "ART.pdf", "obra": "Edifício Jardim Europa"},
+            {"nome": "Memorial Descritivo.pdf", "obra": "Residencial Solar"}
+        ])
+    if licitacoes_collection.count_documents({}) == 0:
+        licitacoes_collection.insert_many([
+            {"nome": "Licitação 001", "status": "Aberta", "obra": "Edifício Jardim Europa"},
+            {"nome": "Licitação 002", "status": "Aberta", "obra": "Residencial Solar"}
+        ])
+    if materiais_collection.count_documents({}) == 0:
+        materiais_collection.insert_many([
+            {"nome": "Concreto Usinado", "quantidade": 120, "obra": "Edifício Jardim Europa", "fabricante": "Votorantim"},
+            {"nome": "Tinta Suvinil Premium", "quantidade": 80, "obra": "Edifício Jardim Europa", "fabricante": "Suvinil"},
+            {"nome": "Bloco Estrutural", "quantidade": 1000, "obra": "Residencial Solar", "fabricante": "Votorantim"},
+            {"nome": "Cimento Votoran", "quantidade": 200, "obra": "Residencial Solar", "fabricante": "Votorantim"}
+        ])
+    if fabricantes_collection.count_documents({}) == 0:
+        fabricantes_collection.insert_many([
+            {"nome": "Votorantim", "produtos": ["Concreto Usinado", "Cimento Votoran"]},
+            {"nome": "Suvinil", "produtos": ["Tinta Suvinil Premium"]}
+        ])
+inserir_exemplos()
+
+# --- ROTAS DE PAINEL ---
 @app.route('/')
-def home():
+def painel_construtora():
     return render_template('painel_construtora.html')
 
-# Rota dinâmica de painéis
-@app.route('/painel/<perfil>')
-def render_painel(perfil):
-    try:
-        return render_template(f'painel_{perfil}.html')
-    except:
-        return f"Painel '{perfil}' não encontrado.", 404
+# --- API DE DADOS ---
+@app.route('/api/obras')
+def api_obras():
+    obras = list(obras_collection.find({}, {'_id': 0}))
+    return jsonify(obras)
 
-# API - status
-@app.route("/api")
-def index():
-    return jsonify({"status": "ConstroiVerse API está rodando 🏗️"}), 200
+@app.route('/api/profissionais')
+def api_profissionais():
+    profissionais = list(profissionais_collection.find({}, {'_id': 0}))
+    return jsonify(profissionais)
 
-# API - login
-@app.route("/api/login", methods=["POST"])
-def login():
-    data = request.json
-    user = usuarios_collection.find_one({
-        "username": data["username"],
-        "password": data["password"]
-    })
-    if user:
-        token = jwt.encode({
-            "user_id": str(user["_id"]),
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12)
-        }, SECRET_KEY, algorithm="HS256")
-        return jsonify({"token": token})
-    else:
-        return jsonify({"error": "Credenciais inválidas"}), 401
+@app.route('/api/documentos')
+def api_documentos():
+    documentos = list(documentos_collection.find({}, {'_id': 0}))
+    return jsonify(documentos)
 
-# API - registro
-@app.route("/api/register", methods=["POST"])
-def register():
-    data = request.json
-    if usuarios_collection.find_one({"username": data["username"]}):
-        return jsonify({"error": "Usuário já existe"}), 400
-    usuarios_collection.insert_one({
-        "username": data["username"],
-        "password": data["password"],
-        "perfil": data.get("perfil", "cliente")
-    })
-    return jsonify({"message": "Cadastro realizado com sucesso!"}), 201
+@app.route('/api/licitacoes')
+def api_licitacoes():
+    licitacoes = list(licitacoes_collection.find({}, {'_id': 0}))
+    return jsonify(licitacoes)
 
-# API - IA Clarice
-@app.route("/api/ia", methods=["POST"])
-def ia_clarice():
-    data = request.json
-    prompt = data.get("mensagem", "")
-    if not prompt:
-        return jsonify({"erro": "Mensagem ausente"}), 400
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "Você é a Clarice, uma assistente inteligente especializada em construção civil. Responda com clareza e agilidade."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        resposta = response['choices'][0]['message']['content']
-        mensagens_collection.insert_one({
-            "entrada": prompt,
-            "resposta": resposta,
-            "data": datetime.datetime.utcnow()
-        })
-        return jsonify({"resposta": resposta})
-    except Exception as e:
-        return jsonify({"erro": str(e)}), 500
+@app.route('/api/materiais')
+def api_materiais():
+    materiais = list(materiais_collection.find({}, {'_id': 0}))
+    return jsonify(materiais)
 
-# API - usuário autenticado
-@app.route("/api/usuario", methods=["GET"])
-def get_usuario():
-    token = request.headers.get("Authorization")
-    if not token:
-        return jsonify({"error": "Token ausente"}), 401
-    try:
-        decoded = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        user = usuarios_collection.find_one({"_id": decoded["user_id"]})
-        if not user:
-            return jsonify({"error": "Usuário não encontrado"}), 404
-        return jsonify({"username": user["username"], "perfil": user.get("perfil", "cliente")})
-    except jwt.ExpiredSignatureError:
-        return jsonify({"error": "Token expirado"}), 401
-    except Exception:
-        return jsonify({"error": "Token inválido"}), 401
+@app.route('/api/fabricantes')
+def api_fabricantes():
+    fabricantes = list(fabricantes_collection.find({}, {'_id': 0}))
+    return jsonify(fabricantes)
 
-# Execução do servidor
-if __name__ == "__main__":
+# --- API STATUS ---
+@app.route('/api')
+def api_status():
+    return jsonify({"status": "ConstroiVerse API ativa"})
+
+if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host='0.0.0.0', port=port)
