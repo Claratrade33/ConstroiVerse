@@ -16,7 +16,7 @@ MONGO_URI = os.getenv('MONGO_URI')
 client = MongoClient(MONGO_URI)
 db = client['constroiverse']
 
-# IMPORTS dos BLUEPRINTS Python pelos nomes corretos
+# IMPORTS dos BLUEPRINTS - NOMES EXATOS DOS SEUS ARQUIVOS
 from backend.controllers.auth_controller import auth_bp
 from backend.controllers.corretor_controller import corretor_bp
 from backend.controllers.documento_controller import documento_bp
