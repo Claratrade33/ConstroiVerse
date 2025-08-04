@@ -5,11 +5,17 @@ import openai
 import jwt
 import datetime
 import os
-
 from dotenv import load_dotenv
+
+# Carregar variáveis de ambiente
 load_dotenv()
 
-app = Flask(__name__, static_folder='../frontend', template_folder='../frontend/painel')
+# Caminhos absolutos para compatibilidade com Render
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'frontend', 'painel')
+STATIC_DIR = os.path.join(BASE_DIR, 'frontend')
+
+app = Flask(__name__, static_folder=STATIC_DIR, template_folder=TEMPLATE_DIR)
 CORS(app)
 
 # Variáveis de ambiente
@@ -27,12 +33,12 @@ db = client['constroiverse']
 usuarios_collection = db['usuarios']
 mensagens_collection = db['mensagens']
 
-# ROTA INICIAL (painel padrão)
+# Rota inicial
 @app.route('/')
 def home():
     return render_template('painel_construtora.html')
 
-# ROTAS DINÂMICAS PARA OS DEMAIS PANEIS
+# Rota dinâmica dos painéis
 @app.route('/painel/<perfil>')
 def render_painel(perfil):
     try:
@@ -40,7 +46,7 @@ def render_painel(perfil):
     except:
         return f"Painel '{perfil}' não encontrado.", 404
 
-# API - Rota de status
+# API - Status
 @app.route("/api")
 def index():
     return jsonify({"status": "ConstroiVerse API está rodando 🏗️"}), 200
@@ -62,7 +68,7 @@ def login():
     else:
         return jsonify({"error": "Credenciais inválidas"}), 401
 
-# API - Cadastro
+# API - Registro
 @app.route("/api/register", methods=["POST"])
 def register():
     data = request.json
@@ -100,7 +106,7 @@ def ia_clarice():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-# API - Usuário autenticado
+# API - Perfil
 @app.route("/api/usuario", methods=["GET"])
 def get_usuario():
     token = request.headers.get("Authorization")
@@ -117,7 +123,7 @@ def get_usuario():
     except Exception:
         return jsonify({"error": "Token inválido"}), 401
 
-# EXECUÇÃO
+# Execução
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 10000))
     app.run(host="0.0.0.0", port=port, debug=True)
