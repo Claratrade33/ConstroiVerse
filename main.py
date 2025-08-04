@@ -19,7 +19,7 @@ CORS(app)
 
 # Configurações
 SECRET_KEY = os.getenv('SECRET_KEY', 'CHAVESECRETA')
-MONGO_URI = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
+MONGO_URI = os.getenv('MONGO_URI')
 
 # Conexão com MongoDB
 client = MongoClient(MONGO_URI)
@@ -34,7 +34,7 @@ licitacoes_collection = db['licitacoes']
 materiais_collection = db['materiais']
 fabricantes_collection = db['fabricantes']
 
-### --- Dados de EXEMPLO (cadastra só se não existir nada) ---
+# Inserir dados de exemplo
 def inserir_exemplos():
     if obras_collection.count_documents({}) == 0:
         obras_collection.insert_many([
@@ -90,12 +90,11 @@ def inserir_exemplos():
         ])
 inserir_exemplos()
 
-# --- ROTAS DE PAINEL ---
+# --- ROTAS ---
 @app.route('/')
 def painel_construtora():
     return render_template('painel_construtora.html')
 
-# --- API DE DADOS ---
 @app.route('/api/obras')
 def api_obras():
     obras = list(obras_collection.find({}, {'_id': 0}))
@@ -126,11 +125,11 @@ def api_fabricantes():
     fabricantes = list(fabricantes_collection.find({}, {'_id': 0}))
     return jsonify(fabricantes)
 
-# --- API STATUS ---
 @app.route('/api')
 def api_status():
     return jsonify({"status": "ConstroiVerse API ativa"})
 
+# Execução
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
