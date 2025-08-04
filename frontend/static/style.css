@@ -1,97 +1,110 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Layout geral */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
-  line-height: 1.6;
-  padding: 20px;
+    background: #181929;
+    color: #f4f4f4;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
 }
 
-/* Container */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 30px 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+header {
+    background: #2d225b;
+    color: #fff;
+    padding: 30px 0 10px 0;
+    box-shadow: 0 4px 14px rgba(44,33,91,0.23);
+    text-align: center;
 }
 
-/* Título principal */
-.container h1 {
-  font-size: 2rem;
-  color: #1f2937;
-  margin-bottom: 30px;
-  text-align: center;
+header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.2rem;
+    letter-spacing: 2px;
 }
 
-/* Cards de profissionais */
-.pro-lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 25px;
+nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    flex-wrap: wrap;
 }
 
-/* Card individual */
-.card-profissional {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 20px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+nav ul li a {
+    color: #ffb84d;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.1rem;
+    border-bottom: 2px solid transparent;
+    transition: border 0.2s;
 }
 
-.card-profissional:hover {
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-  transform: translateY(-5px);
+nav ul li a:hover {
+    border-bottom: 2px solid #ffb84d;
 }
 
-/* Nome do profissional */
-.card-profissional h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: #111827;
+main {
+    padding: 30px 5vw 50px 5vw;
+    max-width: 1200px;
+    margin: auto;
 }
 
-/* Info secundária */
-.card-profissional p {
-  font-size: 0.95rem;
-  color: #4b5563;
-  margin-bottom: 6px;
+section {
+    margin-bottom: 40px;
 }
 
-/* Botão de ação */
-.card-profissional button {
-  margin-top: 10px;
-  padding: 8px 15px;
-  background-color: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+h2 {
+    color: #ffb84d;
+    margin-bottom: 18px;
+    margin-top: 0;
 }
 
-.card-profissional button:hover {
-  background-color: #4338ca;
+.card {
+    background: #232345;
+    color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(44,33,91,0.08);
+    margin-bottom: 16px;
+    padding: 16px 24px;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    transition: transform 0.14s;
+    border-left: 5px solid #ffb84d;
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-  .container {
-    padding: 20px 10px;
-  }
+.card:hover {
+    transform: translateY(-2px) scale(1.02);
+    background: #2d225b;
+    border-left: 5px solid #fff1c1;
+}
 
-  .pro-lista {
-    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-  }
+footer {
+    background: #232345;
+    color: #ccc;
+    text-align: center;
+    padding: 16px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    font-size: 1rem;
+}
+
+@media (max-width: 700px) {
+    header h1 {
+        font-size: 1.3rem;
+    }
+    nav ul {
+        gap: 14px;
+    }
+    main {
+        padding: 14px 3vw 60px 3vw;
+    }
+    .card {
+        padding: 12px 10px;
+        font-size: 0.97rem;
+    }
+    footer {
+        font-size: 0.92rem;
+    }
 }
