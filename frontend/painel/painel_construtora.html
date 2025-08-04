@@ -1,56 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel da Construtora | ConstroiVerse</title>
-  <link rel="stylesheet" href="/static/style.css" />
+    <meta charset="UTF-8">
+    <title>Painel da Construtora | ConstroiVerse</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header>
-    <h1>🏗️ Painel da Construtora</h1>
-    <nav>
-      <a href="/logout">Sair</a>
-    </nav>
-  </header>
-
-  <main>
-    <section>
-      <h2>🏘️ Obras em execução</h2>
-      <div id="lista-obras-construtora">Listando...</div>
-    </section>
-
-    <section>
-      <h2>📈 ROI por Obra</h2>
-      <p>Acompanhe o retorno financeiro de cada projeto em andamento.</p>
-      <button onclick="verROI()">Ver ROI</button>
-    </section>
-
-    <section>
-      <h2>👷 Profissionais</h2>
-      <p>Lista de profissionais vinculados às suas obras.</p>
-      <ul id="lista-profissionais">
-        <!-- Lista dinâmica -->
-      </ul>
-    </section>
-
-    <section>
-      <h2>📁 Documentos</h2>
-      <button onclick="verDocumentos()">Ver todos os documentos da obra</button>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2025 ConstroiVerse</p>
-  </footer>
-
-  <script>
-    function verROI() {
-      alert("Mostrando ROI por obra...");
-    }
-    function verDocumentos() {
-      alert("Abrindo documentos...");
-    }
-  </script>
+    <header>
+        <h1>ConstroiVerse - Painel da Construtora</h1>
+        <nav>
+            <ul>
+                <li><a href="#obras">Obras</a></li>
+                <li><a href="#licitacoes">Licitações</a></li>
+                <li><a href="#profissionais">Profissionais</a></li>
+                <li><a href="#materiais">Materiais</a></li>
+                <li><a href="#fabricantes">Fabricantes</a></li>
+                <li><a href="#documentos">Documentos</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="obras">
+            <h2>Obras em execução</h2>
+            <div id="lista-obras"></div>
+        </section>
+        <section id="licitacoes">
+            <h2>Licitações</h2>
+            <div id="lista-licitacoes"></div>
+        </section>
+        <section id="profissionais">
+            <h2>Profissionais</h2>
+            <div id="lista-profissionais"></div>
+        </section>
+        <section id="materiais">
+            <h2>Materiais de Construção</h2>
+            <div id="lista-materiais"></div>
+        </section>
+        <section id="fabricantes">
+            <h2>Fabricantes</h2>
+            <div id="lista-fabricantes"></div>
+        </section>
+        <section id="documentos">
+            <h2>Documentos das Obras</h2>
+            <div id="lista-documentos"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 ConstroiVerse</p>
+    </footer>
+    <script src="/static/dashboard.js"></script>
 </body>
 </html>
