@@ -5,3 +5,4 @@ openai==1.98.0
 python-dotenv==1.1.1
 pyjwt==2.10.1
 dnspython==2.7.0
+gunicorn==22.0.0
