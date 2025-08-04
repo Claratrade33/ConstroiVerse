@@ -1,25 +1,32 @@
 from flask import Blueprint, request, jsonify
-from services.clarice import gerar_orcamento
+import openai
+from config import OPENAI_API_KEY
 
-ia_bp = Blueprint('ia', __name__)
+ia_controller = Blueprint('ia_controller', __name__)
+openai.api_key = OPENAI_API_KEY
 
-# 🔮 Rota para conversar com a Clarice
-@ia_bp.route('/chat', methods=['POST'])
-def chat_clarice():
-    data = request.json
-    descricao = data.get('descricao')
+@ia_controller.route('/ia/sugestao', methods=['POST'])
+def ia_sugestao():
+    data = request.get_json()
+    prompt = data.get('prompt')
 
-    if not descricao:
-        return jsonify({'erro': 'Descrição da obra é obrigatória'}), 400
+    if not prompt:
+        return jsonify({'erro': 'Texto não informado'}), 400
 
-    resposta = gerar_orcamento(descricao)
+    try:
+        resposta = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "Você é uma especialista em construção civil chamada Clarice. Responda de forma inteligente e prática."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=500,
+            temperature=0.7
+        )
 
-    # Se a IA retornou um JSON como string, tenta converter
-    if isinstance(resposta, str):
-        try:
-            import json
-            return jsonify(json.loads(resposta))
-        except:
-            return jsonify({'resposta': resposta})
-    else:
-        return jsonify(resposta)
+        return jsonify({
+            "resposta": resposta['choices'][0]['message']['content'].strip()
+        })
+
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 500
