@@ -1,45 +1,25 @@
 from flask import Blueprint, request, jsonify
-from models.user import User
-from services.auth import generate_token, verify_password, hash_password
-from main import db
+from werkzeug.security import check_password_hash
+import jwt
+import datetime
+from config import SECRET_KEY
+from models.user_model import users_db
 
-auth_bp = Blueprint('auth', __name__)
+auth_controller = Blueprint('auth_controller', __name__)
 
-# 📌 Registro de usuário
-@auth_bp.route('/register', methods=['POST'])
-def register():
-    data = request.json
-    email = data.get('email')
-    senha = data.get('senha')
-    nome = data.get('nome')
-    perfil = data.get('perfil')  # cliente, engenheiro, pedreiro, etc.
-
-    if User.query.filter_by(email=email).first():
-        return jsonify({'msg': 'Usuário já existe'}), 409
-
-    user = User(
-        email=email,
-        senha=hash_password(senha),
-        nome=nome,
-        perfil=perfil
-    )
-
-    db.session.add(user)
-    db.session.commit()
-    token = generate_token(user)
-
-    return jsonify({'msg': 'Usuário registrado com sucesso', 'token': token})
-
-# 📌 Login de usuário
-@auth_bp.route('/login', methods=['POST'])
+@auth_controller.route('/login', methods=['POST'])
 def login():
-    data = request.json
-    email = data.get('email')
-    senha = data.get('senha')
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
 
-    user = User.query.filter_by(email=email).first()
-    if not user or not verify_password(senha, user.senha):
-        return jsonify({'msg': 'Credenciais inválidas'}), 401
+    user = users_db.get(username)
+    if not user or not check_password_hash(user['password'], password):
+        return jsonify({'error': 'Credenciais inválidas'}), 401
 
-    token = generate_token(user)
-    return jsonify({'msg': 'Login realizado', 'token': token, 'perfil': user.perfil})
+    token = jwt.encode({
+        'username': username,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
+    }, SECRET_KEY, algorithm="HS256")
+
+    return jsonify({'token': token, 'perfil': user['perfil']})
