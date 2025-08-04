@@ -1,21 +1,13 @@
-from flask import Blueprint, jsonify, request
-from config import db
+# backend/controllers/obra_controller.py
 
-obra_bp = Blueprint('obra_bp', __name__)
-obras_collection = db['obras']
+from flask import Blueprint, request, jsonify
+from backend.config import db
 
-# 📌 Listar todas as obras
+obra_bp = Blueprint('obras', __name__)
+
 @obra_bp.route('/api/obras', methods=['GET'])
 def listar_obras():
-    obras = list(obras_collection.find({}, {'_id': 0}))
+    obras = list(db.obras.find({}, {'_id': 0}))
     return jsonify(obras)
 
-# 📌 Cadastrar nova obra
-@obra_bp.route('/api/obras', methods=['POST'])
-def cadastrar_obra():
-    dados = request.get_json()
-    if 'nome' not in dados or 'responsavel' not in dados:
-        return jsonify({'erro': 'Campos obrigatórios: nome, responsavel'}), 400
-
-    obras_collection.insert_one(dados)
-    return jsonify({'mensagem': 'Obra cadastrada com sucesso'})
+# (Adicione aqui outras rotas do controller conforme sua lógica)
