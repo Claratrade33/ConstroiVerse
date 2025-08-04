@@ -14,7 +14,7 @@ def listar_fabricantes():
 @fabricantes_controller.route('/fabricantes', methods=['POST'])
 def adicionar_fabricante():
     dados = request.get_json()
-    if not dados.get('nome') or not dados.get('produtos'):
+    if 'nome' not in dados or 'produtos' not in dados:
         return jsonify({'erro': 'Campos obrigatórios: nome, produtos'}), 400
 
     fabricantes_collection.insert_one(dados)
