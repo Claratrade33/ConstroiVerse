@@ -1,4 +1,10 @@
-from flask_pymongo import PyMongo
+import os
+from pymongo import MongoClient
+from dotenv import load_dotenv
 
-mongo = PyMongo()
-db = mongo.db
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI")
+
+client = MongoClient(MONGO_URI)
+db = client["constroiverse"]
