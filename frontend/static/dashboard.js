@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // Insere ações rápidas personalizadas
+  renderAcoes(perfil);
+
   // Carrega funções por perfil
   if (perfil === 'cliente') {
     carregarOrcamentos(clienteId || usuarioId);
@@ -31,6 +34,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     carregarObra(obraId || '1');
   }
 });
+
+// 🔹 Links rápidos por perfil
+const ACOES_RAPIDAS = {
+  cliente: [
+    { texto: 'Solicitar orçamento', link: '/orcamentos/novo.html' },
+    { texto: 'Ver tarefas', link: '/tarefas.html' }
+  ],
+  engenheiro: [
+    { texto: 'Gerenciar obra', link: '/obras.html' },
+    { texto: 'Profissionais', link: '/profissionais.html' }
+  ],
+  pedreiro: [
+    { texto: 'Minhas tarefas', link: '/tarefas.html' }
+  ]
+};
+
+function renderAcoes(perfil) {
+  const main = document.querySelector('main');
+  if (!main) return;
+
+  const acoes = ACOES_RAPIDAS[perfil] || [];
+  if (!acoes.length) return;
+
+  const section = document.createElement('section');
+  section.id = 'acoes-rapidas';
+
+  const titulo = document.createElement('h2');
+  titulo.textContent = '⚡ Ações rápidas';
+  section.appendChild(titulo);
+
+  const container = document.createElement('div');
+  container.className = 'acoes';
+
+  acoes.forEach(a => {
+    const link = document.createElement('a');
+    link.href = a.link;
+    link.className = 'btn-acao';
+    link.textContent = a.texto;
+    container.appendChild(link);
+  });
+
+  section.appendChild(container);
+  main.prepend(section);
+}
 
 // 🔹 Cliente: Histórico de orçamentos
 async function carregarOrcamentos(clienteId) {
