@@ -1,11 +1,10 @@
 import os
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
-# Pega a string de conexão do MongoDB das variáveis de ambiente (.env ou Render)
+load_dotenv()
+
 MONGO_URI = os.getenv("MONGO_URI")
 
-# Cria o client do MongoDB
 client = MongoClient(MONGO_URI)
-
-# Seleciona o banco de dados 'constroiverse'
 db = client['constroiverse']
