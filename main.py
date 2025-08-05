@@ -1,46 +1,45 @@
 from flask import Flask
 from flask_cors import CORS
 from backend.database import db
-from config import MONGO_URI
+from backend.config import SECRET_KEY
+
+# Importando os blueprints
 from backend.controllers.auth_controller import auth_bp
-from backend.controllers.obra_controller import obra_controller
-from backend.controllers.perfil_controller import perfil_controller
-from backend.controllers.vitrine_controller import vitrine_controller
-from backend.controllers.fabricante_controller import fabricante_controller
-from backend.controllers.representante_controller import representante_controller
-from backend.controllers.loja_controller import loja_controller
-from backend.controllers.arquiteto_controller import arquiteto_controller
-from backend.controllers.engenheiro_controller import engenheiro_controller
-from backend.controllers.pedreiro_controller import pedreiro_controller
-from backend.controllers.eletricista_controller import eletricista_controller
-from backend.controllers.encanador_controller import encanador_controller
-from backend.controllers.mestre_obra_controller import mestre_obra_controller
-from backend.controllers.cliente_controller import cliente_controller
-from backend.controllers.corretor_controller import corretor_controller
+from backend.controllers.documento_controller import documento_bp
+from backend.controllers.fabricantes_controller import fabricantes_bp
+from backend.controllers.ia_controller import ia_bp
+from backend.controllers.licitacao_controller import licitacao_bp
+from backend.controllers.materiais_controller import materiais_bp
+from backend.controllers.obra_controller import obra_bp
+from backend.controllers.orcamento_controller import orcamento_bp
+from backend.controllers.profissional_controller import profissional_bp
+from backend.controllers.representantes_controller import representantes_bp
+from backend.controllers.corretor_controller import corretor_bp
+from backend.controllers.cliente_controller import cliente_bp
+from backend.controllers.vitrine_controller import vitrine_bp
 
 app = Flask(__name__)
 CORS(app)
+app.config['SECRET_KEY'] = SECRET_KEY
 
-# Configura o MongoDB
-app.config["MONGO_URI"] = MONGO_URI
-db.init_app(app)
-
-# Blueprints registrados
+# Registrando os blueprints
 app.register_blueprint(auth_bp)
-app.register_blueprint(obra_controller)
-app.register_blueprint(perfil_controller)
-app.register_blueprint(vitrine_controller)
-app.register_blueprint(fabricante_controller)
-app.register_blueprint(representante_controller)
-app.register_blueprint(loja_controller)
-app.register_blueprint(arquiteto_controller)
-app.register_blueprint(engenheiro_controller)
-app.register_blueprint(pedreiro_controller)
-app.register_blueprint(eletricista_controller)
-app.register_blueprint(encanador_controller)
-app.register_blueprint(mestre_obra_controller)
-app.register_blueprint(cliente_controller)
-app.register_blueprint(corretor_controller)
+app.register_blueprint(documento_bp)
+app.register_blueprint(fabricantes_bp)
+app.register_blueprint(ia_bp)
+app.register_blueprint(licitacao_bp)
+app.register_blueprint(materiais_bp)
+app.register_blueprint(obra_bp)
+app.register_blueprint(orcamento_bp)
+app.register_blueprint(profissional_bp)
+app.register_blueprint(representantes_bp)
+app.register_blueprint(corretor_bp)
+app.register_blueprint(cliente_bp)
+app.register_blueprint(vitrine_bp)
+
+@app.route('/')
+def index():
+    return {"status": "API ConstroiVerse online"}
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
