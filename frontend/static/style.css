@@ -90,6 +90,28 @@ footer {
     font-size: 1rem;
 }
 
+.acoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.btn-acao {
+    background: #ffb84d;
+    color: #181929;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-acao:hover {
+    background: #ffd699;
+}
+
 @media (max-width: 700px) {
     header h1 {
         font-size: 1.3rem;
