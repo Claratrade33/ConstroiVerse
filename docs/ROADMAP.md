@@ -7,6 +7,7 @@ Etapa 1 – Configuração inicial
 Etapa 2 – Autenticação e perfis
 - Implementar cadastro/login com JWT
 - Definir perfis: engenheiro, representante, corretor, usuário final
+- Criados endpoints `/auth/register` e `/auth/login`
 
 Etapa 3 – Modelagem de dados
 - Criar esquemas no MongoDB
@@ -15,6 +16,7 @@ Etapa 3 – Modelagem de dados
 Etapa 4 – Funcionalidades por perfil
 - Permitir que cada perfil acesse operações específicas
 - Criar dashboards personalizados
+- Rota `GET /perfil/<email>` retorna o painel correspondente ao perfil
 
 Etapa 5 – Integração da IA
 - Conectar com Clarice IA (OpenAI)
