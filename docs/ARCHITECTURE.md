@@ -1,10 +1,8 @@
-#### `docs/ARCHITECTURE.md`
-```markdown
 # Esqueleto da Arquitetura do Projeto
 
 ## Backend (API Flask)
 - `backend/app.py` – ponto de entrada da aplicação
-- `backend/controllers/` – controladores agrupados por domínio
+- `backend/controllers/` – controladores agrupados por domínio (ex.: `auth_controller.py` para autenticação JWT)
 - `backend/models/` – esquemas de dados e lógica de banco
 - `backend/services/` – regras de negócio e integrações
 - `backend/utils/` – utilitários compartilhados
