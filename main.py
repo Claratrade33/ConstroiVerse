@@ -4,62 +4,54 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from pymongo import MongoClient
 
-# Carregar variáveis de ambiente (.env)
+# Carregar variáveis do .env
 load_dotenv()
 
-# Configuração do Flask
-app = Flask(
-    __name__,
-    template_folder='frontend/painel',  # Se precisar de templates HTML
-    static_folder='frontend/static'     # Para arquivos JS/CSS
-)
+# Configuração Flask
+app = Flask(__name__, template_folder='frontend/painel', static_folder='frontend/static')
 CORS(app)
 
-# Conexão com MongoDB
+# Conexão MongoDB
 MONGO_URI = os.getenv('MONGO_URI')
 client = MongoClient(MONGO_URI)
 db = client['constroiverse']
 
-# Deixe isso disponível para os outros módulos
-app.db = db
-
-# IMPORTAÇÃO E REGISTRO DOS BLUEPRINTS
-
-from backend.controllers.authController import auth_bp
+# Blueprints - IMPORTAR COM O NOME EXATO DOS ARQUIVOS
+from backend.controllers.auth_controller import auth_bp
+from backend.controllers.corretor_controller import corretor_bp
+from backend.controllers.documento_controller import documento_bp
+from backend.controllers.fabricantes_controller import fabricantes_bp
+from backend.controllers.ia_controller import ia_bp
+from backend.controllers.licitacao_controller import licitacao_bp
+from backend.controllers.materiais_controller import materiais_bp
 from backend.controllers.obra_controller import obra_bp
+from backend.controllers.orcamento_controller import orcamento_bp
 from backend.controllers.perfil_controller import perfil_bp
+from backend.controllers.profissional_controller import profissional_bp
+from backend.controllers.representantes_controller import representantes_bp
 from backend.controllers.vitrine_controller import vitrine_bp
-from backend.controllers.fabricante_controller import fabricante_bp
-from backend.controllers.representante_controller import representante_bp
-from backend.controllers.deliveryController import delivery_bp
-from backend.controllers.evaluationController import evaluation_bp
-from backend.controllers.logisticaController import logistica_bp
-from backend.controllers.quoteController import quote_bp
-from backend.controllers.reportController import report_bp
-from backend.controllers.stockController import stock_bp
-from backend.controllers.taskController import task_bp
 
-# Registro dos blueprints (rotas)
+# Registrar blueprints
 app.register_blueprint(auth_bp)
+app.register_blueprint(corretor_bp)
+app.register_blueprint(documento_bp)
+app.register_blueprint(fabricantes_bp)
+app.register_blueprint(ia_bp)
+app.register_blueprint(licitacao_bp)
+app.register_blueprint(materiais_bp)
 app.register_blueprint(obra_bp)
+app.register_blueprint(orcamento_bp)
 app.register_blueprint(perfil_bp)
+app.register_blueprint(profissional_bp)
+app.register_blueprint(representantes_bp)
 app.register_blueprint(vitrine_bp)
-app.register_blueprint(fabricante_bp)
-app.register_blueprint(representante_bp)
-app.register_blueprint(delivery_bp)
-app.register_blueprint(evaluation_bp)
-app.register_blueprint(logistica_bp)
-app.register_blueprint(quote_bp)
-app.register_blueprint(report_bp)
-app.register_blueprint(stock_bp)
-app.register_blueprint(task_bp)
 
-# Rota de status (opcional)
+# Rota principal
 @app.route('/')
 def index():
     return jsonify({"status": "API ConstroiVerse ativa"})
 
-# Rodar servidor (para dev/local)
+# Start
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
