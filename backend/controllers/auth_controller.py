@@ -1,58 +1,65 @@
-import os
-from flask import Blueprint, request, jsonify
-from pymongo import MongoClient
+from datetime import datetime, timedelta, UTC
+from flask import Blueprint, request
+from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
-import datetime
 
-auth_bp = Blueprint('auth', __name__)
+from backend.database import db
+from backend.config import SECRET_KEY
 
-# Conexão com o MongoDB
-MONGO_URI = os.getenv('MONGO_URI')
-client = MongoClient(MONGO_URI)
-db = client.constroiverse
-usuarios_collection = db['usuarios']
 
-# Chave secreta para geração de token JWT
-SECRET_KEY = os.getenv("SECRET_KEY", "CHAVESECRETA")
+auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
-@auth_bp.route('/api/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    username = data.get("username")
-    senha = data.get("senha")
+PROFILES = {
+    "arquiteto",
+    "engenheiro",
+    "loja",
+    "fabricante",
+    "representante",
+    "corretor",
+    "mestre",
+    "pedreiro",
+    "eletricista",
+    "encanador",
+    "cliente",
+    "construtora",
+}
 
-    usuario = usuarios_collection.find_one({"username": username, "senha": senha})
-    if usuario:
-        token = jwt.encode({
-            "user_id": str(usuario["_id"]),
-            "username": usuario["username"],
-            "perfil": usuario["perfil"],
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=12)
-        }, SECRET_KEY, algorithm="HS256")
 
-        return jsonify({
-            "status": "sucesso",
-            "token": token,
-            "username": usuario["username"],
-            "perfil": usuario["perfil"]
-        }), 200
-    else:
-        return jsonify({"status": "erro", "mensagem": "Usuário ou senha inválidos"}), 401
-
-@auth_bp.route('/api/register', methods=['POST'])
+@auth_bp.post("/register")
 def register():
-    data = request.get_json()
-    username = data.get("username")
-    senha = data.get("senha")
-    perfil = data.get("perfil", "cliente")
-
-    if usuarios_collection.find_one({"username": username}):
-        return jsonify({"status": "erro", "mensagem": "Usuário já existe"}), 400
-
-    usuarios_collection.insert_one({
-        "username": username,
-        "senha": senha,
-        "perfil": perfil
+    data = request.get_json() or {}
+    email = data.get("email")
+    password = data.get("password")
+    main_profile = data.get("main_profile")
+    if not email or not password or not main_profile:
+        return {"erro": "Dados incompletos"}, 400
+    if main_profile not in PROFILES:
+        return {"erro": "Perfil inválido"}, 400
+    if db.users.find_one({"email": email}):
+        return {"erro": "Email já cadastrado"}, 409
+    hashed_pw = generate_password_hash(password)
+    db.users.insert_one({
+        "email": email,
+        "password": hashed_pw,
+        "main_profile": main_profile,
     })
+    return {"mensagem": "Usuário cadastrado"}, 201
 
-    return jsonify({"status": "sucesso", "mensagem": "Usuário registrado com sucesso"}), 201
+
+@auth_bp.post("/login")
+def login():
+    data = request.get_json() or {}
+    email = data.get("email")
+    password = data.get("password")
+    if not email or not password:
+        return {"erro": "Dados incompletos"}, 400
+    user = db.users.find_one({"email": email})
+    if not user or not check_password_hash(user["password"], password):
+        return {"erro": "Credenciais inválidas"}, 401
+    payload = {
+        "sub": str(user["_id"]),
+        "main_profile": user["main_profile"],
+        "exp": datetime.now(UTC) + timedelta(hours=12),
+    }
+    token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+    return {"token": token, "main_profile": user["main_profile"]}
