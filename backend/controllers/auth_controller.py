@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from flask import Blueprint, request
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
@@ -9,7 +9,20 @@ from backend.config import SECRET_KEY
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
-PROFILES = {"engenheiro", "representante", "corretor", "usuario"}
+PROFILES = {
+    "arquiteto",
+    "engenheiro",
+    "loja",
+    "fabricante",
+    "representante",
+    "corretor",
+    "mestre",
+    "pedreiro",
+    "eletricista",
+    "encanador",
+    "cliente",
+    "construtora",
+}
 
 
 @auth_bp.post("/register")
@@ -46,7 +59,7 @@ def login():
     payload = {
         "sub": str(user["_id"]),
         "main_profile": user["main_profile"],
-        "exp": datetime.utcnow() + timedelta(hours=12),
+        "exp": datetime.now(UTC) + timedelta(hours=12),
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
     return {"token": token, "main_profile": user["main_profile"]}
