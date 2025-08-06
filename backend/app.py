@@ -19,3 +19,10 @@ def create_app() -> Flask:
     app.register_blueprint(user_bp)
 
     return app
+    
+        from backend.routes.auth import auth_bp
+    app.register_blueprint(auth_bp)
+    from backend.routes.user import user_bp
+    app.register_blueprint(user_bp)
+    from backend.routes.project import project_bp
+    app.register_blueprint(project_bp)
