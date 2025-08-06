@@ -19,4 +19,3 @@ def create_app() -> Flask:
     app.register_blueprint(user_bp)
 
     return app
-
