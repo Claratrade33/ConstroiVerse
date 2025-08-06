@@ -3,6 +3,8 @@ from flask_cors import CORS
 
 from backend.config import SECRET_KEY
 from backend.database import db  # noqa: F401 - initializes db connection
+from backend.routes.user import user_bp
+app.register_blueprint(user_bp)
 
 def create_app() -> Flask:
     """Create and configure the Flask application."""
