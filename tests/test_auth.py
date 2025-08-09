@@ -21,9 +21,10 @@ def client():
 
 def test_register_and_login(client):
     resp = client.post("/auth/register", json={
+        "username": "tester",
         "email": "tester@example.com",
         "password": "123456",
-        "main_profile": "engenheiro",
+        "role": "engenheiro",
     })
     assert resp.status_code == 201
 
@@ -34,16 +35,43 @@ def test_register_and_login(client):
     assert resp.status_code == 200
     data = resp.get_json()
     assert "token" in data
-    assert data["main_profile"] == "engenheiro"
+    assert data["role"] == "engenheiro"
 
 
 def test_perfil_endpoint(client):
     client.post("/auth/register", json={
+        "username": "tester",
         "email": "tester@example.com",
         "password": "123456",
-        "main_profile": "engenheiro",
+        "role": "engenheiro",
     })
     resp = client.get("/perfil/tester@example.com")
     assert resp.status_code == 200
     data = resp.get_json()
     assert data["painel"] == "/painel_engenheiro"
+
+
+def test_register_existing_user_fails(client):
+    payload = {
+        "username": "tester",
+        "email": "tester@example.com",
+        "password": "123456",
+        "role": "engenheiro",
+    }
+    client.post("/auth/register", json=payload)
+    resp = client.post("/auth/register", json=payload)
+    assert resp.status_code == 400
+
+
+def test_login_wrong_password(client):
+    client.post("/auth/register", json={
+        "username": "tester",
+        "email": "tester@example.com",
+        "password": "123456",
+        "role": "engenheiro",
+    })
+    resp = client.post("/auth/login", json={
+        "email": "tester@example.com",
+        "password": "abcdef",
+    })
+    assert resp.status_code == 401
