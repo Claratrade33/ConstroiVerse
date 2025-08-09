@@ -23,3 +23,14 @@ cd ConstroiVerse
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
+
+## 🟢 Iniciando o servidor Node
+
+O servidor Express está localizado na pasta `backend`. Para iniciá-lo, instale as dependências e execute o arquivo `server.js`:
+
+```bash
+cd backend
+npm install
+node server.js
+```
