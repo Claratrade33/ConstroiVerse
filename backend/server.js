@@ -3,8 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-const userRoutes = require('./src/routes/userRoutes');
-const projectRoutes = require('./src/routes/projectRoutes');
+const userRoutes = require('../routes/userRoutes');
+const projectRoutes = require('../routes/projectRoutes');
 
 app.use(cors());
 app.use(express.json());
