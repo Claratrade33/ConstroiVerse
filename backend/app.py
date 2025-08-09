@@ -4,6 +4,7 @@ from flask_cors import CORS
 from backend.config import SECRET_KEY
 from backend.database import db  # noqa: F401
 
+
 def create_app() -> Flask:
     app = Flask(__name__)
     CORS(app)
@@ -14,15 +15,11 @@ def create_app() -> Flask:
         return {"mensagem": "ConstroiVerse API funcionando 🎯"}
 
     from backend.routes.auth import auth_bp
-    app.register_blueprint(auth_bp)
     from backend.routes.user import user_bp
+    from backend.routes.project import project_bp
+
+    app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(project_bp)
 
     return app
-    
-        from backend.routes.auth import auth_bp
-    app.register_blueprint(auth_bp)
-    from backend.routes.user import user_bp
-    app.register_blueprint(user_bp)
-    from backend.routes.project import project_bp
-    app.register_blueprint(project_bp)
