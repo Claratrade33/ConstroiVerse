@@ -1,35 +1,26 @@
-"""Utility functions for authentication and JWT token handling.
+from functools import wraps
+from flask import request, jsonify
+from backend.services.auth import decode_token
+from backend.database import get_db
+from backend.models.user import User
 
-This module provides helpers to hash and verify passwords using the
-`werkzeug.security` helpers from Flask, as well as to generate JWT
-tokens for authenticated users. Tokens include the user's ID and role
-and expire after 24 hours.
-"""
-
-import datetime
-import jwt
-from werkzeug.security import generate_password_hash, check_password_hash
-from backend.config import SECRET_KEY
-
-def hash_password(password: str) -> str:
-    return generate_password_hash(password)
-
-def verify_password(password: str, password_hash: str) -> bool:
-    return check_password_hash(password_hash, password)
-
-def generate_token(user_id: str, role: str) -> str:
-    payload = {
-        "user_id": user_id,
-        "role": role,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24)
-    }
-    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-
-def decode_token(token: str) -> dict:
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-        return payload
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
-        return None
+def jwt_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        auth = request.headers.get("Authorization", "")
+        if not auth.startswith("Bearer "):
+            return jsonify({"error": "Token ausente"}), 401
+        token = auth.split(" ", 1)[1]
+        try:
+            payload = decode_token(token)
+        except Exception:
+            return jsonify({"error": "Token inválido"}), 401
+        user_id = payload.get("sub")
+        db = next(get_db())
+        user = db.get(User, user_id)  # SQLAlchemy 2.x
+        if not user:
+            return jsonify({"error": "Usuário não encontrado"}), 401
+        request.user = user
+        request.db = db
+        return fn(*args, **kwargs)
+    return wrapper
