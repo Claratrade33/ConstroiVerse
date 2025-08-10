@@ -1,13 +1,11 @@
-from main import db
+from sqlalchemy import Column, Integer, String, DateTime, func
+from backend.database import Base
 
-class User(db.Model):
-    __tablename__ = 'usuarios'
-
-    id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    senha = db.Column(db.String(200), nullable=False)
-    perfil = db.Column(db.String(50), nullable=False)  # cliente, engenheiro, pedreiro, lojista, etc.
-
-    def __repr__(self):
-        return f'<User {self.email} - {self.perfil}>'
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(120), nullable=False)
+    email = Column(String(180), unique=True, index=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    role = Column(String(50), default="user")
+    created_at = Column(DateTime, server_default=func.now())
