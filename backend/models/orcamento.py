@@ -1,17 +1,15 @@
-from main import db
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Numeric, func
+from sqlalchemy.orm import relationship
+from backend.database import Base
 
-class Orcamento(db.Model):
-    __tablename__ = 'orcamentos'
+class Orcamento(Base):
+    __tablename__ = "orcamentos"
+    id = Column(Integer, primary_key=True, index=True)
+    obra_id = Column(Integer, ForeignKey("obras.id"), nullable=False)
+    descricao = Column(String(255), nullable=True)
+    total = Column(Numeric(12, 2), nullable=False, default=0)
+    status = Column(String(50), default="aberto", nullable=False)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
-    id = db.Column(db.Integer, primary_key=True)
-    cliente_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
-    obra_id = db.Column(db.Integer, db.ForeignKey('obras.id'), nullable=True)
-
-    descricao_input = db.Column(db.Text)       # o que o cliente digitou
-    resposta_ia = db.Column(db.Text)           # JSON bruto da IA Clarice
-    total_estimado = db.Column(db.String(50))  # valor aproximado
-    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return f'<Orcamento #{self.id} — Cliente {self.cliente_id}>'
+    obra = relationship("Obra", back_populates="orcamentos")
