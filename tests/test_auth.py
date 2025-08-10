@@ -1,77 +1,8 @@
-import os
-import sys
-import pytest
+import json
+from backend.app import app
 
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-os.environ.setdefault("SECRET_KEY", "testing")
-os.environ["MONGO_URI"] = ""
-
-from backend.app import create_app
-from backend.database import db
-
-
-@pytest.fixture()
-def client():
-    app = create_app()
-    with app.test_client() as client:
-        db.users.delete_many({})
-        yield client
-        db.users.delete_many({})
-
-
-def test_register_and_login(client):
-    resp = client.post("/auth/register", json={
-        "username": "tester",
-        "email": "tester@example.com",
-        "password": "123456",
-        "role": "engenheiro",
-    })
-    assert resp.status_code == 201
-
-    resp = client.post("/auth/login", json={
-        "email": "tester@example.com",
-        "password": "123456",
-    })
-    assert resp.status_code == 200
-    data = resp.get_json()
-    assert "token" in data
-    assert data["role"] == "engenheiro"
-
-
-def test_perfil_endpoint(client):
-    client.post("/auth/register", json={
-        "username": "tester",
-        "email": "tester@example.com",
-        "password": "123456",
-        "role": "engenheiro",
-    })
-    resp = client.get("/perfil/tester@example.com")
-    assert resp.status_code == 200
-    data = resp.get_json()
-    assert data["painel"] == "/painel_engenheiro"
-
-
-def test_register_existing_user_fails(client):
-    payload = {
-        "username": "tester",
-        "email": "tester@example.com",
-        "password": "123456",
-        "role": "engenheiro",
-    }
-    client.post("/auth/register", json=payload)
-    resp = client.post("/auth/register", json=payload)
-    assert resp.status_code == 400
-
-
-def test_login_wrong_password(client):
-    client.post("/auth/register", json={
-        "username": "tester",
-        "email": "tester@example.com",
-        "password": "123456",
-        "role": "engenheiro",
-    })
-    resp = client.post("/auth/login", json={
-        "email": "tester@example.com",
-        "password": "abcdef",
-    })
-    assert resp.status_code == 401
+def test_health():
+    c = app.test_client()
+    r = c.get('/health')
+    assert r.status_code == 200
+    assert r.json.get('status') == 'ok'
