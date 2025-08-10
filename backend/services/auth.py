@@ -1,36 +1,30 @@
-import jwt
-import bcrypt
-from datetime import datetime, timedelta
-from dotenv import load_dotenv
-import os
+import os, datetime, bcrypt, jwt
+from sqlalchemy.orm import Session
+from backend.models.user import User
 
-load_dotenv()
+SECRET = os.getenv("SECRET_KEY", "change-me")
+EXPIRES = int(os.getenv("JWT_EXPIRES", "3600"))
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'chave-secreta-constroiverse')
+def hash_password(pwd: str) -> str:
+    return bcrypt.hashpw(pwd.encode(), bcrypt.gensalt()).decode()
 
-# 🔐 Criptografa senha
-def hash_password(senha_plana):
-    return bcrypt.hashpw(senha_plana.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+def verify_password(pwd: str, hashed: str) -> bool:
+    return bcrypt.checkpw(pwd.encode(), hashed.encode())
 
-# 🔍 Verifica senha
-def verify_password(senha_plana, senha_hash):
-    return bcrypt.checkpw(senha_plana.encode('utf-8'), senha_hash.encode('utf-8'))
+def generate_token(user_id: int) -> str:
+    now = datetime.datetime.utcnow()
+    payload = {"sub": user_id, "iat": now, "exp": now + datetime.timedelta(seconds=EXPIRES)}
+    return jwt.encode(payload, SECRET, algorithm="HS256")
 
-# 🎫 Gera token JWT
-def generate_token(user):
-    payload = {
-        'id': user.id,
-        'email': user.email,
-        'perfil': user.perfil,
-        'exp': datetime.utcnow() + timedelta(days=7)
-    }
-    return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+def register(db: Session, name: str, email: str, password: str):
+    if db.query(User).filter_by(email=email).first():
+        raise ValueError("E-mail já cadastrado")
+    u = User(name=name, email=email, password_hash=hash_password(password))
+    db.add(u); db.flush()
+    return u
 
-# ✅ Decodifica e valida token
-def decode_token(token):
-    try:
-        return jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-        return None
-    except jwt.InvalidTokenError:
-        return None
+def login(db: Session, email: str, password: str):
+    u = db.query(User).filter_by(email=email).first()
+    if not u or not verify_password(password, u.password_hash):
+        raise ValueError("Credenciais inválidas")
+    return generate_token(u.id)
