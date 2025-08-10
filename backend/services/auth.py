@@ -16,11 +16,15 @@ def generate_token(user_id: int) -> str:
     payload = {"sub": user_id, "iat": now, "exp": now + datetime.timedelta(seconds=EXPIRES)}
     return jwt.encode(payload, SECRET, algorithm="HS256")
 
+def decode_token(token: str):
+    return jwt.decode(token, SECRET, algorithms=["HS256"])
+
 def register(db: Session, name: str, email: str, password: str):
     if db.query(User).filter_by(email=email).first():
         raise ValueError("E-mail já cadastrado")
     u = User(name=name, email=email, password_hash=hash_password(password))
-    db.add(u); db.flush()
+    db.add(u)
+    db.flush()
     return u
 
 def login(db: Session, email: str, password: str):
