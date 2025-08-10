@@ -1,39 +1,29 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 import os
-from pymongo import MongoClient
-from dotenv import load_dotenv
 
-load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dev.db")
 
-MONGO_URI = os.getenv("MONGO_URI")
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    future=True
+)
 
-if MONGO_URI:
-    client = MongoClient(MONGO_URI)
-    db = client["constroiverse"]
-else:
-    class _FakeCollection(dict):
-        def find_one(self, query):
-            return next(
-                (doc for doc in self.values() if all(doc.get(k) == v for k, v in query.items())),
-                None,
-            )
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)
+Base = declarative_base()
 
-        def insert_one(self, doc):
-            doc = dict(doc)
-            doc["_id"] = len(self) + 1
-            self[doc["_id"]] = doc
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+        db.commit()
+    except:
+        db.rollback()
+        raise
+    finally:
+        db.close()
 
-            class _Result:
-                inserted_id = doc["_id"]
-
-            return _Result()
-
-        def delete_many(self, query):
-            keys = [k for k, v in self.items() if all(v.get(k2) == v2 for k2, v2 in query.items())]
-            for k in keys:
-                del self[k]
-
-    class _FakeDB:
-        def __init__(self):
-            self.users = _FakeCollection()
-
-    db = _FakeDB()
+def init_db():
+    from backend.models import user, obra, orcamento  # garantir import de modelos
+    Base.metadata.create_all(bind=engine)
