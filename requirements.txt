@@ -1,6 +1,6 @@
 Flask
 Flask-Cors
-SQLAlchemy
+SQLAlchemy>=2.0.0
 psycopg2-binary
 python-dotenv
 PyJWT
