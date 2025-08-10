@@ -1,80 +1,80 @@
-"""Routes for managing projects and running intelligent calculations."""
+from flask import Blueprint, request, jsonify
+from backend.utils.auth import jwt_required
+from backend.database import get_db
+from backend.models.obra import Obra
+from backend.models.orcamento import Orcamento
 
-from flask import Blueprint, request, jsonify, g
-from backend.database import db
-from backend.utils.auth import decode_token
-from functools import wraps
-import datetime
-import uuid
+project_bp = Blueprint("projects", __name__, url_prefix="/api/v1/projects")
 
-project_bp = Blueprint("project", __name__, url_prefix="/projects")
-
-def login_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth = request.headers.get("Authorization")
-        if not auth or not auth.startswith("Bearer "):
-            return jsonify({"erro": "Token não fornecido"}), 401
-        token = auth.split(" ")[1]
-        payload = decode_token(token)
-        if not payload:
-            return jsonify({"erro": "Token inválido ou expirado"}), 401
-        g.user_payload = payload
-        return f(*args, **kwargs)
-    return decorated
-
-@project_bp.route("/", methods=["POST"])
-@login_required
+@project_bp.post("")
+@jwt_required
 def create_project():
-    data = request.get_json()
-    required = ["nome", "descricao"]
-    missing = [f for f in required if not data.get(f)]
-    if missing:
-        return jsonify({"erro": f"Campos obrigatórios faltando: {', '.join(missing)}"}), 400
-    project = {
-        "_id": str(uuid.uuid4()),
-        "nome": data["nome"],
-        "descricao": data["descricao"],
-        "user_id": g.user_payload.get("user_id"),
-        "arquivos": data.get("arquivos", []),  # lista de nomes ou URLs
-        "material_calc": None,  # será preenchido após IA
-        "status": "criado",
-        "created_at": datetime.datetime.utcnow().isoformat(),
-        "updated_at": datetime.datetime.utcnow().isoformat(),
-        "historico": []
-    }
-    db.projects.insert_one(project)
-    return jsonify(project), 201
+    db = next(get_db())
+    data = request.get_json() or {}
+    if not data.get("titulo"):
+        return jsonify({"error": "titulo é obrigatório"}), 400
+    obra = Obra(titulo=data["titulo"], endereco=data.get("endereco"), owner_id=request.user.id)
+    db.add(obra); db.flush()
+    return jsonify({"id": obra.id, "titulo": obra.titulo, "endereco": obra.endereco, "status": obra.status}), 201
 
-@project_bp.route("/", methods=["GET"])
-@login_required
+@project_bp.get("")
+@jwt_required
 def list_projects():
-    user_id = g.user_payload.get("user_id")
-    projetos = list(db.projects.find({"user_id": user_id}))
-    return jsonify(projetos), 200
+    db = next(get_db())
+    obras = db.query(Obra).filter_by(owner_id=request.user.id).order_by(Obra.id.desc()).all()
+    return jsonify([{"id": o.id, "titulo": o.titulo, "status": o.status} for o in obras])
 
-@project_bp.route("/<id>", methods=["GET"])
-@login_required
-def get_project(id):
-    proj = db.projects.find_one({"_id": id})
-    if not proj:
-        return jsonify({"erro": "Projeto não encontrado"}), 404
-    return jsonify(proj), 200
+@project_bp.get("/<int:obra_id>")
+@jwt_required
+def get_project(obra_id: int):
+    db = next(get_db())
+    o = db.query(Obra).filter_by(id=obra_id, owner_id=request.user.id).first()
+    if not o:
+        return jsonify({"error": "Obra não encontrada"}), 404
+    return jsonify({"id": o.id, "titulo": o.titulo, "endereco": o.endereco, "status": o.status})
 
-@project_bp.route("/<id>/calc_material", methods=["POST"])
-@login_required
-def calc_material(id):
-    # Aqui será plugada a IA de cálculo de materiais
-    proj = db.projects.find_one({"_id": id})
-    if not proj:
-        return jsonify({"erro": "Projeto não encontrado"}), 404
-    # Exemplo: calcular quantidade fictícia de materiais
-    materiais = {
-        "areia": 10,
-        "cimento": 20,
-        "tijolos": 5000,
-        "ferro": 150
-    }
-    db.projects.update_one({"_id": id}, {"$set": {"material_calc": materiais, "updated_at": datetime.datetime.utcnow().isoformat()}})
-    proj.update({"material_calc": materiais})
-    return jsonify({"msg": "Cálculo de materiais salvo!", "materiais": materiais}), 200
+@project_bp.patch("/<int:obra_id>")
+@jwt_required
+def update_project(obra_id: int):
+    db = next(get_db())
+    o = db.query(Obra).filter_by(id=obra_id, owner_id=request.user.id).first()
+    if not o:
+        return jsonify({"error": "Obra não encontrada"}), 404
+    data = request.get_json() or {}
+    for field in ["titulo", "endereco", "status"]:
+        if field in data and data[field] is not None:
+            setattr(o, field, data[field])
+    return jsonify({"id": o.id, "titulo": o.titulo, "endereco": o.endereco, "status": o.status})
+
+@project_bp.delete("/<int:obra_id>")
+@jwt_required
+def delete_project(obra_id: int):
+    db = next(get_db())
+    o = db.query(Obra).filter_by(id=obra_id, owner_id=request.user.id).first()
+    if not o:
+        return jsonify({"error": "Obra não encontrada"}), 404
+    db.delete(o)
+    return jsonify({"ok": True})
+
+# Orcamentos simples ligados à obra
+@project_bp.post("/<int:obra_id>/orcamentos")
+@jwt_required
+def create_orcamento(obra_id: int):
+    db = next(get_db())
+    o = db.query(Obra).filter_by(id=obra_id, owner_id=request.user.id).first()
+    if not o:
+        return jsonify({"error": "Obra não encontrada"}), 404
+    data = request.get_json() or {}
+    orc = Orcamento(obra_id=o.id, descricao=data.get("descricao"), total=data.get("total", 0), status=data.get("status", "aberto"))
+    db.add(orc); db.flush()
+    return jsonify({"id": orc.id, "obra_id": o.id, "total": str(orc.total), "status": o.status}), 201
+
+@project_bp.get("/<int:obra_id>/orcamentos")
+@jwt_required
+def list_orcamentos(obra_id: int):
+    db = next(get_db())
+    o = db.query(Obra).filter_by(id=obra_id, owner_id=request.user.id).first()
+    if not o:
+        return jsonify({"error": "Obra não encontrada"}), 404
+    itens = db.query(Orcamento).filter_by(obra_id=o.id).all()
+    return jsonify([{"id": i.id, "descricao": i.descricao, "total": str(i.total), "status": i.status} for i in itens])
