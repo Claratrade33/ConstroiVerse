@@ -1,0 +1,42 @@
+{
+  "family": "construiverse-mvp-task",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "construiverse-mvp-container",
+      "image": "seu-aws-account-id.dkr.ecr.sua-regiao.amazonaws.com/construiverse-mvp:latest",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "hostPort": 5000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "MONGO_URI",
+          "value": "mongodb+srv://Marisa:Olivia2022.@cluster0.dxbozq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+        },
+        {
+          "name": "DB_NAME",
+          "value": "construiverse_db"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/construiverse-mvp-task",
+          "awslogs-region": "sa-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512"
+}
