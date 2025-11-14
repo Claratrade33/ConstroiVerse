@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Backend Flask
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+      - FLASK_ENV=development
+      - FLASK_DEBUG=True
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mongodb
+    networks:
+      - construiverse-network
+
+  # MongoDB (opcional para desenvolvimento local)
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=construiverse
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - construiverse-network
+
+  # Frontend (a ser adicionado)
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - construiverse-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  construiverse-network:
+    driver: bridge
